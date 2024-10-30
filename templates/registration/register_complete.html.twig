@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register Complete{% endblock %}
+
+{% block body %}
+{#    {% for flash_error in app.flashes('verify_email_error') %}#}
+{#        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>#}
+{#    {% endfor %}#}
+
+    <div class="info">
+        <div>
+            <h1>Register Confirmation</h1>
+        </div>
+        <div>
+            Thank you for your registration!
+        </div>
+        <div>
+            A message was sent to your e-mail address.
+        </div>
+        <div>
+            You must confirm your email address to can access your account.
+        </div>
+        <div>
+            <a href="{{ url('app_login') }}">&bull; Click here to Sign In</a>
+        </div>
+    </div>
+
+{% endblock %}

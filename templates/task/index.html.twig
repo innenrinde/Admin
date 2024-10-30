@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tasks{% endblock %}
+
+{% block body %}
+
+    <div class="table" {{ vue_component('Table', {
+        'url': {
+            'get': path('app_tasks_list'),
+            'post': path('app_tasks_edit'),
+            'delete': path('app_tasks_delete'),
+        },
+        'columns': columns
+    }) }} />
+
+{% endblock %}

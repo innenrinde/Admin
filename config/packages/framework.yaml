@@ -1,0 +1,19 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+    #csrf_protection: true
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+
+parameters:
+    # env(DATABASE_URL): "mysql://radu1onescu_openai:7^P}SYYX]@q8@localhost:3306/radu1onescu_openai?serverVersion=8&charset=utf8mb4"
