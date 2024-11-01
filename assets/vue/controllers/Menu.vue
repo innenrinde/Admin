@@ -1,17 +1,19 @@
 <template>
   <div class="menu-panel">
     <div class="icon-panel">
-      <div class="icon"></div>
+      <el-icon><Switch /></el-icon>Stocks
     </div>
     <div class="menu-content">
       <el-menu class="el-menu-vertical">
         <el-menu-item
           v-for="(item, index) of items"
           :key="item"
-          :index="index"
-          @click="goToRoute(item.route)"
+          @click="goToRoute(item)"
+          :class="{ 'menu-active': item.active }"
         >
-          <el-icon><component :is="item.icon" /></el-icon>
+          <el-icon>
+            <component :is="item.icon" />
+          </el-icon>
           <template #title>{{ item.title }}</template>
         </el-menu-item>
       </el-menu>
@@ -20,6 +22,7 @@
 </template>
 
 <script>
+import { ElMessageBox } from 'element-plus';
 
 export default {
   name: "Menu",
@@ -36,43 +39,34 @@ export default {
   methods: {
     /**
      * Redirect to url
-     * @param {String} route
+     * @param {Object} menu
      */
-    goToRoute(route) {
-      document.location.href = route;
+    goToRoute(menu) {
+      if (menu.confirm) {
+        ElMessageBox.confirm(
+          'Are you sure that you want to continue?',
+          menu.title,
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'info',
+          }
+        )
+        .then(() => {
+          document.location.href = menu.route;
+        })
+        .catch(() => {
+        });
+      } else {
+        document.location.href = menu.route;
+      }
     },
   }
 };
 </script>
 
 <style scoped>
-.menu-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-.icon-panel {
-  background: #fff;
-  border-right: 1px solid #cacaca;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50px;
-  background-color: #418465;
-  background-size: 500%;
-  background-position: center;
-}
-
-.menu-content {
-  display: flex;
-  height: 100%;
+.menu-active {
+  background-color: #ecf5ff;
 }
 </style>

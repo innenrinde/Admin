@@ -12,6 +12,7 @@ import './styles/app.css';
 import ElementPlus from 'element-plus';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import 'element-plus/dist/index.css';
+import moment from "moment";
 
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
@@ -27,6 +28,8 @@ document.addEventListener('vue:before-mount', (event) => {
     app.use(ElementPlus);
 
     for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-        app.component(key, component)
+        app.component(key, component);
     }
+
+    app.config.globalProperties.$moment = moment;
 });

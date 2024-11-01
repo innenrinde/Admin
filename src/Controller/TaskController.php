@@ -51,7 +51,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/list', name: 'app_tasks_list')]
     public function getTasks(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $tasks = $this->em->getRepository(Task::class)->findAll();
 
@@ -93,7 +93,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/edit', name: 'app_tasks_edit')]
     public function tasksAdd(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $data = $request->toArray();
 
@@ -122,7 +122,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/delete', name: 'app_tasks_delete')]
     public function tasksDelete(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $userId = (int)$request->getContent(false);
 

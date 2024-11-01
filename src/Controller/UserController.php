@@ -48,16 +48,32 @@ class UserController extends AbstractController
                     'title' => 'Email',
                     'type' => 'string',
                     'field' => 'email',
+                    'width' => 200,
                 ],
                 [
-                    'title' => 'Register date',
-                    'type' => 'date',
-                    'field' => 'registerDate',
+                    'title' => 'Is Active',
+                    'type' => 'boolean',
+                    'field' => 'isActive',
                 ],
                 [
                     'title' => 'Is Verified',
                     'type' => 'boolean',
                     'field' => 'isVerified',
+                ],
+                [
+                    'title' => 'Last login date',
+                    'type' => 'datetime',
+                    'field' => 'lastLogged',
+                ],
+//                [
+//                    'title' => 'Register date',
+//                    'type' => 'datetime',
+//                    'field' => 'registerDate',
+//                ],
+                [
+                    'title' => 'Is Admin',
+                    'type' => 'boolean',
+                    'field' => 'isAdmin',
                 ],
             ],
         ]);
@@ -72,6 +88,9 @@ class UserController extends AbstractController
 
         return new JsonResponse(
             [
+                /**
+                 * @var User $user
+                 */
                 'rows' => array_map(function ($user) {
                     return [
                         'id' => $user->getId(),
@@ -80,7 +99,9 @@ class UserController extends AbstractController
                         'email' => $user->getUserIdentifier(),
                         'lastLogged' => $this->dateFormat($user->getLastLogged()),
                         'registerDate' => $this->dateFormat($user->getRegisterDate()),
-                        'isVerified' => $user->isVerified()
+                        'isVerified' => $user->isVerified(),
+                        'isActive' => $user->isActive(),
+                        'isAdmin' => $user->isAdmin()
                     ];
                 }, $users)
             ],
@@ -121,10 +142,26 @@ class UserController extends AbstractController
         /**
          * @var User $user
          */
+        $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
+        if ($userCheck && $userCheck->getId() != $data['id']) {
+            return new JsonResponse([
+                'id' => $data['id'],
+                'ok' => false,
+                'message' => "User email already exists",
+            ],
+                Response::HTTP_OK);
+        }
+
         $user = $this->em->getRepository(User::class)->find($data['id']);
+        $user->setEmail($data['email']);
         $user->setName($data['name']);
         $user->setSurname($data['surname']);
         $user->setVerified($data['isVerified']);
+        $user->setIsActive($data['isActive']);
+        $user->setLastLogged(new \DateTime($data['lastLogged']));
+        $roles = $data['isAdmin'] ? [User::ROLE_ADMIN] : [User::ROLE_USER];
+        $user->setRoles($roles);
+
         $this->em->persist($user);
         $this->em->flush();
 
@@ -147,12 +184,20 @@ class UserController extends AbstractController
          * @var User $user
          */
         $user = $this->em->getRepository(User::class)->find($userId);
-        $this->em->remove($user);
-        $this->em->flush();
+
+        $responseOk = true;
+        if ($user->isAdmin()) {
+            $responseOk = false;
+        } else {
+            $this->em->remove($user);
+            $this->em->flush();
+        }
 
         return new JsonResponse([
-            'id' => $userId
+            'id' => $userId,
+            'ok' => $responseOk,
+            'message' => $responseOk ? null : "Can't delete an admin user",
         ],
-        Response::HTTP_OK);
+            Response::HTTP_OK);
     }
 }

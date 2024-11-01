@@ -7,9 +7,6 @@ html, body {
 body {
     font-family: system-ui;
     font-size: 12px;
-    text-align: center;
-    align-items: center;
-    align-content: center;
     height: 100%;
 }
 
@@ -96,7 +93,7 @@ body {
 }
 
 .container-account .content {
-    background-color: #eaeaea;
+    background-color: #eeeef1;
     overflow: auto;
     height: 100%;
     display: flex;
@@ -104,6 +101,7 @@ body {
 }
 
 
+/* START left menu */
 .container-account .content-menu {
     height: 100%;
     display: flex;
@@ -111,8 +109,33 @@ body {
 
 .container-account .content-menu .el-menu {
     width: 150px;
-    border-right: solid 1px #cacaca;
+    border-right: solid 1px #d3d3d3;
 }
+
+.container-account .content-menu .menu-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-account .content-menu .icon-panel {
+    border: 5px solid #77ac94;
+    background-color: #87baa3;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container-account .content-menu .menu-content {
+    display: flex;
+    height: 100%;
+}
+/* END left menu */
 
 .container-account .content-body {
     width: 100%;
@@ -124,8 +147,8 @@ body {
     display: flex;
     margin: 12px;
     border-radius: 5px;
-    border: solid 1px #d5d5d5;
-    box-shadow: 1px 1px  3px #d3d3d3;
+    border: solid 1px #d3d3d3;
+    box-shadow: 1px 1px 4px #d3d3d3;
     overflow: hidden;
 }
 

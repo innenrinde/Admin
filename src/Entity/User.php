@@ -13,6 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+    const ROLE_USER = "ROLE_USER";
+
+    const ROLE_ADMIN = "ROLE_ADMIN";
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -28,19 +33,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $surname = null;
 
     /**
-     * @var list<string> The user roles
+     * @var array<string> The user roles
      */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string|null The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[ORM\Column]
+    private bool $isActive = false;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private \DateTime|null $registerDate = null;
@@ -54,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -127,15 +135,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      *
-     * @return list<string>
+     * @return array<string>
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = User::ROLE_USER;
 
         return array_unique($roles);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return in_array(User::ROLE_ADMIN, $this->getRoles());
     }
 
     /**
@@ -192,6 +208,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     * @return $this
+     */
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

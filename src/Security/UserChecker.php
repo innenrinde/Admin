@@ -3,12 +3,18 @@
 namespace App\Security;
 
 use App\Entity\User as AppUser;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {
+    }
+
     public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof AppUser) {
@@ -19,6 +25,11 @@ class UserChecker implements UserCheckerInterface
             // the message passed to this exception is meant to be displayed to the user
             throw new CustomUserMessageAccountStatusException('Your user account is not verified.');
         }
+
+        if (!$user->isActive()) {
+            // the message passed to this exception is meant to be displayed to the user
+            throw new CustomUserMessageAccountStatusException('Your user account is not active.');
+        }
     }
 
     public function checkPostAuth(UserInterface $user): void
@@ -26,5 +37,10 @@ class UserChecker implements UserCheckerInterface
         if (!$user instanceof AppUser) {
             return;
         }
+
+        $user->setLastLogged(new \DateTime());
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 }

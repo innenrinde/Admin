@@ -13,9 +13,14 @@
           :prop="column.field"
           :label="column.title"
           prop="tag"
-          width="120"
+          width="130"
           sortable
           align="center"
+          :filters="[
+            { text: 'Yes', value: true },
+            { text: 'No', value: false }
+          ]"
+          :filter-method="filterHandler"
         >
           <template #default="scope">
             <el-tag
@@ -25,27 +30,40 @@
           </template>
         </el-table-column>
         <el-table-column
-            v-else-if="column.type === 'number'"
-            :prop="column.field"
-            :label="column.title"
-            width="80"
-            sortable
+          v-else-if="column.type === 'number'"
+          :prop="column.field"
+          :label="column.title"
+          width="80"
+          sortable
         />
+        <el-table-column
+          v-else-if="column.type === 'datetime'"
+          :prop="column.field"
+          :label="column.title"
+          width="150"
+          sortable
+        >
+          <template #default="scope">
+            {{ dateFormat(scope.row[column.field]) }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-else
           :prop="column.field"
           :label="column.title"
+          :width="column.width ?? 0"
           sortable
         />
       </template>
-      <el-table-column fixed="right" label="Operations" width="120">
+      <el-table-column
+        fixed="right"
+        label="Operations"
+        width="120"
+        align="center"
+      >
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="deleteRow(scope.row)">
-            Remove
-          </el-button>
-          <el-button link type="primary" size="small" @click="editRow(scope.row)">
-            Edit
-          </el-button>
+          <el-button type="danger" :icon="Delete" plain circle size="small" @click="deleteRow(scope.row)" />
+          <el-button type="primary" :icon="Edit" plain circle size="small" @click="editRow(scope.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -80,7 +98,7 @@
         :key="column"
         :label="column.title"
       >
-        <el-date-picker v-if="column.type === 'date'" v-model="form[column.field]" />
+        <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
         <el-switch v-else-if="column.type === 'boolean'" v-model="form[column.field]" />
         <el-input v-else v-model="form[column.field]" />
       </el-form-item>
@@ -100,7 +118,8 @@
 
 <script>
 import axios from "axios";
-import { ElMessage } from 'element-plus';
+import { ElNotification } from 'element-plus';
+import { Delete, Edit } from '@element-plus/icons-vue';
 
 export default {
   name: "Table",
@@ -122,6 +141,8 @@ export default {
       editDialogVisible: false,
       selectedRow: {},
       form: {},
+      Delete,
+      Edit,
     };
   },
   mounted() {
@@ -170,7 +191,12 @@ export default {
           data: this.selectedRow[this.pk().field]
         })
         .then(response => {
-          this.processDeletedRow(response.data);
+          if (response.data.ok) {
+            this.processDeletedRow(response.data);
+            this.okMessage(response.data.message ?? "Row successfully deleted");
+          } else {
+            this.errorMessage(response.data.message);
+          }
           this.deleteDialogVisible = false;
         });
     },
@@ -178,12 +204,24 @@ export default {
      * Perform edit
      */
     confirmEditRow() {
+
+      let values = { ... this.form };
+      this.columns.forEach(column => {
+        if (column.type === "datetime") {
+          values[column.field] = this.dateFormatWS(values[column.field]);
+        }
+      });
+
       axios
-        .post(this.url.post,  this.form)
+        .post(this.url.post,  values)
         .then(response => {
-          this.processEditedRow(response.data);
-          this.editDialogVisible = false;
-          this.showMessage("Row successfully edited");
+          if (response.data.ok) {
+            this.processEditedRow(response.data);
+            this.editDialogVisible = false;
+            this.okMessage("Row successfully edited");
+          } else {
+            this.errorMessage(response.data.message);
+          }
         });
     },
     /**
@@ -232,15 +270,45 @@ export default {
       return pk;
     },
     /**
-     * Display custom message
+     * Display a success message
      * @param {String} message
      */
-    showMessage(message) {
-      ElMessage({
-        message,
-        type: 'success',
-        plain: true,
-      })
+    okMessage(message) {
+      ElNotification({ title: "Success", message, type: "success" })
+    },
+    /**
+     * Display an error message
+     * @param {String} message
+     */
+    errorMessage(message) {
+      ElNotification({ title: "Error", message, type: "error" })
+    },
+    /**
+     * Custom date time format
+     * @param {String} value
+     * @returns {String}
+     */
+    dateFormat(value) {
+      return value ? this.$moment(value).format("DD/MM/YYYY HH:mm:ss") : "-";
+    },
+    /**
+     * Send date to ws
+     * @param {Date} value
+     * @returns {String}
+     */
+    dateFormatWS(value) {
+      return value ? this.$moment(value).format("YYYY-MM-DD HH:mm:ss") : "";
+    },
+    /**
+     * Local filtration by bool column
+     * @param value
+     * @param row
+     * @param column
+     * @returns {boolean}
+     */
+    filterHandler(value, row, column) {
+      const property = column['property']
+      return row[property] === value;
     }
   }
 };
@@ -250,6 +318,7 @@ export default {
 .table-list {
   width: 100%;
 }
+
 .dialog-message {
   display: block;
   text-align: center;
