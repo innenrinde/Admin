@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isActive = false;
 
+    #[ORM\Column]
+    private bool $removed = false;
+
     #[ORM\Column(type: 'datetime', nullable: true)]
     private \DateTime|null $registerDate = null;
 
@@ -227,6 +230,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRemoved(): bool
+    {
+        return $this->removed;
+    }
+
+    /**
+     * @param bool $isRemoved
+     * @return $this
+     */
+    public function setRemoved(bool $isRemoved): static
+    {
+        $this->removed = $isRemoved;
 
         return $this;
     }

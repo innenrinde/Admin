@@ -189,7 +189,8 @@ class UserController extends AbstractController
         if ($user->isAdmin()) {
             $responseOk = false;
         } else {
-            $this->em->remove($user);
+            $user->setRemoved(true);
+            $this->em->persist($user);
             $this->em->flush();
         }
 
