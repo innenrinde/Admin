@@ -24,8 +24,6 @@ class TaskController extends AbstractController
     #[Route('/tasks', name: 'app_tasks')]
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         return $this->render('task/index.html.twig', [
             'columns' => [
                 [
@@ -51,8 +49,6 @@ class TaskController extends AbstractController
     #[Route('/tasks/list', name: 'app_tasks_list')]
     public function getTasks(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $tasks = $this->em->getRepository(Task::class)->findAll();
 
         return new JsonResponse(
@@ -93,8 +89,6 @@ class TaskController extends AbstractController
     #[Route('/tasks/edit', name: 'app_tasks_edit')]
     public function tasksAdd(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $data = $request->toArray();
 
         if (!$data['id']) {
@@ -122,8 +116,6 @@ class TaskController extends AbstractController
     #[Route('/tasks/delete', name: 'app_tasks_delete')]
     public function tasksDelete(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $userId = (int)$request->getContent(false);
 
         /**

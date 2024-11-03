@@ -24,8 +24,6 @@ class UserController extends AbstractController
     #[Route('/users', name: 'app_users')]
     public function index(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         return $this->render('user/index.html.twig', [
             'columns' => [
                 [
@@ -82,8 +80,6 @@ class UserController extends AbstractController
     #[Route('/users/list', name: 'app_users_list')]
     public function getUsers(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $users = $this->em->getRepository(User::class)->findAll();
 
         return new JsonResponse(
@@ -131,8 +127,6 @@ class UserController extends AbstractController
     #[Route('/users/edit', name: 'app_users_edit')]
     public function usersAdd(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $data = $request->toArray();
 
         if (!$data['id']) {
@@ -176,8 +170,6 @@ class UserController extends AbstractController
     #[Route('/users/delete', name: 'app_users_delete')]
     public function usersDelete(Request $request): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $userId = (int)$request->getContent(false);
 
         /**
