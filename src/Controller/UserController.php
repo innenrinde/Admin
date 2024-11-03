@@ -6,12 +6,11 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class UserController extends AbstractController
+class UserController extends CrudController
 {
     /**
      * @var EntityManagerInterface
@@ -79,7 +78,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/list', name: 'app_users_list')]
-    public function getUsers(Request $request): JsonResponse
+    public function getRows(Request $request): JsonResponse
     {
         $users = $this->em->getRepository(User::class)->findAll();
 
@@ -127,7 +126,7 @@ class UserController extends AbstractController
      * @throws Exception
      */
     #[Route('/users/edit', name: 'app_users_edit')]
-    public function usersAdd(Request $request): JsonResponse
+    public function addRow(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
@@ -141,12 +140,7 @@ class UserController extends AbstractController
         $this->em->getFilters()->disable('removedRow');
         $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
         if ($userCheck && $userCheck->getId() != $data['id']) {
-            return new JsonResponse([
-                'id' => $data['id'],
-                'success' => false,
-                'message' => "User email already exists",
-            ],
-                Response::HTTP_OK);
+            return $this->httpResponse($data['id'], false, "User email already exists");
         }
 
         $user = $this->em->getRepository(User::class)->find($data['id']);
@@ -162,13 +156,7 @@ class UserController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
 
-        return new JsonResponse([
-            'content' => $data,
-            'id' => $data['id'],
-            'success' => true,
-            'message' => "User successfully edited"
-        ],
-            Response::HTTP_OK);
+        return $this->httpResponse($data['id'], true, "User successfully edited", $data);
     }
 
     /**
@@ -177,7 +165,7 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     #[Route('/users/delete', name: 'app_users_delete')]
-    public function usersDelete(Request $request): JsonResponse
+    public function deleteRow(Request $request): JsonResponse
     {
         $userId = (int)$request->getContent(false);
 
@@ -187,26 +175,13 @@ class UserController extends AbstractController
         $user = $this->em->getRepository(User::class)->find($userId);
 
         if ($user->isAdmin()) {
-
-            return new JsonResponse([
-                'id' => $userId,
-                'success' => false,
-                'message' => "Can't delete an admin user"
-            ],
-                Response::HTTP_OK);
-
+            return $this->httpResponse($userId, false, "Can't delete an admin user");
         }
 
         $user->setRemoved(true);
         $this->em->persist($user);
         $this->em->flush();
 
-        return new JsonResponse([
-            'id' => $userId,
-            'success' => true,
-            'message' => "User successfully deleted"
-        ],
-            Response::HTTP_OK);
-
+        return $this->httpResponse($userId, false, "User successfully deleted");
     }
 }
