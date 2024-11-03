@@ -120,6 +120,7 @@
 import axios from "axios";
 import { ElNotification } from 'element-plus';
 import { Delete, Edit } from '@element-plus/icons-vue';
+import { HttpRequestService } from "../services/HttpRequestService";
 
 export default {
   name: "Table",
@@ -191,12 +192,9 @@ export default {
           data: this.selectedRow[this.pk().field]
         })
         .then(response => {
-          if (response.data.ok) {
+          HttpRequestService.parseResponse(response, () => {
             this.processDeletedRow(response.data);
-            this.okMessage(response.data.message ?? "Row successfully deleted");
-          } else {
-            this.errorMessage(response.data.message);
-          }
+          });
           this.deleteDialogVisible = false;
         });
     },
@@ -215,13 +213,10 @@ export default {
       axios
         .post(this.url.post,  values)
         .then(response => {
-          if (response.data.ok) {
-            this.processEditedRow(response.data);
+          HttpRequestService.parseResponse(response, () => {
+            this.processEditedRow(response.data.content);
             this.editDialogVisible = false;
-            this.okMessage("Row successfully edited");
-          } else {
-            this.errorMessage(response.data.message);
-          }
+          });
         });
     },
     /**

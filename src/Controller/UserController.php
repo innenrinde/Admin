@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -123,6 +124,7 @@ class UserController extends AbstractController
      * Create an user
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     #[Route('/users/edit', name: 'app_users_edit')]
     public function usersAdd(Request $request): JsonResponse
@@ -136,11 +138,12 @@ class UserController extends AbstractController
         /**
          * @var User $user
          */
+        $this->em->getFilters()->disable('removedRow');
         $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
         if ($userCheck && $userCheck->getId() != $data['id']) {
             return new JsonResponse([
                 'id' => $data['id'],
-                'ok' => false,
+                'success' => false,
                 'message' => "User email already exists",
             ],
                 Response::HTTP_OK);
@@ -159,7 +162,13 @@ class UserController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
 
-        return new JsonResponse($data, Response::HTTP_OK);
+        return new JsonResponse([
+            'content' => $data,
+            'id' => $data['id'],
+            'success' => true,
+            'message' => "User successfully edited"
+        ],
+            Response::HTTP_OK);
     }
 
     /**
@@ -177,20 +186,27 @@ class UserController extends AbstractController
          */
         $user = $this->em->getRepository(User::class)->find($userId);
 
-        $responseOk = true;
         if ($user->isAdmin()) {
-            $responseOk = false;
-        } else {
-            $user->setRemoved(true);
-            $this->em->persist($user);
-            $this->em->flush();
+
+            return new JsonResponse([
+                'id' => $userId,
+                'success' => false,
+                'message' => "Can't delete an admin user"
+            ],
+                Response::HTTP_OK);
+
         }
+
+        $user->setRemoved(true);
+        $this->em->persist($user);
+        $this->em->flush();
 
         return new JsonResponse([
             'id' => $userId,
-            'ok' => $responseOk,
-            'message' => $responseOk ? null : "Can't delete an admin user",
+            'success' => true,
+            'message' => "User successfully deleted"
         ],
             Response::HTTP_OK);
+
     }
 }
