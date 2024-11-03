@@ -2,15 +2,17 @@
 
 namespace App\Filters;
 
+use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 
-class UserFilter extends SQLFilter
+class RemovedFilter extends SQLFilter
 {
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
-        if ($targetEntity->getReflectionClass()->name !== User::class) {
+        $className = $targetEntity->getReflectionClass()->name;
+        if ($className !== User::class && $className !== Task::class) {
             return '';
         }
 

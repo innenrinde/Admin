@@ -26,6 +26,9 @@ class Task
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $modifiedDate = null;
 
+    #[ORM\Column]
+    private bool $removed = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,25 @@ class Task
     public function setModifiedDate(\DateTimeInterface $modifiedDate): static
     {
         $this->modifiedDate = $modifiedDate;
+
+        return $this;
+    }
+
+    /**
+    * @return bool
+    */
+    public function isRemoved(): bool
+    {
+        return $this->removed;
+    }
+
+    /**
+     * @param bool $isRemoved
+     * @return $this
+     */
+    public function setRemoved(bool $isRemoved): static
+    {
+        $this->removed = $isRemoved;
 
         return $this;
     }

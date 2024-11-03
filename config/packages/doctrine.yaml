@@ -28,7 +28,7 @@ doctrine:
             auto_mapping: false
         filters:
             removedUser:
-                class: App\Filters\UserFilter
+                class: App\Filters\RemovedFilter
                 enabled: true
                 parameters:
                     removed: false
