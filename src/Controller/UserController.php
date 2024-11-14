@@ -125,8 +125,28 @@ class UserController extends CrudController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/users/edit', name: 'app_users_edit')]
+    #[Route('/users/add', name: 'app_users_add')]
     public function addRow(Request $request): JsonResponse
+    {
+        $data = $request->toArray();
+
+        if (!$data['id']) {
+            throw new \Error("payload mismatch");
+        }
+
+        $id = 0;
+
+        return $this->httpResponse($id, true, "User successfully added", $data);
+    }
+
+    /**
+     * Create an user
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    #[Route('/users/edit', name: 'app_users_edit')]
+    public function editRow(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
@@ -182,6 +202,6 @@ class UserController extends CrudController
         $this->em->persist($user);
         $this->em->flush();
 
-        return $this->httpResponse($userId, false, "User successfully deleted");
+        return $this->httpResponse($userId, true, "User successfully deleted");
     }
 }

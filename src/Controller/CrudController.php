@@ -30,6 +30,12 @@ abstract class CrudController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    abstract public function editRow(Request $request): JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     abstract public function deleteRow(Request $request): JsonResponse;
 
     /**

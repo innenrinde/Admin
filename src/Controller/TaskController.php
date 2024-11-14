@@ -4,13 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class TaskController extends AbstractController
+class TaskController extends CrudController
 {
     /**
      * @var EntityManagerInterface
@@ -47,7 +46,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/list', name: 'app_tasks_list')]
-    public function getTasks(Request $request): JsonResponse
+    public function getRows(Request $request): JsonResponse
     {
         $tasks = $this->em->getRepository(Task::class)->findAll();
 
@@ -86,8 +85,8 @@ class TaskController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/tasks/edit', name: 'app_tasks_edit')]
-    public function tasksAdd(Request $request): JsonResponse
+    #[Route('/tasks/add', name: 'app_tasks_add')]
+    public function addRow(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
@@ -95,15 +94,22 @@ class TaskController extends AbstractController
             throw new \Error("payload mismatch");
         }
 
-        /**
-         * @var Task $user
-         */
-//        $user = $this->em->getRepository(User::class)->find($data['id']);
-//        $user->setName($data['name']);
-//        $user->setSurname($data['surname']);
-//        $user->setVerified($data['isVerified']);
-//        $this->em->persist($user);
-//        $this->em->flush();
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    /**
+     * Create an user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/tasks/edit', name: 'app_tasks_edit')]
+    public function editRow(Request $request): JsonResponse
+    {
+        $data = $request->toArray();
+
+        if (!$data['id']) {
+            throw new \Error("payload mismatch");
+        }
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
@@ -114,16 +120,9 @@ class TaskController extends AbstractController
      * @return JsonResponse
      */
     #[Route('/tasks/delete', name: 'app_tasks_delete')]
-    public function tasksDelete(Request $request): JsonResponse
+    public function deleteRow(Request $request): JsonResponse
     {
         $userId = (int)$request->getContent(false);
-
-        /**
-         * @var Task $user
-         */
-//        $user = $this->em->getRepository(User::class)->find($userId);
-//        $this->em->remove($user);
-//        $this->em->flush();
 
         return new JsonResponse([
             'id' => $userId

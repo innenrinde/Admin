@@ -1,21 +1,39 @@
 <template>
   <div class="menu-panel">
     <div class="icon-panel">
-      <el-icon><Switch /></el-icon>Stocks
+      <el-icon><Switch /></el-icon>{{ title }}
     </div>
     <div class="menu-content">
-      <el-menu class="el-menu-vertical">
-        <el-menu-item
+      <el-menu
+        class="el-menu-vertical"
+        :default-openeds="defaultOpeneds"
+        @open="submenuClick"
+        @close="submenuClick"
+      >
+        <el-sub-menu
           v-for="(item, index) of items"
           :key="item"
-          @click="goToRoute(item)"
-          :class="{ 'menu-active': item.active }"
+          :index="index.toString()"
         >
-          <el-icon>
-            <component :is="item.icon" />
-          </el-icon>
-          <template #title>{{ item.title }}</template>
-        </el-menu-item>
+          <template #title>
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            {{ item.title }}
+          </template>
+
+          <el-menu-item
+            v-for="(child, index) of item.children"
+            :key="child"
+            :class="{ 'menu-active': child.active }"
+            @click="goToRoute(child)"
+          >
+            <el-icon>
+              <component :is="child.icon" />
+            </el-icon>
+            <template #title>{{ child.title }}</template>
+          </el-menu-item>
+        </el-sub-menu>
       </el-menu>
     </div>
   </div>
@@ -24,9 +42,15 @@
 <script>
 import { ElMessageBox } from 'element-plus';
 
+const DEFAULT_OPENEDS_KEY = "defaultOpeneds";
+
 export default {
   name: "Menu",
   props: {
+    title: {
+      type: String,
+      default: () => ""
+    },
     items: {
       type: Array,
       default: () => []
@@ -34,9 +58,45 @@ export default {
   },
   data() {
     return {
+      defaultOpeneds: [],
     };
   },
+  beforeMount() {
+    this.defaultOpeneds = this.getFromSession(DEFAULT_OPENEDS_KEY);
+  },
   methods: {
+    /**
+     * Keep clicked menu into session
+     * @param {Number} item
+     */
+    submenuClick(item) {
+      let clicked = item.toString();
+
+      if (this.defaultOpeneds.includes(clicked)) {
+        this.defaultOpeneds = this.defaultOpeneds.filter(item => item !== clicked);
+      } else {
+        this.defaultOpeneds.push(clicked);
+      }
+
+      this.saveIntoSession(DEFAULT_OPENEDS_KEY, this.defaultOpeneds);
+    },
+    /**
+     * Get a value from session by key
+     * @param {String} key
+     * @returns {Array}
+     */
+    getFromSession(key) {
+      let values = sessionStorage.getItem(key);
+      return values ? values.split(",") : [];
+    },
+    /**
+     * Keep an array value into session
+     * @param {String} key
+     * @param {Array} values
+     */
+    saveIntoSession(key, values) {
+      sessionStorage.setItem(key, values.join(","));
+    },
     /**
      * Redirect to url
      * @param {Object} menu
