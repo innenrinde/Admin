@@ -62,7 +62,7 @@ export default {
     };
   },
   beforeMount() {
-    this.defaultOpeneds = this.getFromSession(DEFAULT_OPENEDS_KEY);
+    this.defaultOpeneds = this.getFromStorage(DEFAULT_OPENEDS_KEY);
   },
   methods: {
     /**
@@ -78,24 +78,29 @@ export default {
         this.defaultOpeneds.push(clicked);
       }
 
-      this.saveIntoSession(DEFAULT_OPENEDS_KEY, this.defaultOpeneds);
+      this.saveIntoStorage(DEFAULT_OPENEDS_KEY, this.defaultOpeneds);
     },
     /**
-     * Get a value from session by key
+     * Get a value from storage by key
      * @param {String} key
      * @returns {Array}
      */
-    getFromSession(key) {
-      let values = sessionStorage.getItem(key);
-      return values ? values.split(",") : [];
+    getFromStorage(key) {
+      if (localStorage) {
+        let values = localStorage.getItem(key);
+        return values ? values.split(",") : [];
+      }
+      return [];
     },
     /**
-     * Keep an array value into session
+     * Keep an array value into storage
      * @param {String} key
      * @param {Array} values
      */
-    saveIntoSession(key, values) {
-      sessionStorage.setItem(key, values.join(","));
+    saveIntoStorage(key, values) {
+      if (localStorage) {
+        localStorage.setItem(key, values.join(","));
+      }
     },
     /**
      * Redirect to url

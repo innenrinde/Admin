@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create user{% endblock %}
+
+{% block body %}
+
+    <div class="form" {{ vue_component('Form', {
+        'title': 'Create user',
+        'url': {
+            'put': path('app_users_edit'),
+        },
+        'columns': columns
+    }) }} />
+
+{% endblock %}

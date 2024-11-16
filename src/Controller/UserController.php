@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends CrudController
 {
@@ -17,63 +18,76 @@ class UserController extends CrudController
      */
     private EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em) {
+    /**
+     * @var UserPasswordHasherInterface
+     */
+    private UserPasswordHasherInterface $userPasswordHasher;
+
+    /**
+     * @var array
+     */
+    private $columns = [
+        [
+            'title' => 'ID',
+            'type' => 'number',
+            'field' => 'id',
+            'isPk' => true,
+        ],
+        [
+            'title' => 'Name',
+            'type' => 'string',
+            'field' => 'name',
+        ],
+        [
+            'title' => 'Surname',
+            'type' => 'string',
+            'field' => 'surname',
+        ],
+        [
+            'title' => 'Email',
+            'type' => 'string',
+            'field' => 'email',
+            'width' => 200,
+        ],
+        [
+            'title' => 'Password',
+            'type' => 'string',
+            'field' => 'password',
+            'width' => 200,
+            'hidden' => true
+        ],
+        [
+            'title' => 'Is Active',
+            'type' => 'boolean',
+            'field' => 'isActive',
+        ],
+        [
+            'title' => 'Is Verified',
+            'type' => 'boolean',
+            'field' => 'isVerified',
+        ],
+        [
+            'title' => 'Last login date',
+            'type' => 'datetime',
+            'field' => 'lastLogged',
+        ],
+        [
+            'title' => 'Is Admin',
+            'type' => 'boolean',
+            'field' => 'isAdmin',
+        ],
+    ];
+
+    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher) {
         $this->em = $em;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     #[Route('/users', name: 'app_users')]
     public function index(): Response
     {
         return $this->render('user/index.html.twig', [
-            'columns' => [
-                [
-                    'title' => 'ID',
-                    'type' => 'number',
-                    'field' => 'id',
-                    'isPk' => true,
-                ],
-                [
-                    'title' => 'Name',
-                    'type' => 'string',
-                    'field' => 'name',
-                ],
-                [
-                    'title' => 'Surname',
-                    'type' => 'string',
-                    'field' => 'surname',
-                ],
-                [
-                    'title' => 'Email',
-                    'type' => 'string',
-                    'field' => 'email',
-                    'width' => 200,
-                ],
-                [
-                    'title' => 'Is Active',
-                    'type' => 'boolean',
-                    'field' => 'isActive',
-                ],
-                [
-                    'title' => 'Is Verified',
-                    'type' => 'boolean',
-                    'field' => 'isVerified',
-                ],
-                [
-                    'title' => 'Last login date',
-                    'type' => 'datetime',
-                    'field' => 'lastLogged',
-                ],
-//                [
-//                    'title' => 'Register date',
-//                    'type' => 'datetime',
-//                    'field' => 'registerDate',
-//                ],
-                [
-                    'title' => 'Is Admin',
-                    'type' => 'boolean',
-                    'field' => 'isAdmin',
-                ],
-            ],
+            'columns' => $this->columns,
         ]);
     }
 
@@ -82,41 +96,21 @@ class UserController extends CrudController
     {
         $users = $this->em->getRepository(User::class)->findAll();
 
-        return new JsonResponse(
-            [
-                /**
-                 * @var User $user
-                 */
-                'rows' => array_map(function ($user) {
-                    return [
-                        'id' => $user->getId(),
-                        'name' => $user->getName(),
-                        'surname' => $user->getSurname(),
-                        'email' => $user->getUserIdentifier(),
-                        'lastLogged' => $this->dateFormat($user->getLastLogged()),
-                        'registerDate' => $this->dateFormat($user->getRegisterDate()),
-                        'isVerified' => $user->isVerified(),
-                        'isActive' => $user->isActive(),
-                        'isAdmin' => $user->isAdmin()
-                    ];
-                }, $users)
-            ],
-            Response::HTTP_OK
-        );
-    }
+        $data = array_map(function ($user) {
+            return [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'surname' => $user->getSurname(),
+                'email' => $user->getUserIdentifier(),
+                'lastLogged' => $this->dateFormat($user->getLastLogged()),
+                'registerDate' => $this->dateFormat($user->getRegisterDate()),
+                'isVerified' => $user->isVerified(),
+                'isActive' => $user->isActive(),
+                'isAdmin' => $user->isAdmin()
+            ];
+        }, $users);
 
-    /**
-     * Custom date time format
-     * @param \DateTime|null $date
-     * @return string
-     */
-    private function dateFormat(?\DateTime $date): string
-    {
-        if ($date) {
-            return $date->format("Y-m-d H:i:s");
-        }
-
-        return "";
+        return $this->httpResponse($data);
     }
 
     /**
@@ -126,17 +120,11 @@ class UserController extends CrudController
      * @throws Exception
      */
     #[Route('/users/add', name: 'app_users_add')]
-    public function addRow(Request $request): JsonResponse
+    public function addRow(Request $request): Response
     {
-        $data = $request->toArray();
-
-        if (!$data['id']) {
-            throw new \Error("payload mismatch");
-        }
-
-        $id = 0;
-
-        return $this->httpResponse($id, true, "User successfully added", $data);
+        return $this->render('user/add.html.twig', [
+            'columns' => $this->columns,
+        ]);
     }
 
     /**
@@ -146,37 +134,58 @@ class UserController extends CrudController
      * @throws Exception
      */
     #[Route('/users/edit', name: 'app_users_edit')]
-    public function editRow(Request $request): JsonResponse
+    public function saveRow(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
-        if (!$data['id']) {
+        if ($this->isCreate($request)) {
+            $data['id'] = 0;
+        } else if (!$data['id']) {
             throw new \Error("payload mismatch");
         }
 
-        /**
-         * @var User $user
-         */
+        if (!isset($data['email'])) {
+            return $this->httpResponse($data['id'], false, "User email missing");
+        }
+
+        if ($this->isCreate($request) && !isset($data['password'])) {
+            return $this->httpResponse($data['id'], false, "User password missing");
+        }
+
         $this->em->getFilters()->disable('removedRow');
         $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
         if ($userCheck && $userCheck->getId() != $data['id']) {
             return $this->httpResponse($data['id'], false, "User email already exists");
         }
 
-        $user = $this->em->getRepository(User::class)->find($data['id']);
+        /**
+         * @var User $user
+         */
+        $user = new User();
+        if ($this->isEdit($request)) {
+            $user = $this->em->getRepository(User::class)->find($data['id']);
+        }
+
         $user->setEmail($data['email']);
         $user->setName($data['name']);
         $user->setSurname($data['surname']);
-        $user->setVerified($data['isVerified']);
-        $user->setIsActive($data['isActive']);
+        $user->setVerified($data['isVerified'] ?? false);
+        $user->setIsActive($data['isActive'] ?? false);
         $user->setLastLogged(new \DateTime($data['lastLogged']));
-        $roles = $data['isAdmin'] ? [User::ROLE_ADMIN] : [User::ROLE_USER];
+        $roles = ($data['isAdmin'] ?? false) ? [User::ROLE_ADMIN] : [User::ROLE_USER];
         $user->setRoles($roles);
+
+        $plainPassword = $data['password'] ?? null;
+        if ($plainPassword) {
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, $plainPassword));
+        }
 
         $this->em->persist($user);
         $this->em->flush();
 
-        return $this->httpResponse($data['id'], true, "User successfully edited", $data);
+        $message = $this->isEdit($request) ? "User successfully edited" : "User successfully created";
+
+        return $this->httpResponse($data['id'], true, $message, $data);
     }
 
     /**

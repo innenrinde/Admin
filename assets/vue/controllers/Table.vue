@@ -48,7 +48,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-else
+          v-else-if="!column.hidden"
           :prop="column.field"
           :label="column.title"
           :width="column.width ?? 0"
@@ -87,10 +87,10 @@
   </el-dialog>
 
   <el-dialog
-      v-model="editDialogVisible"
-      title="Edit row"
-      width="500"
-      center
+    v-model="editDialogVisible"
+    title="Edit row"
+    width="500"
+    center
   >
     <el-form :model="form" label-width="auto" style="max-width: 600px">
       <el-form-item
@@ -158,10 +158,10 @@ export default {
       axios
         .get(this.url.get)
         .then(response => {
-          if (!response.data.rows) {
-            throw new Error(`${this.url.list} response => .data.rows not found`);
+          if (!response.data.content) {
+            throw new Error(`${this.url.list} response => .data.content not found`);
           }
-          this.tableData = response.data.rows;
+          this.tableData = response.data.content;
         });
     },
     /**

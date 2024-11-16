@@ -93,7 +93,7 @@ body {
 }
 
 .container-account .content {
-    background-color: #eeeef1;
+    background-color: #e1e1e1;
     overflow: auto;
     height: 100%;
     display: flex;
@@ -142,14 +142,41 @@ body {
     display: flex;
 }
 
-.container-account .table {
+.container-account .table,
+.container-account .form {
     width: 100%;
     display: flex;
     margin: 12px;
     border-radius: 5px;
+    background-color: #fff;
     border: solid 1px #d3d3d3;
     box-shadow: 1px 1px 4px #d3d3d3;
     overflow: hidden;
+}
+
+.container-account .form {
+    padding: 20px;
+    overflow: auto;
+    flex-direction: column;
+}
+
+.container-account .table .el-table tr th {
+    background-color: #f6f6f6;
+    color: #000;
+    /*text-shadow: 1px 1px #fff;*/
+    border-bottom: solid 1px #000;
+    /*border-top: solid 1px #77ac94;*/
+    font-weight: normal;
+}
+
+.container-account .table .el-table tr th:first-child {
+    /*border-left: solid 1px #77ac94;*/
+    border-radius: 3px 0 0 0;
+}
+
+.container-account .table .el-table tr th:last-child {
+    /*border-right: solid 1px #77ac94;*/
+    border-radius: 0 3px 0 0;
 }
 
 .container-account .header .title {

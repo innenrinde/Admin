@@ -50,34 +50,17 @@ class TaskController extends CrudController
     {
         $tasks = $this->em->getRepository(Task::class)->findAll();
 
-        return new JsonResponse(
-            [
-                'rows' => array_map(function ($task) {
-                    return [
-                        'id' => $task->getId(),
-                        'title' => $task->getTitle(),
-                        'description' => $task->getDescription(),
-                        'createdDate' => $this->dateFormat($task->getCreatedDate()),
-                        'editedDate' => $this->dateFormat($task->getModifiedDate()),
-                    ];
-                }, $tasks)
-            ],
-            Response::HTTP_OK
-        );
-    }
+        $data = array_map(function ($task) {
+            return [
+                'id' => $task->getId(),
+                'title' => $task->getTitle(),
+                'description' => $task->getDescription(),
+                'createdDate' => $this->dateFormat($task->getCreatedDate()),
+                'editedDate' => $this->dateFormat($task->getModifiedDate()),
+            ];
+        }, $tasks);
 
-    /**
-     * Custom date time format
-     * @param \DateTime|null $date
-     * @return string
-     */
-    private function dateFormat(?\DateTime $date): string
-    {
-        if ($date) {
-            return $date->format("Y-m-d H:i:s");
-        }
-
-        return "";
+        return $this->httpResponse($data);
     }
 
     /**
@@ -103,7 +86,7 @@ class TaskController extends CrudController
      * @return JsonResponse
      */
     #[Route('/tasks/edit', name: 'app_tasks_edit')]
-    public function editRow(Request $request): JsonResponse
+    public function saveRow(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
