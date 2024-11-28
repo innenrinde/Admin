@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\TaskRepository;
+use App\Repository\IndicatorRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TaskRepository::class)]
-class Task
+#[ORM\Entity(repositoryClass: IndicatorRepository::class)]
+class Indicator
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,10 +20,10 @@ class Task
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdDate = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $modifiedDate = null;
 
     #[ORM\Column]
@@ -40,6 +40,11 @@ class Task
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private ?array $tags = null;
+
+    public function __construct()
+    {
+        $this->createdDate = new \DateTime();
+    }
 
     public function getId(): ?int
     {

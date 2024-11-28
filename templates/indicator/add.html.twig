@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create category{% endblock %}
+{% block title %}Create indicator{% endblock %}
 
 {% block body %}
 
     <div class="form" {{ vue_component('Form', {
-        'title': 'Create category',
+        'title': 'Create indicator',
         'url': {
-            'put': path('app_categories_edit'),
+            'put': path('app_indicators_edit'),
         },
         'columns': columns,
         'values': {}

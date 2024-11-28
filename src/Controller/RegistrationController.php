@@ -26,7 +26,7 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_tasks');
+            return $this->redirectToRoute('app_indicators');
         }
 
         $user = new User();
@@ -65,7 +65,7 @@ class RegistrationController extends AbstractController
     public function registerComplete(): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_tasks');
+            return $this->redirectToRoute('app_indicators');
         }
 
         return $this->render('registration/register_complete.html.twig', [

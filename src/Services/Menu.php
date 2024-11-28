@@ -61,15 +61,15 @@ class Menu
                 [
                     "title" => "Indicators list",
                     "icon" => "DataLine",
-                    "route" => $this->router->generate("app_tasks"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/tasks",
+                    "route" => $this->router->generate("app_indicators"),
+                    "active" => $this->router->getContext()->getPathInfo() === "/indicators",
                     "confirm" => false,
                 ],
                 [
                     "title" => "Add indicator",
                     "icon" => "CirclePlus",
-                    "route" => $this->router->generate("app_tasks_add"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/tasks/add",
+                    "route" => $this->router->generate("app_indicators_add"),
+                    "active" => $this->router->getContext()->getPathInfo() === "/indicators/add",
                     "confirm" => false,
                 ]
             ]
