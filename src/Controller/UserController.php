@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,9 +67,19 @@ class UserController extends CrudController
             'type' => 'boolean',
             'field' => 'isAdmin',
         ],
+        [
+            'title' => 'ZKP',
+            'type' => 'boolean',
+            'field' => 'zkp',
+            'hidden' => true
+        ],
     ];
 
-    public function __construct(private readonly EntityManagerInterface $em, private readonly UserPasswordHasherInterface $userPasswordHasher) {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly HttpService $httpService
+    ) {
     }
 
     #[Route('/users', name: 'app_users')]
@@ -84,7 +95,7 @@ class UserController extends CrudController
     {
         $users = $this->em->getRepository(User::class)->findAll();
 
-        $data = array_map(function ($user) {
+        $data = array_map(function (User $user) {
             return [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
@@ -94,11 +105,12 @@ class UserController extends CrudController
                 'registerDate' => $this->dateFormat($user->getRegisterDate()),
                 'isVerified' => $user->isVerified(),
                 'isActive' => $user->isActive(),
-                'isAdmin' => $user->isAdmin()
+                'isAdmin' => $user->isAdmin(),
+                'zkp' => $user->isZkp()
             ];
         }, $users);
 
-        return $this->httpResponse($data);
+        return $this->httpService->response($data);
     }
 
     /**
@@ -133,22 +145,19 @@ class UserController extends CrudController
         }
 
         if (!isset($data['email'])) {
-            return $this->httpResponse($data['id'], false, "User email missing");
+            return $this->httpService->response($data['id'], false, "User email missing");
         }
 
         if ($this->isCreate($request) && !isset($data['password'])) {
-            return $this->httpResponse($data['id'], false, "User password missing");
+            return $this->httpService->response($data['id'], false, "User password missing");
         }
 
         $this->em->getFilters()->disable('removedRow');
         $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
         if ($userCheck && $userCheck->getId() != $data['id']) {
-            return $this->httpResponse($data['id'], false, "User email already exists");
+            return $this->httpService->response($data['id'], false, "User email already exists");
         }
 
-        /**
-         * @var User $user
-         */
         $user = new User();
         if ($this->isEdit($request)) {
             $user = $this->em->getRepository(User::class)->find($data['id']);
@@ -159,6 +168,7 @@ class UserController extends CrudController
         $user->setSurname($data['surname']);
         $user->setVerified($data['isVerified'] ?? false);
         $user->setIsActive($data['isActive'] ?? false);
+        $user->setZkp($data['zkp'] ?? false);
         $user->setLastLogged(new \DateTime($data['lastLogged']));
         $roles = ($data['isAdmin'] ?? false) ? [User::ROLE_ADMIN] : [User::ROLE_USER];
         $user->setRoles($roles);
@@ -173,7 +183,7 @@ class UserController extends CrudController
 
         $message = $this->isEdit($request) ? "User successfully edited" : "User successfully created";
 
-        return $this->httpResponse($data['id'], true, $message, $data);
+        return $this->httpService->response($data['id'], true, $message, $data);
     }
 
     /**
@@ -192,13 +202,13 @@ class UserController extends CrudController
         $user = $this->em->getRepository(User::class)->find($userId);
 
         if ($user->isAdmin()) {
-            return $this->httpResponse($userId, false, "Can't delete an admin user");
+            return $this->httpService->response($userId, false, "Can't delete an admin user");
         }
 
         $user->setRemoved(true);
         $this->em->persist($user);
         $this->em->flush();
 
-        return $this->httpResponse($userId, true, "User successfully deleted");
+        return $this->httpService->response($userId, true, "User successfully deleted");
     }
 }

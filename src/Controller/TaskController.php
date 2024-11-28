@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,13 +12,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TaskController extends CrudController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em) {
-        $this->em = $em;
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly HttpService $httpService
+    ) {
     }
 
     #[Route('/tasks', name: 'app_tasks')]
@@ -60,7 +58,7 @@ class TaskController extends CrudController
             ];
         }, $tasks);
 
-        return $this->httpResponse($data);
+        return $this->httpService->response($data);
     }
 
     /**

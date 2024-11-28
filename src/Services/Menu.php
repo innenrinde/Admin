@@ -29,25 +29,48 @@ class Menu
      */
     function menus(): array
     {
-        $menusList = [
-            [
-                "title" => "Tasks",
-                "icon" => "Tickets",
+        $menusList = [];
+
+        if ($this->security->getUser()->isAdmin()) {
+            $menusList[] = [
+                "title" => "Categories",
+                "icon" => "Notebook",
                 "children" => [
                     [
-                        "title" => "Tasks list",
+                        "title" => "Categories list",
                         "icon" => "Memo",
-                        "route" => $this->router->generate("app_tasks"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/tasks",
+                        "route" => $this->router->generate("app_categories"),
+                        "active" => $this->router->getContext()->getPathInfo() === "/categories",
                         "confirm" => false,
                     ],
                     [
-                        "title" => "Add task",
+                        "title" => "Add category",
                         "icon" => "CirclePlus",
-                        "route" => $this->router->generate("app_tasks_add"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/tasks/add",
+                        "route" => $this->router->generate("app_categories_add"),
+                        "active" => $this->router->getContext()->getPathInfo() === "/categories/add",
                         "confirm" => false,
                     ]
+                ]
+            ];
+        }
+
+        $menusList[] = [
+            "title" => "Indicators",
+            "icon" => "DataAnalysis",
+            "children" => [
+                [
+                    "title" => "Indicators list",
+                    "icon" => "DataLine",
+                    "route" => $this->router->generate("app_tasks"),
+                    "active" => $this->router->getContext()->getPathInfo() === "/tasks",
+                    "confirm" => false,
+                ],
+                [
+                    "title" => "Add indicator",
+                    "icon" => "CirclePlus",
+                    "route" => $this->router->generate("app_tasks_add"),
+                    "active" => $this->router->getContext()->getPathInfo() === "/tasks/add",
+                    "confirm" => false,
                 ]
             ]
         ];

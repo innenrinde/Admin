@@ -16,11 +16,11 @@ class HttpService
     {
         $count = count($arguments);
 
-        if ($function_name === "httpResponse") {
+        if ($function_name === "response") {
             if ($count === 1) {
-                return HttpService::httpResponseContent(...$arguments);
+                return $this->responseContent(...$arguments);
             } else if ($count === 3 || $count === 4) {
-                return HttpService::httpResponseWithMessage(...$arguments);
+                return $this->responseWithMessage(...$arguments);
             }
         }
 
@@ -34,7 +34,7 @@ class HttpService
      * @param array|null $content
      * @return JsonResponse
      */
-    static function httpResponseWithMessage(int $pk, bool $isSuccess, string $message, array $content = null): JsonResponse
+    private function responseWithMessage(int $pk, bool $isSuccess, string $message, array $content = null): JsonResponse
     {
         return new JsonResponse([
             'id' => $pk,
@@ -49,7 +49,7 @@ class HttpService
      * @param array $content
      * @return JsonResponse
      */
-    static function httpResponseContent(array $content): JsonResponse
+    private function responseContent(array $content): JsonResponse
     {
         return new JsonResponse([ 'content' => $content ], Response::HTTP_OK);
     }

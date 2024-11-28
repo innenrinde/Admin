@@ -47,13 +47,19 @@ class AccountController extends AbstractController
             'field' => 'password',
             'width' => 200,
             'placeholder' => 'Leave empty if you don\'t want to change password',
+        ],
+        [
+            'title' => 'ZKP',
+            'type' => 'boolean',
+            'field' => 'zkp',
         ]
     ];
 
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly Security $security,
-        private readonly UserPasswordHasherInterface $userPasswordHasher
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly HttpService $httpService
     ) {
     }
 
@@ -68,6 +74,7 @@ class AccountController extends AbstractController
             'name' => $user->getName(),
             'surname' => $user->getSurname(),
             'email' => $user->getEmail(),
+            'zkp' => $user->isZkp(),
         ];
 
         return $this->render('account/index.html.twig', [
@@ -77,18 +84,18 @@ class AccountController extends AbstractController
     }
 
     #[Route('/account_edit', name: 'app_account_edit')]
-    public function editAccount(Request $request, HttpService $httpService): JsonResponse
+    public function editAccount(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
         if (!isset($data['email']) || !$data['email']) {
-            return $httpService->httpResponse($data['id'], false, "User email missing");
+            return $this->httpService->response($data['id'], false, "User email missing");
         }
 
         $this->em->getFilters()->disable('removedRow');
         $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
         if ($userCheck && $userCheck->getId() != $data['id']) {
-            return $httpService->httpResponse($data['id'], false, "User email already exists");
+            return $this->httpService->response($data['id'], false, "User email already exists");
         }
 
         /** @var User $user */
@@ -102,11 +109,12 @@ class AccountController extends AbstractController
         $user->setName($data['name']);
         $user->setSurname($data['surname']);
         $user->setEmail($data['email']);
+        $user->setZkp($data['zkp'] ?? false);
 
         $this->em->persist($user);
         $this->em->flush();
 
-        return $httpService->httpResponse($data['id'], true, 'Data successfully saved', []);
+        return $this->httpService->response($data['id'], true, 'Data successfully saved', []);
 
     }
 

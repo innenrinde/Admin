@@ -9,7 +9,7 @@
         :key="column"
       >
         <el-table-column
-          v-if="column.type === 'boolean'"
+          v-if="column.type === 'boolean' && !column.hidden"
           :prop="column.field"
           :label="column.title"
           prop="tag"

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Services\HttpService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,26 +31,6 @@ abstract class CrudController extends AbstractController
      * @return JsonResponse
      */
     abstract public function deleteRow(Request $request): JsonResponse;
-
-    /**
-     * @param string $function_name
-     * @param array $arguments
-     * @return JsonResponse
-     */
-    public function __call(string $function_name, array $arguments): JsonResponse
-    {
-        $count = count($arguments);
-
-        if ($function_name === "httpResponse") {
-            if ($count === 1) {
-                return HttpService::httpResponseContent(...$arguments);
-            } else if ($count === 3 || $count === 4) {
-                return HttpService::httpResponseWithMessage(...$arguments);
-            }
-        }
-
-        return new JsonResponse();
-    }
 
     /**
      * Custom date time format

@@ -29,6 +29,18 @@ class Task
     #[ORM\Column]
     private bool $removed = false;
 
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $transaction = null;
+
+    #[ORM\Column(length: 25, nullable: true)]
+    private ?string $ip = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $tags = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,6 +109,54 @@ class Task
     public function setRemoved(bool $isRemoved): static
     {
         $this->removed = $isRemoved;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getTransaction(): ?string
+    {
+        return $this->transaction;
+    }
+
+    public function setTransaction(?string $transaction): static
+    {
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    public function getIp(): ?string
+    {
+        return $this->ip;
+    }
+
+    public function setIp(?string $ip): static
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): static
+    {
+        $this->tags = $tags;
 
         return $this;
     }
