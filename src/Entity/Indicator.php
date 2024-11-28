@@ -41,6 +41,9 @@ class Indicator
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private ?array $tags = null;
 
+    #[ORM\ManyToOne]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->createdDate = new \DateTime();
@@ -162,6 +165,18 @@ class Indicator
     public function setTags(?array $tags): static
     {
         $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

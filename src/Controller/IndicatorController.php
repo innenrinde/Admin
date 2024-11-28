@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Indicator;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,51 +16,71 @@ class IndicatorController extends CrudController
     /**
      * @var array List columns
      */
-    private array $columns = [
-        [
-            'title' => 'ID',
-            'type' => 'number',
-            'field' => 'id',
-            'isPk' => true,
-        ],
-        [
-            'title' => 'Title',
-            'type' => 'string',
-            'field' => 'title',
-        ],
-        [
-            'title' => 'Address',
-            'type' => 'string',
-            'field' => 'address',
-        ],
-        [
-            'title' => 'Transaction',
-            'type' => 'string',
-            'field' => 'transaction',
-        ],
-        [
-            'title' => 'IP',
-            'type' => 'string',
-            'field' => 'ip',
-        ],
-        [
-            'title' => 'Description',
-            'type' => 'string',
-            'field' => 'description',
-            'hidden' => true,
-        ],
-        [
-            'title' => 'tags',
-            'type' => 'string',
-            'field' => 'tags',
-            'hidden' => true,
-        ],
-    ];
+    private array $columns = [];
 
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly HttpService $httpService
     ) {
+        $this->columns = [
+            [
+                'title' => 'ID',
+                'type' => 'number',
+                'field' => 'id',
+                'isPk' => true,
+            ],
+            [
+                'title' => 'Category',
+                'type' => 'select',
+                'field' => 'category',
+                'options' => $this->getCategoriesList(),
+            ],
+            [
+                'title' => 'Title',
+                'type' => 'string',
+                'field' => 'title',
+            ],
+            [
+                'title' => 'Address',
+                'type' => 'string',
+                'field' => 'address',
+            ],
+            [
+                'title' => 'Transaction',
+                'type' => 'string',
+                'field' => 'transaction',
+            ],
+            [
+                'title' => 'IP',
+                'type' => 'string',
+                'field' => 'ip',
+            ],
+            [
+                'title' => 'Description',
+                'type' => 'string',
+                'field' => 'description',
+                'hidden' => true,
+            ],
+            [
+                'title' => 'tags',
+                'type' => 'string',
+                'field' => 'tags',
+                'hidden' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getCategoriesList(): array
+    {
+        return array_map(function (Category $row) {
+            return [
+                'value' => $row->getId(),
+                'label' => $row->getTitle(),
+            ];
+        }, $this->em->getRepository(Category::class)->findAll());
     }
 
     #[Route('/indicators', name: 'app_indicators')]
@@ -78,6 +99,7 @@ class IndicatorController extends CrudController
         $data = array_map(function (Indicator $row) {
             return [
                 'id' => $row->getId(),
+                'category' => $row->getCategory() ? $row->getCategory()->getTitle() : '',
                 'title' => $row->getTitle(),
                 'address' => $row->getAddress(),
                 'transaction' => $row->getTransaction(),
@@ -91,7 +113,7 @@ class IndicatorController extends CrudController
     }
 
     /**
-     * Create an user
+     * Create an indicator
      * @param Request $request
      * @return JsonResponse
      * @throws Exception
@@ -124,6 +146,10 @@ class IndicatorController extends CrudController
             return $this->httpService->response($data['id'], false, "Indicator title missing");
         }
 
+        if (!isset($data['category'])) {
+            return $this->httpService->response($data['id'], false, "Select a category");
+        }
+
         $row = new Indicator();
         if ($this->isEdit($request)) {
             $row = $this->em->getRepository(Indicator::class)->find($data['id']);
@@ -137,6 +163,9 @@ class IndicatorController extends CrudController
 
         $tags = isset($data['tags']) && !is_array($data['tags']) ? explode(',', $data['tags']) : [];
         $row->setTags($tags);
+
+        $category = $this->em->getRepository(Category::class)->find($data['category']);
+        $row->setCategory($category);
 
         $this->em->persist($row);
         $this->em->flush();

@@ -12,6 +12,19 @@
     >
       <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
       <el-switch v-else-if="column.type === 'boolean'" v-model="form[column.field]" />
+      <el-select
+          v-else-if="column.type === 'select'"
+          v-model="form[column.field]"
+          placeholder="- select an option -"
+          size="large"
+      >
+        <el-option
+          v-for="option in column.options"
+          :key="option"
+          :label="option.label"
+          :value="option.value"
+        />
+      </el-select>
       <el-input v-else v-model="form[column.field]" :placeholder="column.placeholder ?? ''" />
     </el-form-item>
 
