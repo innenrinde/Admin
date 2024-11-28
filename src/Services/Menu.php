@@ -82,7 +82,7 @@ class Menu
                 [
                     "title" => "Edit profile",
                     "icon" => "User",
-                    "route" => $this->router->generate("app_users"),
+                    "route" => $this->router->generate("app_account"),
                     "active" => $this->router->getContext()->getPathInfo() === "/account",
                     "confirm" => false,
                 ],

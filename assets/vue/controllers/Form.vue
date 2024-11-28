@@ -12,7 +12,7 @@
     >
       <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
       <el-switch v-else-if="column.type === 'boolean'" v-model="form[column.field]" />
-      <el-input v-else v-model="form[column.field]" />
+      <el-input v-else v-model="form[column.field]" :placeholder="column.placeholder ?? ''" />
     </el-form-item>
 
     <el-form-item :label="empty">
@@ -39,6 +39,10 @@ export default {
       type: Array,
       default: () => []
     },
+    values: {
+      type: Object,
+      default: () => {}
+    },
     url: {
       type: Object,
       default: () => {}
@@ -46,7 +50,7 @@ export default {
   },
   data() {
     return {
-      form: {},
+      form: this.values,
       empty: " ",
     };
   },

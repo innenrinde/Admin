@@ -14,19 +14,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends CrudController
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private EntityManagerInterface $em;
-
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private UserPasswordHasherInterface $userPasswordHasher;
-
-    /**
      * @var array
      */
-    private $columns = [
+    private array $columns = [
         [
             'title' => 'ID',
             'type' => 'number',
@@ -78,9 +68,7 @@ class UserController extends CrudController
         ],
     ];
 
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher) {
-        $this->em = $em;
-        $this->userPasswordHasher = $userPasswordHasher;
+    public function __construct(private readonly EntityManagerInterface $em, private readonly UserPasswordHasherInterface $userPasswordHasher) {
     }
 
     #[Route('/users', name: 'app_users')]

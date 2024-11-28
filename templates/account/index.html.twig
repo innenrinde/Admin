@@ -5,12 +5,12 @@
 {% block body %}
 
     <div class="form" {{ vue_component('Form', {
-        'title': 'Create user',
+        'title': 'Edit profile',
         'url': {
-            'put': path('app_users_edit'),
+            'put': path('app_account_edit'),
         },
         'columns': columns,
-        'values': {}
+        'values': values
     }) }} />
 
 {% endblock %}

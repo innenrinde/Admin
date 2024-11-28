@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\HttpService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,6 +36,7 @@ abstract class CrudController extends AbstractController
     /**
      * @param string $function_name
      * @param array $arguments
+     * @return JsonResponse
      */
     public function __call(string $function_name, array $arguments): JsonResponse
     {
@@ -42,39 +44,13 @@ abstract class CrudController extends AbstractController
 
         if ($function_name === "httpResponse") {
             if ($count === 1) {
-                return $this->httpResponseContent(...$arguments);
+                return HttpService::httpResponseContent(...$arguments);
             } else if ($count === 3 || $count === 4) {
-                return $this->httpResponseWithMessage(...$arguments);
+                return HttpService::httpResponseWithMessage(...$arguments);
             }
         }
 
         return new JsonResponse();
-    }
-
-    /**
-     * @param int $pk
-     * @param bool $isSuccess
-     * @param string $message
-     * @param array|null $content
-     * @return JsonResponse
-     */
-    private function httpResponseWithMessage(int $pk, bool $isSuccess, string $message, array $content = null): JsonResponse
-    {
-        return new JsonResponse([
-            'id' => $pk,
-            'success' => $isSuccess,
-            'message' => $message,
-            'content' => $content
-        ],
-            Response::HTTP_OK);
-    }
-
-    /**
-     * @param array $content
-     */
-    private function httpResponseContent(array $content): JsonResponse
-    {
-        return new JsonResponse([ 'content' => $content ], Response::HTTP_OK);
     }
 
     /**
@@ -92,6 +68,7 @@ abstract class CrudController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @return bool
      */
     protected function isEdit(Request $request): bool
@@ -100,6 +77,7 @@ abstract class CrudController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @return bool
      */
     protected function isCreate(Request $request): bool
