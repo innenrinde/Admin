@@ -168,6 +168,9 @@ class IndicatorController extends CrudController
         $row->setTags($tags);
 
         $category = $this->em->getRepository(Category::class)->find($data['category']);
+        if ($category) {
+            $data['category'] = $category->getTitle();
+        }
         $row->setCategory($category);
 
         $this->em->persist($row);

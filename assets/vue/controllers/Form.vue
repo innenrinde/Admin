@@ -96,12 +96,12 @@ export default {
 
       if (this.url.put) {
         axios
-            .put(this.url.put, values)
-            .then(response => {
-              HttpRequestService.parseResponse(response, () => {
-                console.log(response.data.content);
-              });
+          .put(this.url.put, values)
+          .then(response => {
+            HttpRequestService.parseResponse(response, () => {
+              console.log(response.data.content);
             });
+          });
       } else {
         this.$emit("save", values);
       }
