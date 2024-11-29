@@ -38,7 +38,8 @@ security:
     access_control:
         - { path: ^/users, roles: ROLE_ADMIN }
         - { path: ^/account, roles: ROLE_USER }
-        - { path: ^/tasks, roles: ROLE_USER }
+        - { path: ^/categories, roles: ROLE_ADMIN }
+        - { path: ^/indicators, roles: ROLE_USER }
 
 when@test:
     security:

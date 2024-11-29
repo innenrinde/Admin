@@ -131,6 +131,12 @@ export default {
 </script>
 
 <style scoped>
+.menu-panel {
+  --el-menu-base-level-padding: 5px;
+  --el-menu-item-height: 40px;
+  --el-menu-sub-item-height: 40px;
+}
+
 .menu-active {
   background-color: #ecf5ff;
 }

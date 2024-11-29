@@ -61,6 +61,7 @@ class UserController extends CrudController
             'title' => 'Last login date',
             'type' => 'datetime',
             'field' => 'lastLogged',
+            'hidden' => true
         ],
         [
             'title' => 'Is Admin',

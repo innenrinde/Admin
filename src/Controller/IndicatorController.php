@@ -44,16 +44,19 @@ class IndicatorController extends CrudController
                 'title' => 'Address',
                 'type' => 'string',
                 'field' => 'address',
+                'width' => 200,
             ],
             [
                 'title' => 'Transaction',
                 'type' => 'string',
                 'field' => 'transaction',
+                'width' => 150,
             ],
             [
                 'title' => 'IP',
                 'type' => 'string',
                 'field' => 'ip',
+                'width' => 100,
             ],
             [
                 'title' => 'Description',
@@ -62,7 +65,7 @@ class IndicatorController extends CrudController
                 'hidden' => true,
             ],
             [
-                'title' => 'tags',
+                'title' => 'Tags',
                 'type' => 'string',
                 'field' => 'tags',
                 'hidden' => true,

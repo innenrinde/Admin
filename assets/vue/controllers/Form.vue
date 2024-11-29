@@ -1,7 +1,7 @@
 <template>
   <el-form :model="form" label-width="auto">
 
-    <el-form-item :label="empty">
+    <el-form-item v-if="title" :label="empty">
       <h1>{{ title }}</h1>
     </el-form-item>
 
@@ -29,8 +29,18 @@
     </el-form-item>
 
     <el-form-item :label="empty">
-      <el-button type="primary" @click="confirmSave">
+      <el-button
+        type="primary"
+        @click="confirmSave"
+      >
         Save
+      </el-button>
+      <el-button
+        v-if="hasCloseButton"
+        type="secondary"
+        @click="confirmClose"
+      >
+        Close
       </el-button>
     </el-form-item>
   </el-form>
@@ -58,7 +68,11 @@ export default {
     },
     url: {
       type: Object,
-      default: () => {}
+      default: () => { return {}; }
+    },
+    hasCloseButton: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -80,14 +94,24 @@ export default {
         }
       });
 
-      axios
-        .put(this.url.put,  values)
-        .then(response => {
-          HttpRequestService.parseResponse(response, () => {
-            console.log(response.data.content);
-          });
-        });
+      if (this.url.put) {
+        axios
+            .put(this.url.put, values)
+            .then(response => {
+              HttpRequestService.parseResponse(response, () => {
+                console.log(response.data.content);
+              });
+            });
+      } else {
+        this.$emit("save", values);
+      }
     },
+    /**
+     * Close action
+     */
+    confirmClose() {
+       this.$emit("close");
+    }
   }
 };
 </script>

@@ -30,14 +30,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-else-if="column.type === 'number'"
+          v-else-if="column.type === 'number' && !column.hidden"
           :prop="column.field"
           :label="column.title"
           width="80"
           sortable
         />
         <el-table-column
-          v-else-if="column.type === 'datetime'"
+          v-else-if="column.type === 'datetime' && !column.hidden"
           :prop="column.field"
           :label="column.title"
           width="150"
@@ -92,39 +92,14 @@
     width="500"
     center
   >
-    <el-form :model="form" label-width="auto" style="max-width: 600px">
-      <el-form-item
-        v-for="column in columns.filter(item => !item.isPk)"
-        :key="column"
-        :label="column.title"
-      >
-        <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
-        <el-switch v-else-if="column.type === 'boolean'" v-model="form[column.field]" />
-        <el-select
-          v-else-if="column.type === 'select'"
-          v-model="form[column.field]"
-          placeholder="- select an option -"
-          size="large"
-        >
-          <el-option
-            v-for="option in column.options"
-            :key="option"
-            :label="option.label"
-            :value="option.value"
-          />
-        </el-select>
-        <el-input v-else v-model="form[column.field]" />
-      </el-form-item>
-    </el-form>
-
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="editDialogVisible = false">Close</el-button>
-        <el-button type="primary" @click="confirmEditRow">
-          Save
-        </el-button>
-      </div>
-    </template>
+    <Form
+      v-if="editDialogVisible"
+      :columns="columns"
+      :values="form"
+      :has-close-button="true"
+      @save="confirmEditRow"
+      @close="closeEditRow"
+    />
   </el-dialog>
 
 </template>
@@ -134,6 +109,7 @@ import axios from "axios";
 import { ElNotification } from 'element-plus';
 import { Delete, Edit } from '@element-plus/icons-vue';
 import { HttpRequestService } from "../services/HttpRequestService";
+import DateTimeTransformer from "../transformers/DateTimeTransformer";
 
 export default {
   name: "Table",
@@ -214,15 +190,7 @@ export default {
     /**
      * Perform edit
      */
-    confirmEditRow() {
-
-      let values = { ... this.form };
-      this.columns.forEach(column => {
-        if (column.type === "datetime") {
-          values[column.field] = this.dateFormatWS(values[column.field]);
-        }
-      });
-
+    confirmEditRow(values) {
       axios
         .post(this.url.post,  values)
         .then(response => {
@@ -265,6 +233,12 @@ export default {
       });
     },
     /**
+     * Close edit form
+     */
+    closeEditRow() {
+      this.editDialogVisible = false;
+    },
+    /**
      * Try to find the primary column for table
      * @returns {Object}
      */
@@ -297,15 +271,7 @@ export default {
      * @returns {String}
      */
     dateFormat(value) {
-      return value ? this.$moment(value).format("DD/MM/YYYY HH:mm:ss") : "-";
-    },
-    /**
-     * Send date to ws
-     * @param {Date} value
-     * @returns {String}
-     */
-    dateFormatWS(value) {
-      return value ? this.$moment(value).format("YYYY-MM-DD HH:mm:ss") : "";
+      return value ? DateTimeTransformer.transform(value) : "-";
     },
     /**
      * Local filtration by bool column
