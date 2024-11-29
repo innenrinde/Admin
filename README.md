@@ -1,0 +1,1 @@
+https://admin.powerfullapp.ro/
