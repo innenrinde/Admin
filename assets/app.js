@@ -15,6 +15,16 @@ import 'element-plus/dist/index.css';
 import moment from "moment";
 import Form from './vue/controllers/Form.vue';
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+/* import specific icons */
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
 // assets/app.js
@@ -33,6 +43,13 @@ document.addEventListener('vue:before-mount', (event) => {
     }
 
     app.component("Form", Form);
+
+    /* add font awesome icons to the library */
+    library.add(faTrashCan);
+    library.add(faXmark);
+    library.add(faPenToSquare);
+
+    app.component('font-awesome-icon', FontAwesomeIcon);
 
     app.config.globalProperties.$moment = moment;
 });

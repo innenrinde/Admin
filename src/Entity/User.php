@@ -59,8 +59,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime', nullable: true)]
     private \DateTime|null $lastLogged = null;
 
-    #[ORM\Column]
-    private ?bool $zkp = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $zkp = false;
 
     public function __construct()
     {

@@ -23,12 +23,13 @@ class CategoryController extends CrudController
             'type' => 'number',
             'field' => 'id',
             'isPk' => true,
-            'width' => 200,
+            'width' => 'w1',
         ],
         [
             'title' => 'Title',
             'type' => 'string',
             'field' => 'title',
+            'width' => 'w100',
         ],
     ];
 
