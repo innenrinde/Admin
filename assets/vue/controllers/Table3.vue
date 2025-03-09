@@ -37,14 +37,14 @@
           class="header"
         >
           <div
-            v-for="column in columns"
+            v-for="column in visibleColumns"
             :key="column"
-            :class="column.width"
+            :class="{ [column.width]: column.width, 'align-center': column.type === 'boolean'}"
           >
             {{ column.title }}
           </div>
 	        <div class="wp80">
-		        Operations
+						<!-- Operations-->
 	        </div>
         </div>
 
@@ -54,10 +54,20 @@
           class="content"
         >
           <div
-            v-for="column in columns"
+            v-for="column in visibleColumns"
             :key="column"
           >
-            {{ row[column.field] }}
+	          <span
+		          v-if="column.type === 'boolean'"
+	            class="align-center"
+	          >
+							<font-awesome-icon :icon="['far', 'circle-check']" v-if="row[column.field]" />
+							<span v-else>-</span>
+	          </span>
+	          <span v-else-if="column.type === 'datetime'">
+		          {{ dateFormat(row[column.field]) }}
+	          </span>
+	          <span v-else>{{ row[column.field] }}</span>
           </div>
 
 	        <div class="actions">
@@ -123,6 +133,7 @@
 import { defineProps, defineModel, toRefs, reactive, ref, watch, onMounted } from "vue";
 import { kNNSearch } from "../lib/kNNSearch";
 import { HttpRequestService } from "../services/HttpRequestService";
+import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import axios from "axios";
 
 const props = defineProps({
@@ -135,6 +146,8 @@ const query = defineModel("vector");
 const kNumber = defineModel({ default: 100 });
 
 const { columns, url } = toRefs(props);
+
+const visibleColumns = columns.value.filter(column => !column.hidden);
 
 let rows = [];
 let localRows = reactive([]);
@@ -267,14 +280,14 @@ kNN.setK(kNumber.value);
  */
 const getTableDataList = () => {
   axios
-      .get(url.value.get)
-      .then(response => {
-        if (!response.data.content) {
-          throw new Error(`${url.value.list} response => .data.content not found`);
-        }
-        rows = response.data.content;
-				rows.forEach(row => localRows.push(row));
-      });
+    .get(url.value.get)
+    .then(response => {
+      if (!response.data.content) {
+        throw new Error(`${url.value.list} response => .data.content not found`);
+      }
+      rows = response.data.content;
+			rows.forEach(row => localRows.push(row));
+    });
 }
 
 /**
@@ -324,6 +337,15 @@ let clickApply = () => {
   applyResults();
 }
 
+/**
+ * Custom date time format
+ * @param {String} value
+ * @returns {String}
+ */
+const dateFormat = (value) => {
+	return value ? DateTimeTransformer.transform(value) : "-";
+};
+
 </script>
 
 <style lang="scss">
@@ -336,7 +358,7 @@ let clickApply = () => {
 }
 
 .header-bar {
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -429,9 +451,14 @@ let clickApply = () => {
 	    }
 
 	    .wp80 {
-		    width: 80px;
+		    width: 10px;
 	    }
     }
+
+	  .align-center {
+		  display: block;
+		  text-align: center;
+	  }
 
     .content {
       display: table-row;
@@ -471,8 +498,8 @@ let clickApply = () => {
 		    }
 
 		    span.red {
-			    border: solid 1px #ff3737;
-			    background-color: #fdc7c7;
+			    border: solid 1px #f35959;
+			    background-color: #ffa1a1;
 		    }
 
 		    span.blue {
