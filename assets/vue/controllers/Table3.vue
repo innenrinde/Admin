@@ -355,6 +355,8 @@ const dateFormat = (value) => {
   display: flex;
   flex-direction: column;
 	background-color: #fff;
+	background-image: url("/assets/img/bk.gif");
+	background-repeat: repeat;
 }
 
 .header-bar {

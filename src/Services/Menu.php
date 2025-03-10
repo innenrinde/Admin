@@ -34,18 +34,18 @@ class Menu
         if ($this->security->getUser()->isAdmin()) {
             $menusList[] = [
                 "title" => "Categories",
-                "icon" => "Notebook",
+                "icon" => "list",
                 "children" => [
                     [
                         "title" => "Categories list",
-                        "icon" => "Memo",
+                        "icon" => "list",
                         "route" => $this->router->generate("app_categories"),
                         "active" => $this->router->getContext()->getPathInfo() === "/categories",
                         "confirm" => false,
                     ],
                     [
                         "title" => "Add category",
-                        "icon" => "CirclePlus",
+                        "icon" => "plus",
                         "route" => $this->router->generate("app_categories_add"),
                         "active" => $this->router->getContext()->getPathInfo() === "/categories/add",
                         "confirm" => false,
@@ -60,14 +60,14 @@ class Menu
             "children" => [
                 [
                     "title" => "Indicators list",
-                    "icon" => "DataLine",
+                    "icon" => "chart-column",
                     "route" => $this->router->generate("app_indicators"),
                     "active" => $this->router->getContext()->getPathInfo() === "/indicators",
                     "confirm" => false,
                 ],
                 [
                     "title" => "Add indicator",
-                    "icon" => "CirclePlus",
+                    "icon" => "plus",
                     "route" => $this->router->generate("app_indicators_add"),
                     "active" => $this->router->getContext()->getPathInfo() === "/indicators/add",
                     "confirm" => false,
@@ -82,14 +82,14 @@ class Menu
                 "children" => [
                     [
                         "title" => "Users list",
-                        "icon" => "Memo",
+                        "icon" => "users",
                         "route" => $this->router->generate("app_users"),
                         "active" => $this->router->getContext()->getPathInfo() === "/users",
                         "confirm" => false,
                     ],
                     [
                         "title" => "Add user",
-                        "icon" => "CirclePlus",
+                        "icon" => "plus",
                         "route" => $this->router->generate("app_users_add"),
                         "active" => $this->router->getContext()->getPathInfo() === "/users/add",
                         "confirm" => false,
@@ -104,14 +104,14 @@ class Menu
             "children" => [
                 [
                     "title" => "Edit profile",
-                    "icon" => "User",
+                    "icon" => "user",
                     "route" => $this->router->generate("app_account"),
                     "active" => $this->router->getContext()->getPathInfo() === "/account",
                     "confirm" => false,
                 ],
                 [
                     "title" => "Sign out",
-                    "icon" => "SwitchButton",
+                    "icon" => "power-off",
                     "route" => $this->router->generate("app_logout"),
                     "confirm" => true,
                 ]

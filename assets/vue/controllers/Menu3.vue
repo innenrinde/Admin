@@ -1,7 +1,8 @@
 <template>
 	<div class="menu-panel">
 		<div class="icon-panel">
-			<el-icon><Switch /></el-icon>{{ title }}
+			<font-awesome-icon :icon="['fas', 'repeat']" />
+			{{ title }}
 		</div>
 		<div class="menu-content">
 			<div
@@ -9,7 +10,7 @@
 				:key="item"
 			>
 				<div
-					class="main-item"
+					class="level1-item-title"
 					@click="expandItem(item, index)"
 				>
 					<div class="icon">
@@ -17,17 +18,28 @@
 					</div>
 					{{ item.title }}
 				</div>
+
 				<div
-					v-for="child of item.children"
-					:key="child"
-					@click="goToRoute(child)"
-					class="main-item second-item"
-					:class="{ 'active-item': child.active, 'hide-item': !item.show, 'display-item': item.show }"
+					class="children"
+					:class="{ 'hide-item': !item.show, 'display-item': item.show }"
 				>
-					<el-icon>
-						<component :is="child.icon" />
-					</el-icon>
-					{{ child.title }}
+					<div
+						v-for="child of item.children"
+						:key="child"
+						@click="goToRoute(child)"
+						class="level2-item-title"
+						:class="{ 'active-item': child.active }"
+					>
+						<div class="icon">
+							<font-awesome-icon :icon="['fas', child.icon]" />
+						</div>
+						<div class="label">
+							{{ child.title }}
+						</div>
+						<div class="icon-right">
+							<font-awesome-icon :icon="['fas', 'chevron-right']" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -155,7 +167,7 @@ export default {
   height: 100%;
 	padding: 5px;
 
-	.main-item {
+	.level1-item-title {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -175,13 +187,47 @@ export default {
 		}
 	}
 
-	.second-item {
-		padding-left: 30px;
-		font-weight: normal;
-	}
-
-	.active-item {
+	.children {
 		background-color: #0076ae;
+		border-radius: 5px;
+		padding: 5px;
+		margin-bottom: 10px;
+
+		.level2-item-title {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding: 10px 10px 10px 25px;
+			margin-bottom: 1px;
+			border-radius: 5px;
+			cursor: pointer;
+
+			&:hover {
+				background-color: #036593;
+			}
+
+			.icon {
+				width: 20px;
+				align-content: center;
+				text-align: center;
+			}
+
+			.label {
+				width: 100%;
+			}
+
+			.icon-right {
+				display: none;
+			}
+		}
+
+		.active-item {
+			background-color: #036593;
+
+			.icon-right {
+				display: inherit;
+			}
+		}
 	}
 
 	.hide-item {
