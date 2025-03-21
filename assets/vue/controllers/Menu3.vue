@@ -11,6 +11,7 @@
 			>
 				<div
 					class="level1-item-title"
+					:class="{ 'level1-item-title-active': item.show }"
 					@click="expandItem(item, index)"
 				>
 					<div class="icon">
@@ -175,7 +176,7 @@ export default {
 		background-color: #036593;
 		border-radius: 5px;
 		cursor: pointer;
-		margin-bottom: 1px;
+		margin-top: 1px;
 		font-weight: bold;
 
 		&:hover {
@@ -187,9 +188,14 @@ export default {
 		}
 	}
 
+	.level1-item-title-active {
+		background-color: #0076ae;
+		border-radius: 5px 5px 0 0;
+	}
+
 	.children {
 		background-color: #0076ae;
-		border-radius: 5px;
+		border-radius: 0 0 5px 5px;
 		padding: 5px;
 		margin-bottom: 10px;
 
