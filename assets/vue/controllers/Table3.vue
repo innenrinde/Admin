@@ -411,11 +411,11 @@ const dateFormat = (value) => {
   overflow: auto;
   margin: 5px 10px;
   border-bottom: solid 1px #dadada;
+	box-shadow: #cdcdcd 1px 1px 3px;
 
   .table {
     display: table;
     text-align: left;
-    box-shadow: #cdcdcd 0 0 3px;
     border: solid 1px #dadada;
     border-top: none;
     border-bottom: none;
@@ -432,7 +432,7 @@ const dateFormat = (value) => {
         border-top: solid 1px #dadada;
         border-bottom: solid 1px #dadada;
         font-weight: 600;
-        color: #35a5da;
+        color: #036593;
         padding: 7px;
       }
 
