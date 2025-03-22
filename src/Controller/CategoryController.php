@@ -2,18 +2,18 @@
 
 namespace App\Controller;
 
+use App\Builder\TableBuilder;
 use App\Entity\Category;
 use App\Services\HttpService;
-use App\Services\TableBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Builder\Constraints\NotBlank;
 
 class CategoryController extends CrudController
 {
@@ -27,7 +27,6 @@ class CategoryController extends CrudController
             'field' => 'id',
             'isPk' => true,
             'width' => 'w1',
-
         ],
         [
             'title' => 'Title',
@@ -35,15 +34,15 @@ class CategoryController extends CrudController
             'field' => 'title',
             'width' => 'w100',
             'constraints' => [
-                NotBlank::class => 'Please enter a title',
+                NotBlank::class => 'Please enter a category title',
             ]
         ],
     ];
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private HttpService $httpService,
-        private TableBuilder $tableBuilder
+        private readonly HttpService $httpService,
+        private readonly TableBuilder $tableBuilder
     ) {
     }
 
@@ -95,11 +94,16 @@ class CategoryController extends CrudController
     {
         $data = $request->toArray();
 
-        $entity = $this->tableBuilder->create(Category::class, $this->columns, $data);
-        $this->em->persist($entity);
-        $this->em->flush();
+        try {
+            $entity = $this->tableBuilder->create(Category::class, $this->columns, $data);
+            $this->em->persist($entity);
+            $this->em->flush();
 
-        return $this->httpService->response($entity->getId(), true, "Category successfully created", $data);
+            return $this->httpService->response($entity->getId(), true, "Category successfully created", $data);
+
+        } catch (Exception $e) {
+            return $this->httpService->response(0, false, $e->getMessage());
+        }
     }
 
     /**
@@ -113,22 +117,16 @@ class CategoryController extends CrudController
     {
         $data = $request->toArray();
 
-        if (!$data['id']) {
-            throw new \Error("payload mismatch");
+        try {
+            $entity = $this->tableBuilder->save(Category::class, $this->columns, $data);
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            return $this->httpService->response($data['id'], true, "Category successfully edited", $data);
+
+        } catch (Exception $e) {
+            return $this->httpService->response(0, false, $e->getMessage());
         }
-
-        $entity = $this->em->getRepository(Category::class)->find($data['id']);
-
-        if (!isset($data['title'])) {
-            return $this->httpService->response($data['id'], false, "Category title missing");
-        }
-
-        $entity->setTitle($data['title']);
-
-        $this->em->persist($entity);
-        $this->em->flush();
-
-        return $this->httpService->response($data['id'], true, "Category successfully edited", $data);
     }
 
     /**
