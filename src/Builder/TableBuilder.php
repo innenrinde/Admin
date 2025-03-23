@@ -108,16 +108,43 @@ readonly class TableBuilder
                 continue;
             }
 
-            $value = $data[$column['field']] ?? "";
-
-            if ($column['type'] === ChoiceType::class && isset($column['entity'])) {
-                $value = $this->em->getRepository($column['entity'])->find($value);
-            } elseif ($column['type'] == CollectionType::class) {
-                $value = is_array($value) ? $value : explode(',', $value);
-            }
+            $value = match ($column['type']) {
+                ChoiceType::class => $this->choiceType($column, $data),
+                CollectionType::class => $this->collectionType($column, $data),
+                default => $data[$column['field']] ?? "",
+            };
 
             $entity->{'set'.ucFirst($column['field'])}($value);
 
         }
+    }
+
+    /**
+     * We suppose that a column of choice type is a reference to an entity
+     * So we will try to find an existing entity
+     * @param array $column
+     * @param array $data
+     * @return object|null
+     */
+    private function choiceType(array $column, array $data): object|null
+    {
+        if (isset($column['entity'])) {
+            return $this->em->getRepository($column['entity'])->find($data[$column['field']] ?? "");
+        }
+
+        return null;
+    }
+
+    /**
+     * Value for a column 'collection' is an array
+     * @param array $column
+     * @param array $data
+     * @return array
+     */
+    private function collectionType(array $column, array $data): array
+    {
+        $value = $data[$column['field']] ?? "";
+
+        return is_array($value) ? $value : explode(',', $value);
     }
 }
