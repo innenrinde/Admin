@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
+use App\Builder\TableBuilder;
 use App\Entity\Category;
 use App\Entity\Indicator;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,53 +26,55 @@ class IndicatorController extends CrudController
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly HttpService $httpService
+        private readonly HttpService $httpService,
+        private readonly TableBuilder $tableBuilder
     ) {
         $this->columns = [
             [
                 'title' => 'ID',
-                'type' => 'number',
+                'type' => NumberType::class,
                 'field' => 'id',
                 'isPk' => true,
             ],
             [
                 'title' => 'Category',
-                'type' => 'select',
+                'type' => ChoiceType::class,
+                'entity' => Category::class,
                 'field' => 'category',
                 'options' => $this->getCategoriesList(),
             ],
             [
                 'title' => 'Title',
-                'type' => 'string',
+                'type' => TextType::class,
                 'field' => 'title',
             ],
             [
                 'title' => 'Address',
-                'type' => 'string',
+                'type' => TextType::class,
                 'field' => 'address',
                 'width' => 200,
             ],
             [
                 'title' => 'Transaction',
-                'type' => 'string',
+                'type' => TextType::class,
                 'field' => 'transaction',
                 'width' => 150,
             ],
             [
                 'title' => 'IP',
-                'type' => 'string',
+                'type' => TextType::class,
                 'field' => 'ip',
                 'width' => 100,
             ],
             [
                 'title' => 'Description',
-                'type' => 'string',
+                'type' => TextType::class,
                 'field' => 'description',
                 'hidden' => true,
             ],
             [
                 'title' => 'Tags',
-                'type' => 'string',
+                'type' => CollectionType::class,
                 'field' => 'tags',
                 'hidden' => true,
             ],
@@ -90,7 +98,7 @@ class IndicatorController extends CrudController
     public function index(): Response
     {
         return $this->render('indicator/index.html.twig', [
-            'columns' => $this->columns
+            'columns' => $this->tableBuilder->getColumns($this->columns),
         ]);
     }
 
@@ -125,8 +133,31 @@ class IndicatorController extends CrudController
     public function addRow(Request $request): Response
     {
         return $this->render('indicator/add.html.twig', [
-            'columns' => $this->columns,
+            'columns' => $this->tableBuilder->getColumns($this->columns),
         ]);
+    }
+
+    /**
+     * Edit an indicator
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    #[Route('/indicators/create', name: 'app_indicators_create', methods: ['PUT'])]
+    public function createRow(Request $request): JsonResponse
+    {
+        $data = $request->toArray();
+
+        try {
+            $entity = $this->tableBuilder->create(Indicator::class, $this->columns, $data);
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            return $this->httpService->response($entity->getId(), true, "Indicator successfully created", $data);
+
+        } catch (Exception $e) {
+            return $this->httpService->response(0, false, $e->getMessage());
+        }
     }
 
     /**
@@ -134,51 +165,21 @@ class IndicatorController extends CrudController
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/indicators/edit', name: 'app_indicators_edit')]
+    #[Route('/indicators/edit', name: 'app_indicators_edit', methods: ['POST'])]
     public function saveRow(Request $request): JsonResponse
     {
         $data = $request->toArray();
 
-        if ($this->isCreate($request)) {
-            $data['id'] = 0;
-        } else if (!$data['id']) {
-            throw new \Error("payload mismatch");
+        try {
+            $entity = $this->tableBuilder->save(Indicator::class, $this->columns, $data);
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            return $this->httpService->response($data['id'], true, "Indicator successfully edited", $data);
+
+        } catch (Exception $e) {
+            return $this->httpService->response(0, false, $e->getMessage());
         }
-
-        if (!isset($data['title'])) {
-            return $this->httpService->response($data['id'], false, "Indicator title missing");
-        }
-
-        if (!isset($data['category'])) {
-            return $this->httpService->response($data['id'], false, "Select a category");
-        }
-
-        $row = new Indicator();
-        if ($this->isEdit($request)) {
-            $row = $this->em->getRepository(Indicator::class)->find($data['id']);
-        }
-
-        $row->setTitle($data['title'] ?? "");
-        $row->setAddress($data['address'] ?? "");
-        $row->setTransaction($data['transaction'] ?? "");
-        $row->setIp($data['ip'] ?? "");
-        $row->setDescription($data['description'] ?? "");
-
-        $tags = isset($data['tags']) && !is_array($data['tags']) ? explode(',', $data['tags']) : [];
-        $row->setTags($tags);
-
-        $category = $this->em->getRepository(Category::class)->find($data['category']);
-        if ($category) {
-            $data['category'] = $category->getTitle();
-        }
-        $row->setCategory($category);
-
-        $this->em->persist($row);
-        $this->em->flush();
-
-        $message = $this->isEdit($request) ? "Indicator successfully edited" : "Indicator successfully created";
-
-        return $this->httpService->response($data['id'], true, $message, $data);
     }
 
     /**

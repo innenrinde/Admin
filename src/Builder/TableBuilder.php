@@ -3,6 +3,8 @@
 namespace App\Builder;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 readonly class TableBuilder
 {
@@ -102,9 +104,20 @@ readonly class TableBuilder
     private function fillData(object $entity, array $columns, array $data): void
     {
         foreach ($columns as $column) {
-            if (!isset($column['isPk'])) {
-                $entity->{'set'.ucFirst($column['field'])}($data[$column['field']]);
+            if (isset($column['isPk'])) {
+                continue;
             }
+
+            $value = $data[$column['field']] ?? "";
+
+            if ($column['type'] === ChoiceType::class && isset($column['entity'])) {
+                $value = $this->em->getRepository($column['entity'])->find($value);
+            } elseif ($column['type'] == CollectionType::class) {
+                $value = is_array($value) ? $value : explode(',', $value);
+            }
+
+            $entity->{'set'.ucFirst($column['field'])}($value);
+
         }
     }
 }

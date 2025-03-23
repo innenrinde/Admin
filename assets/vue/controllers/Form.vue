@@ -13,7 +13,7 @@
       <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
       <el-switch v-else-if="column.type === 'boolean'" v-model="form[column.field]" />
       <el-select
-          v-else-if="column.type === 'select'"
+          v-else-if="column.type === 'choice'"
           v-model="form[column.field]"
           placeholder="- select an option -"
           size="large"
