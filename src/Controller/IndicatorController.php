@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Builder\Constraints\IpFormat;
+use App\Builder\Constraints\NotBlank;
 use App\Builder\TableBuilder;
 use App\Entity\Category;
 use App\Entity\Indicator;
@@ -42,11 +44,17 @@ class IndicatorController extends CrudController
                 'entity' => Category::class,
                 'field' => 'category',
                 'options' => $this->getCategoriesList(),
+                'constraints' => [
+                    NotBlank::class => 'Please select a category',
+                ]
             ],
             [
                 'title' => 'Title',
                 'type' => TextType::class,
                 'field' => 'title',
+                'constraints' => [
+                    NotBlank::class => 'Please enter an indicator title',
+                ]
             ],
             [
                 'title' => 'Address',
@@ -65,6 +73,9 @@ class IndicatorController extends CrudController
                 'type' => TextType::class,
                 'field' => 'ip',
                 'width' => 100,
+                'constraints' => [
+                    IpFormat::class => 'Please enter a valid IP address',
+                ]
             ],
             [
                 'title' => 'Description',
