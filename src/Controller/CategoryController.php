@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Builder\Constraints\NullForCreation;
 use App\Builder\TableBuilder;
 use App\Entity\Category;
 use App\Services\HttpService;
@@ -27,6 +28,9 @@ class CategoryController extends CrudController
             'field' => 'id',
             'isPk' => true,
             'width' => 'w1',
+            'constraints' => [
+                NullForCreation::class => 'No id found',
+            ]
         ],
         [
             'title' => 'Title',
@@ -79,7 +83,7 @@ class CategoryController extends CrudController
     public function addRow(Request $request): Response
     {
         return $this->render('category/add.html.twig', [
-            'columns' => $this->columns,
+            'columns' => $this->tableBuilder->getColumns($this->columns),
         ]);
     }
 
@@ -139,11 +143,7 @@ class CategoryController extends CrudController
     {
         $id = (int)$request->getContent(false);
 
-        /**
-         * @var Category $entity
-         */
         $entity = $this->em->getRepository(Category::class)->find($id);
-
         $entity->setRemoved(true);
         $this->em->persist($entity);
         $this->em->flush();

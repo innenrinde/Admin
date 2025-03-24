@@ -197,9 +197,6 @@ class UserController extends CrudController
     {
         $userId = (int)$request->getContent(false);
 
-        /**
-         * @var User $user
-         */
         $user = $this->em->getRepository(User::class)->find($userId);
 
         if ($user->isAdmin()) {

@@ -5,7 +5,7 @@ namespace App\Builder\Constraints;
 /**
  * Check if a value is empty or not
  */
-class NotBlank implements ConstraintInterface
+class NullForCreation implements ConstraintInterface
 {
     /**
      * @param array $container
@@ -15,6 +15,10 @@ class NotBlank implements ConstraintInterface
      */
     public function isValid(array $container, string $field, bool $isCreate = true): bool
     {
-        return isset($container[$field]) && $container[$field];
+        if (!$isCreate) {
+            return isset($container[$field]) && $container[$field];
+        }
+
+        return true;
     }
 }

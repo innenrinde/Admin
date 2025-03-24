@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Builder\Constraints\IpFormat;
 use App\Builder\Constraints\NotBlank;
+use App\Builder\Constraints\NullForCreation;
 use App\Builder\TableBuilder;
 use App\Entity\Category;
 use App\Entity\Indicator;
@@ -37,6 +38,9 @@ class IndicatorController extends CrudController
                 'type' => NumberType::class,
                 'field' => 'id',
                 'isPk' => true,
+                'constraints' => [
+                    NullForCreation::class => 'No id found',
+                ]
             ],
             [
                 'title' => 'Category',
@@ -204,7 +208,6 @@ class IndicatorController extends CrudController
         $id = (int)$request->getContent(false);
 
         $row = $this->em->getRepository(Indicator::class)->find($id);
-
         $row->setRemoved(true);
         $this->em->persist($row);
         $this->em->flush();

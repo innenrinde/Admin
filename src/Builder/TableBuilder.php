@@ -54,7 +54,7 @@ readonly class TableBuilder
      */
     public function save(string $type, array $columns, array $data): object|null
     {
-        $this->validateColumns($columns, $data);
+        $this->validateColumns($columns, $data, false);
 
         $entity = $this->em->getRepository($type)->find($data['id']);
         $this->fillData($entity, $columns, $data);
@@ -66,14 +66,15 @@ readonly class TableBuilder
      * Validate all columns by defined constraints
      * @param array $columns
      * @param array $data
+     * @param bool $isCreate
      * @return void
      * @throws \Exception
      */
-    private function validateColumns(array $columns, array $data): void
+    private function validateColumns(array $columns, array $data, bool $isCreate = true): void
     {
         foreach ($columns as $column) {
             if (isset($column['constraints'])) {
-                $this->validateColumn($column, $data);
+                $this->validateColumn($column, $data, $isCreate);
             }
         }
     }
@@ -82,13 +83,14 @@ readonly class TableBuilder
      * Validate a column by defined constraints
      * @param array $column
      * @param array $data
+     * @param bool $isCreate
      * @return void
      * @throws \Exception
      */
-    private function validateColumn(array $column, array $data): void
+    private function validateColumn(array $column, array $data, bool $isCreate): void
     {
         foreach ($column['constraints'] as $constraint => $message) {
-            if (!(new $constraint())->isValid($data, $column['field'])) {
+            if (!(new $constraint())->isValid($data, $column['field'], $isCreate)) {
                 throw new \Exception($message);
             }
         }
