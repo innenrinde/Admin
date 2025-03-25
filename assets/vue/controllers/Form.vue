@@ -11,7 +11,7 @@
       :label="column.title"
     >
       <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
-      <el-switch v-else-if="column.type === 'boolean'" v-model="form[column.field]" />
+      <el-switch v-else-if="column.type === 'checkbox'" v-model="form[column.field]" />
       <el-select
           v-else-if="column.type === 'choice'"
           v-model="form[column.field]"

@@ -58,7 +58,7 @@
             :key="column"
           >
 	          <span
-		          v-if="column.type === 'boolean'"
+		          v-if="column.type === 'checkbox'"
 	            class="align-center"
 	          >
 							<font-awesome-icon :icon="['far', 'circle-check']" v-if="row[column.field]" />

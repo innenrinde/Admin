@@ -161,6 +161,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * TODO: use setRoles in the future
+     * @param string $value
+     * @return $this
+     */
+    public function setIsAdmin(string $value): static
+    {
+        return $this;
+    }
+
+    /**
      * @param array $roles
      * @return User
      */
@@ -211,7 +221,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @param bool $isVerified
      * @return $this
      */
-    public function setVerified(bool $isVerified): static
+    public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
 

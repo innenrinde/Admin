@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Builder\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,57 +25,57 @@ class UserController extends CrudController
     private array $columns = [
         [
             'title' => 'ID',
-            'type' => 'number',
+            'type' => NumberType::class,
             'field' => 'id',
             'isPk' => true,
         ],
         [
             'title' => 'Name',
-            'type' => 'string',
+            'type' => TextType::class,
             'field' => 'name',
         ],
         [
             'title' => 'Surname',
-            'type' => 'string',
+            'type' => TextType::class,
             'field' => 'surname',
         ],
         [
             'title' => 'Email',
-            'type' => 'string',
+            'type' => TextType::class,
             'field' => 'email',
             'width' => 200,
         ],
         [
             'title' => 'Password',
-            'type' => 'string',
+            'type' => TextType::class,
             'field' => 'password',
             'width' => 200,
             'hidden' => true
         ],
         [
             'title' => 'Is Active',
-            'type' => 'boolean',
+            'type' => CheckboxType::class,
             'field' => 'isActive',
         ],
         [
             'title' => 'Is Verified',
-            'type' => 'boolean',
+            'type' => CheckboxType::class,
             'field' => 'isVerified',
         ],
         [
             'title' => 'Last login date',
-            'type' => 'datetime',
+            'type' => DateTimeType::class,
             'field' => 'lastLogged',
             'hidden' => true
         ],
         [
             'title' => 'Is Admin',
-            'type' => 'boolean',
+            'type' => CheckboxType::class,
             'field' => 'isAdmin',
         ],
         [
             'title' => 'ZKP',
-            'type' => 'boolean',
+            'type' => CheckboxType::class,
             'field' => 'zkp',
             'hidden' => true
         ],
@@ -79,7 +84,8 @@ class UserController extends CrudController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly HttpService $httpService
+        private readonly HttpService $httpService,
+        private readonly TableBuilder $tableBuilder
     ) {
     }
 
@@ -87,7 +93,7 @@ class UserController extends CrudController
     public function index(): Response
     {
         return $this->render('user/index.html.twig', [
-            'columns' => $this->columns,
+            'columns' => $this->tableBuilder->getColumns($this->columns),
         ]);
     }
 
@@ -124,8 +130,31 @@ class UserController extends CrudController
     public function addRow(Request $request): Response
     {
         return $this->render('user/add.html.twig', [
-            'columns' => $this->columns,
+            'columns' => $this->tableBuilder->getColumns($this->columns),
         ]);
+    }
+
+    /**
+     * Create an user
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    #[Route('/user/create', name: 'app_users_create', methods: ['PUT'])]
+    public function createRow(Request $request): JsonResponse
+    {
+        $data = $request->toArray();
+
+        try {
+            $entity = $this->tableBuilder->create(User::class, $this->columns, $data);
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            return $this->httpService->response($entity->getId(), true, "User successfully created", $data);
+
+        } catch (Exception $e) {
+            return $this->httpService->response(0, false, $e->getMessage());
+        }
     }
 
     /**

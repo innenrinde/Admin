@@ -88,7 +88,7 @@ class CategoryController extends CrudController
     }
 
     /**
-     * Edit a category
+     * Create a category
      * @param Request $request
      * @return JsonResponse
      * @throws Exception

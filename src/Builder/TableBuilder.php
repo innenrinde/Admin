@@ -5,6 +5,7 @@ namespace App\Builder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 readonly class TableBuilder
 {
@@ -113,10 +114,11 @@ readonly class TableBuilder
             $value = match ($column['type']) {
                 ChoiceType::class => $this->choiceType($column, $data),
                 CollectionType::class => $this->collectionType($column, $data),
+                DateTimeType::class => $this->dateTimeType($column, $data),
                 default => $data[$column['field']] ?? "",
             };
 
-            $entity->{'set'.ucFirst($column['field'])}($value);
+            $entity->{'set' . ucFirst($column['field'])}($value);
 
         }
     }
@@ -148,5 +150,19 @@ readonly class TableBuilder
         $value = $data[$column['field']] ?? "";
 
         return is_array($value) ? $value : explode(',', $value);
+    }
+
+    /**
+     * Value for a column 'dateTime' is an object
+     * @param array $column
+     * @param array $data
+     * @return \DateTime
+     * @throws \DateMalformedStringException
+     */
+    private function dateTimeType(array $column, array $data): \DateTime
+    {
+        $value = $data[$column['field']] ?? "";
+
+        return new \DateTime($value);
     }
 }
