@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Builder\Constraints\EmailFormat;
+use App\Builder\Constraints\NullForCreation;
 use App\Builder\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
@@ -28,6 +30,9 @@ class UserController extends CrudController
             'type' => NumberType::class,
             'field' => 'id',
             'isPk' => true,
+            'constraints' => [
+                NullForCreation::class => 'No id found',
+            ]
         ],
         [
             'title' => 'Name',
@@ -44,6 +49,9 @@ class UserController extends CrudController
             'type' => TextType::class,
             'field' => 'email',
             'width' => 200,
+            'constraints' => [
+                EmailFormat::class => 'Invalid email address',
+            ]
         ],
         [
             'title' => 'Password',
