@@ -12,6 +12,7 @@ use Exception;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +56,7 @@ class UserController extends CrudController
         ],
         [
             'title' => 'Password',
-            'type' => TextType::class,
+            'type' => PasswordType::class,
             'field' => 'password',
             'width' => 200,
             'hidden' => true

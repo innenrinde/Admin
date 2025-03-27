@@ -6,11 +6,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 readonly class TableBuilder
 {
     public function __construct(
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private UserPasswordHasherInterface $userPasswordHasher
     ) {
     }
 
@@ -103,6 +107,7 @@ readonly class TableBuilder
      * @param array $columns
      * @param array $data
      * @return void
+     * @throws \DateMalformedStringException
      */
     private function fillData(object $entity, array $columns, array $data): void
     {
@@ -115,6 +120,7 @@ readonly class TableBuilder
                 ChoiceType::class => $this->choiceType($column, $data),
                 CollectionType::class => $this->collectionType($column, $data),
                 DateTimeType::class => $this->dateTimeType($column, $data),
+                PasswordType::class => $this->passwordType($column, $data, $entity),
                 default => $data[$column['field']] ?? "",
             };
 
@@ -164,5 +170,22 @@ readonly class TableBuilder
         $value = $data[$column['field']] ?? "";
 
         return new \DateTime($value);
+    }
+
+    /**
+     * Generate a password
+     * @param array $column
+     * @param array $data
+     * @param PasswordAuthenticatedUserInterface $user
+     * @return string
+     */
+    private function passwordType(array $column, array $data, PasswordAuthenticatedUserInterface $user): string
+    {
+        $plainPassword = $data[$column['field']] ?? null;
+        if ($plainPassword) {
+            return $this->userPasswordHasher->hashPassword($user, $plainPassword);
+        }
+
+        return "";
     }
 }
