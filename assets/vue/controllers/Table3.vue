@@ -355,8 +355,6 @@ const dateFormat = (value) => {
   display: flex;
   flex-direction: column;
 	background-color: #fff;
-	background-image: url("/assets/img/bk.gif");
-	background-repeat: repeat;
 }
 
 .header-bar {
@@ -409,9 +407,8 @@ const dateFormat = (value) => {
 .table-section {
   display: flex;
   overflow: auto;
-  margin: 5px 10px;
+  margin: 5px 10px 10px 10px;
   border-bottom: solid 1px #dadada;
-	box-shadow: #cdcdcd 1px 1px 3px;
 
   .table {
     display: table;

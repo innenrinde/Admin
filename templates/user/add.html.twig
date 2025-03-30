@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="form" {{ vue_component('Form', {
+    <div class="form-container" {{ vue_component('Form', {
         'title': 'Create user',
         'url': {
             'put': path('app_users_create'),
