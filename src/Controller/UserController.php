@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends CrudController
 {
@@ -59,7 +58,7 @@ class UserController extends CrudController
             'type' => PasswordType::class,
             'field' => 'password',
             'width' => 200,
-            'hidden' => true
+            'hidden' => true,
         ],
         [
             'title' => 'Is Active',
@@ -92,7 +91,6 @@ class UserController extends CrudController
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly HttpService $httpService,
         private readonly TableBuilder $tableBuilder
     ) {
@@ -177,52 +175,23 @@ class UserController extends CrudController
     {
         $data = $request->toArray();
 
-        if ($this->isCreate($request)) {
-            $data['id'] = 0;
-        } else if (!$data['id']) {
-            throw new \Error("payload mismatch");
+        try {
+            $entity = $this->tableBuilder->save(User::class, $this->columns, $data);
+
+            $this->em->getFilters()->disable('removedRow');
+            $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
+            if ($userCheck && $userCheck->getId() != $data['id']) {
+                return $this->httpService->response($data['id'], false, "User email already exists");
+            }
+
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            return $this->httpService->response($data['id'], true, "User successfully edited", $data);
+
+        } catch (Exception $e) {
+            return $this->httpService->response(0, false, $e->getMessage());
         }
-
-        if (!isset($data['email'])) {
-            return $this->httpService->response($data['id'], false, "User email missing");
-        }
-
-        if ($this->isCreate($request) && !isset($data['password'])) {
-            return $this->httpService->response($data['id'], false, "User password missing");
-        }
-
-        $this->em->getFilters()->disable('removedRow');
-        $userCheck = $this->em->getRepository(User::class)->findOneBy(["email" => $data['email']]);
-        if ($userCheck && $userCheck->getId() != $data['id']) {
-            return $this->httpService->response($data['id'], false, "User email already exists");
-        }
-
-        $user = new User();
-        if ($this->isEdit($request)) {
-            $user = $this->em->getRepository(User::class)->find($data['id']);
-        }
-
-        $user->setEmail($data['email']);
-        $user->setName($data['name']);
-        $user->setSurname($data['surname']);
-        $user->setVerified($data['isVerified'] ?? false);
-        $user->setIsActive($data['isActive'] ?? false);
-        $user->setZkp($data['zkp'] ?? false);
-        $user->setLastLogged(new \DateTime($data['lastLogged']));
-        $roles = ($data['isAdmin'] ?? false) ? [User::ROLE_ADMIN] : [User::ROLE_USER];
-        $user->setRoles($roles);
-
-        $plainPassword = $data['password'] ?? null;
-        if ($plainPassword) {
-            $user->setPassword($this->userPasswordHasher->hashPassword($user, $plainPassword));
-        }
-
-        $this->em->persist($user);
-        $this->em->flush();
-
-        $message = $this->isEdit($request) ? "User successfully edited" : "User successfully created";
-
-        return $this->httpService->response($data['id'], true, $message, $data);
     }
 
     /**

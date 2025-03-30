@@ -177,15 +177,15 @@ readonly class TableBuilder
      * @param array $column
      * @param array $data
      * @param PasswordAuthenticatedUserInterface $user
-     * @return string
+     * @return string|null
      */
-    private function passwordType(array $column, array $data, PasswordAuthenticatedUserInterface $user): string
+    private function passwordType(array $column, array $data, PasswordAuthenticatedUserInterface $user): ?string
     {
         $plainPassword = $data[$column['field']] ?? null;
         if ($plainPassword) {
             return $this->userPasswordHasher->hashPassword($user, $plainPassword);
         }
 
-        return "";
+        return null;
     }
 }
