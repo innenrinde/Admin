@@ -22,7 +22,21 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 /* import specific icons */
-import { faRepeat, faXmark, faChevronUp, faChevronDown, faChevronLeft, faChevronRight, faList, faPlus, faUser, faUsers, faChartColumn, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import {
+    faRepeat,
+    faXmark,
+    faChevronUp,
+    faChevronDown,
+    faMagnifyingGlass,
+    faChevronLeft,
+    faChevronRight,
+    faList,
+    faPlus,
+    faUser,
+    faUsers,
+    faChartColumn,
+    faPowerOff
+} from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan, faPenToSquare, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
@@ -60,6 +74,7 @@ document.addEventListener('vue:before-mount', (event) => {
     library.add(faUsers);
     library.add(faChartColumn);
     library.add(faPowerOff);
+    library.add(faMagnifyingGlass);
 
     app.component('font-awesome-icon', FontAwesomeIcon);
 

@@ -1,34 +1,53 @@
 <template>
   <div class="container-table">
+
+	  <panel
+		  v-show="searchFocus"
+	    @close="closeSearch"
+    >
+		  <template #content>
+			  <div class="header-search">
+				  <div>
+					  Search by
+					  <input
+						  ref="realQueryText"
+						  class="keywords"
+						  type="text"
+						  placeholder="type here a phrase and then Enter..."
+						  v-model="query"
+						  @keydown="onQueryEnter"
+					  />
+				  </div>
+				  <div>
+					  k =
+					  <input
+						  class="knn"
+						  type="text"
+						  placeholder="define k number"
+						  v-model="kNumber"
+						  @keydown="onKNumberEnter"
+					  />
+				  </div>
+				  <div>
+					  <input
+						  class="button"
+						  type="button"
+						  value="Apply"
+						  @click="clickApply"
+					  />
+				  </div>
+			  </div>
+		  </template>
+	  </panel>
+
     <div class="header-bar">
-      <div>
-        Search by
-        <input
-          class="keywords"
-          type="text"
-          placeholder="type here a phrase and then Enter..."
-          v-model="query"
-          @keydown="onQueryEnter"
-        />
-      </div>
-      <div>
-        k =
-        <input
-          class="knn"
-          type="text"
-          placeholder="define k number"
-          v-model="kNumber"
-          @keydown="onKNumberEnter"
-        />
-      </div>
-      <div>
-        <input
-          class="button"
-          type="button"
-          value="Apply"
-          @click="clickApply"
-        />
-      </div>
+			<input
+				v-show="!searchFocus"
+				type="text"
+				placeholder="Search..."
+				v-model="query"
+				@focus="openSearch"
+			/>
     </div>
 
     <div class="table-section">
@@ -39,7 +58,7 @@
           <div
             v-for="column in visibleColumns"
             :key="column"
-            :class="{ [column.width]: column.width, 'align-center': column.type === 'boolean'}"
+            :class="{ [column.width]: column.width, 'align-center': column.type === 'checkbox'}"
           >
             {{ column.title }}
           </div>
@@ -130,11 +149,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineModel, toRefs, reactive, ref, watch, onMounted } from "vue";
+import { defineProps, defineModel, toRefs, reactive, ref, useTemplateRef, onMounted } from "vue";
 import { kNNSearch } from "../lib/kNNSearch";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import axios from "axios";
+import Panel from "./Panel.vue";
 
 const props = defineProps({
   columns: Array,
@@ -158,9 +178,17 @@ let deleteDialogVisible = ref(false);
 let editForm = null;
 let editDialogVisible = ref(false);
 
-// watch(rows, async (data) => {
-//   localRows = reactive([...data]);
-// });
+let searchFocus = ref(false);
+const inputSearch = useTemplateRef("realQueryText");
+
+const openSearch = () => {
+	searchFocus.value = true;
+	inputSearch.value.focus();
+}
+
+const closeSearch = () => {
+	searchFocus.value = false;
+}
 
 /**
  * Detect pk for given list of columns
@@ -304,6 +332,7 @@ const applyResults = () => {
   let results = kNN.applySearch(rows, columns.value);
   localRows.splice(0);
   results.forEach(row => localRows.push(row));
+	searchFocus.value = false;
 }
 
 /**
@@ -358,19 +387,24 @@ const dateFormat = (value) => {
 }
 
 .header-bar {
-  padding: 20px 20px 10px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	padding: 10px 10px 0 10px;
+	display: flex;
+	justify-content: right;
+	align-items: flex-end;
 
-  > div {
-    margin: 0 5px 0 5px;
-  }
+	input {
+		padding: 5px;
+		border: solid 1px #dadada;
+	}
+}
+
+.header-search {
 
   input.keywords,
   input.knn,
   input.button {
     padding: 7px;
+	  margin-bottom: 10px;
     border: solid 1px #c3c3c3;
     border-radius: 5px;
     box-shadow: #cdcdcd 1px 1px 3px;
