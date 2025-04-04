@@ -23,7 +23,7 @@
 
             <div class="content">
                 {% if app.user %}
-                <div class="content-menu" {{ vue_component('Menu3', { 'title': 'Stocks', 'items': menu.menus }) }}></div>
+                <div class="content-menu" {{ vue_component('Menu', { 'title': 'Stocks', 'items': menu.menus }) }}></div>
                 {%  endif %}
                 <div class="content-body">{% block body %}{% endblock %}</div>
             </div>

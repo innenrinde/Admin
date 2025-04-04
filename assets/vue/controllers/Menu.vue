@@ -53,7 +53,7 @@ import { ElMessageBox } from 'element-plus';
 const DEFAULT_OPENEDS_KEY = "defaultOpeneds";
 
 export default {
-	name: "Menu3",
+	name: "Menu",
 	props: {
 		title: {
 			type: String,

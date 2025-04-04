@@ -11,7 +11,7 @@
 
 <script>
 export default {
-	name: "Panel",
+	name: "XPanel",
 	props: {
 		title: {
 			type: String,
@@ -28,6 +28,7 @@ export default {
 	},
 	methods: {
 		close() {
+			console.log("close");
 			this.$emit("close");
 		}
 	}
@@ -44,8 +45,8 @@ export default {
 	display: flex;
 	align-items: center;
 	z-index: 9999;
-	-webkit-backdrop-filter: blur(3px);
-	backdrop-filter: blur(3px);
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
 
 	.shadow {
 		position: fixed;
@@ -53,8 +54,10 @@ export default {
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: #fff;
+		background-color: #c8c8c8;
 		opacity: 60%;
+		animation: fadeBackgroundShadow 0.5s;
+		animation-fill-mode: forwards;
 	}
 
 	.panel {
@@ -74,6 +77,26 @@ export default {
 		box-shadow: 1px 1px 50px #d3d3d3;
 		border-radius: 10px;
 		text-align: center;
+		overflow: auto;
+		animation: panelAnimation 0.3s;
+	}
+}
+
+@keyframes fadeBackgroundShadow {
+	from {
+		background-color: transparent;
+	}
+	to {
+		background-color: #c8c8c8;
+	}
+}
+
+@keyframes panelAnimation {
+	from {
+		top: -50%;
+	}
+	to {
+		top: 150px;
 	}
 }
 </style>

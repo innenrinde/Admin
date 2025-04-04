@@ -1,300 +1,566 @@
 <template>
-  <div
-    class="table-list"
-    ref="tableList"
-  >
-    <el-table :data="tableData" :height="height">
-      <template
-        v-for="column in columns"
-        :key="column"
-      >
-        <el-table-column
-          v-if="column.type === 'boolean' && !column.hidden"
-          :prop="column.field"
-          :label="column.title"
-          prop="tag"
-          width="130"
-          sortable
-          align="center"
-          :filters="[
-            { text: 'Yes', value: true },
-            { text: 'No', value: false }
-          ]"
-          :filter-method="filterHandler"
+  <div class="container-table">
+
+	  <x-panel
+		  v-show="searchFocus"
+	    @close="closeSearch"
+    >
+		  <template #content>
+			  <div class="header-search">
+				  <div>
+					  Search by
+					  <input
+						  ref="realQueryText"
+						  class="keywords"
+						  type="text"
+						  placeholder="type here a phrase and then Enter..."
+						  v-model="query"
+						  @keydown="onQueryEnter"
+					  />
+				  </div>
+				  <div>
+					  k =
+					  <input
+						  class="knn"
+						  type="text"
+						  placeholder="define k number"
+						  v-model="kNumber"
+						  @keydown="onKNumberEnter"
+					  />
+				  </div>
+				  <div>
+					  <input
+						  class="button"
+						  type="button"
+						  value="Apply"
+						  @click="clickApply"
+					  />
+				  </div>
+			  </div>
+		  </template>
+	  </x-panel>
+
+    <div class="header-bar">
+			<input
+				v-show="!searchFocus"
+				type="text"
+				placeholder="Search..."
+				v-model="query"
+				@focus="openSearch"
+			/>
+    </div>
+
+    <div class="table-section">
+      <div class="table">
+        <div
+          class="header"
         >
-          <template #default="scope">
-            <el-tag
-              :type="scope.row[column.field] ? 'primary' : 'error'"
-              disable-transitions
-            >{{ scope.row[column.field] ? 'Yes' : 'No' }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-else-if="column.type === 'number' && !column.hidden"
-          :prop="column.field"
-          :label="column.title"
-          width="80"
-          sortable
-        />
-        <el-table-column
-          v-else-if="column.type === 'datetime' && !column.hidden"
-          :prop="column.field"
-          :label="column.title"
-          width="150"
-          sortable
+          <div
+            v-for="column in visibleColumns"
+            :key="column"
+            :class="{ [column.width]: column.width, 'align-center': column.type === 'checkbox'}"
+          >
+            {{ column.title }}
+          </div>
+	        <div class="wp80">
+						<!-- Operations-->
+	        </div>
+        </div>
+
+        <div
+          v-for="row in localRows"
+          :key="row"
+          class="content"
         >
-          <template #default="scope">
-            {{ dateFormat(scope.row[column.field]) }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-else-if="!column.hidden"
-          :prop="column.field"
-          :label="column.title"
-          :width="column.width ?? 0"
-          sortable
-        />
-      </template>
-      <el-table-column
-        fixed="right"
-        label="Operations"
-        width="120"
-        align="center"
-      >
-        <template #default="scope">
-          <el-button type="danger" :icon="Delete" plain circle size="small" @click="deleteRow(scope.row)" />
-          <el-button type="primary" :icon="Edit" plain circle size="small" @click="editRow(scope.row)" />
-        </template>
-      </el-table-column>
-    </el-table>
+          <div
+            v-for="column in visibleColumns"
+            :key="column"
+          >
+	          <span
+		          v-if="column.type === 'checkbox'"
+	            class="align-center"
+	          >
+							<font-awesome-icon :icon="['far', 'circle-check']" v-if="row[column.field]" />
+							<span v-else>-</span>
+	          </span>
+	          <span v-else-if="column.type === 'datetime'">
+		          {{ dateFormat(row[column.field]) }}
+	          </span>
+	          <span v-else>{{ row[column.field] }}</span>
+          </div>
+
+	        <div class="actions">
+		        <span
+			        @click="deleteRow(row)"
+              title="Delete"
+			        class="red"
+		        >
+			        <font-awesome-icon :icon="['fas', 'xmark']" />
+		        </span>
+		        <span
+			        @click="editRow(row)"
+			        title="Edit"
+		          class="blue"
+		        >
+			        <font-awesome-icon :icon="['far', 'pen-to-square']" />
+		        </span>
+	        </div>
+
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
-  <el-dialog
-    v-model="deleteDialogVisible"
-    title="Delete row"
-    width="500"
-    center
-  >
-    <span class="dialog-message">Do you want to delete the row #{{ this.selectedRow[this.pk().field] }} ?</span>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="deleteDialogVisible = false">No</el-button>
-        <el-button type="primary" @click="confirmDeleteRow">
-          Yes
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+	<x-panel
+		v-if="deleteDialogVisible"
+		@close="closeDeleteRow"
+	>
+		<template #content>
+			Delete row
+			<span>Do you want to delete the row #{{ selectedRow[pk().field] }} ?</span>
 
-  <el-dialog
-    v-model="editDialogVisible"
-    title="Edit row"
-    width="500"
-    center
-  >
-    <Form
-      v-if="editDialogVisible"
-      :columns="columns"
-      :values="form"
-      :has-close-button="true"
-      @save="confirmEditRow"
-      @close="closeEditRow"
-    />
-  </el-dialog>
+			<div>
+				<x-button
+					title="No"
+					type="secondary"
+					@click="closeDeleteRow"
+				/>
+				<x-button
+					title="Yes"
+					type="primary"
+					@click="confirmDeleteRow"
+				/>
+			</div>
+
+		</template>
+	</x-panel>
+
+	<x-panel
+		v-if="editDialogVisible"
+		@close="closeEditRow"
+	>
+		<template #content>
+			<span>Edit row</span>
+			<Form
+				v-if="editDialogVisible"
+				:columns="columns"
+				:values="editForm"
+				:has-close-button="true"
+				@save="confirmEditRow"
+				@close="closeEditRow"
+			/>
+		</template>
+	</x-panel>
 
 </template>
 
-<script>
-import axios from "axios";
-import { ElNotification } from 'element-plus';
-import { Delete, Edit } from '@element-plus/icons-vue';
+<script setup>
+import { defineProps, defineModel, toRefs, reactive, ref, useTemplateRef, onMounted } from "vue";
+import { kNNSearch } from "../lib/kNNSearch";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
+import axios from "axios";
+import XPanel from "./components/XPanel.vue";
+import XButton from "./components/XButton.vue";
 
-export default {
-  name: "Table",
-  props: {
-    columns: {
-     type: Array,
-     default: () => []
-    },
-    url: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  data() {
-    return {
-      tableData: [],
-      height: 0,
-      deleteDialogVisible: false,
-      editDialogVisible: false,
-      selectedRow: {},
-      form: {},
-      Delete,
-      Edit,
-    };
-  },
-  mounted() {
-    this.height = this.$refs.tableList.clientHeight;
-    this.getTableDataList();
-  },
-  methods: {
-    /**
-     * Retrieve rows
-     */
-    getTableDataList() {
-      axios
-        .get(this.url.get)
-        .then(response => {
-          if (!response.data.content) {
-            throw new Error(`${this.url.list} response => .data.content not found`);
-          }
-          this.tableData = response.data.content;
-        });
-    },
-    /**
-     * Show edit/create dialog
-     * @param row
-     */
-    editRow(row) {
-      this.form = { ...row };
-      this.editDialogVisible = true;
-    },
-    /**
-     * Show delete dialog
-     * @param row
-     */
-    deleteRow(row) {
-      this.selectedRow = row;
-      this.deleteDialogVisible = true;
-    },
-    /**
-     * Perform deletion
-     */
-    confirmDeleteRow() {
-      axios
-        .delete(this.url.delete, {
-          headers: {
-            Authorization: ""
-          },
-          data: this.selectedRow[this.pk().field]
-        })
-        .then(response => {
-          HttpRequestService.parseResponse(response, () => {
-            this.processDeletedRow(response.data);
-          });
-          this.deleteDialogVisible = false;
-        });
-    },
-    /**
-     * Perform edit
-     */
-    confirmEditRow(values) {
-      axios
-        .post(this.url.post,  values)
-        .then(response => {
-          HttpRequestService.parseResponse(response, () => {
-            this.processEditedRow(response.data.content);
-            this.editDialogVisible = false;
-          });
-        });
-    },
-    /**
-     * Delete row from local list
-     * @param {Object} data
-     */
-    processDeletedRow(data) {
-      let pk = this.pk();
+const props = defineProps({
+  columns: Array,
+  rows: Array,
+  url: Object,
+});
 
-      if (!data[pk.field]) {
-        throw new Error("Can't find a PK field to be deleted!");
+const query = defineModel("vector");
+const kNumber = defineModel({ default: 100 });
+
+const { columns, url } = toRefs(props);
+
+const visibleColumns = columns.value.filter(column => !column.hidden);
+
+let rows = [];
+let localRows = reactive([]);
+
+let selectedRow = null;
+let deleteDialogVisible = ref(false);
+
+let editForm = null;
+let editDialogVisible = ref(false);
+
+let searchFocus = ref(false);
+const inputSearch = useTemplateRef("realQueryText");
+
+const openSearch = () => {
+	searchFocus.value = true;
+	inputSearch.value.focus();
+}
+
+const closeSearch = () => {
+	searchFocus.value = false;
+}
+
+/**
+ * Detect pk for given list of columns
+ * @returns {any}
+ */
+const pk = () => {
+	let pk = columns.value.find(column => column.isPk);
+
+	if (!pk) {
+		throw new Error("Can't find a PK column!");
+	}
+
+	return pk;
+};
+
+/**
+ * Ask to delete a row
+ * @param row
+ */
+const deleteRow = (row) => {
+	selectedRow = row;
+	deleteDialogVisible.value = true;
+};
+
+/**
+ * Perform deletion
+ */
+const confirmDeleteRow = () => {
+	axios
+		.delete(url.value.delete, {
+			headers: {
+				Authorization: ""
+			},
+			data: selectedRow[pk().field]
+		})
+		.then(response => {
+			HttpRequestService.parseResponse(response, () => {
+				processDeletedRow(response.data);
+			});
+			deleteDialogVisible.value = false;
+		});
+};
+
+/**
+ * Close confirm dialog to delete a row
+ * @param {Object} data
+ */
+const closeDeleteRow = (data) => {
+	deleteDialogVisible.value = false;
+}
+
+/**
+ * Delete row from local list
+ * @param {Object} data
+ */
+const processDeletedRow = (data) => {
+	let id = pk();
+
+	if (!data[id.field]) {
+		throw new Error("Can't find a PK field to be deleted!");
+	}
+
+	localRows = localRows.filter(row => row[id.field] !== data[id.field]);
+};
+
+/**
+ * Ask to edit a row
+ * @param row
+ */
+const editRow = (row) => {
+	editForm = { ...row };
+	editDialogVisible.value = true;
+}
+
+/**
+ * Perform edit
+ */
+const confirmEditRow = (values) => {
+	axios
+		.post(url.value.post, values)
+		.then(response => {
+			HttpRequestService.parseResponse(response, () => {
+				processEditedRow(response.data.content);
+				editDialogVisible.value = false;
+			});
+		});
+};
+
+/**
+ * Close edit form
+ */
+const closeEditRow = () => {
+	editDialogVisible.value = false;
+};
+
+/**
+ * Update row into local list
+ * @param {Object} data
+ */
+const processEditedRow = (data) => {
+	let id = pk();
+
+	if (!data[id.field]) {
+		throw new Error("Can't find a PK field to be updated!");
+	}
+
+	let row = localRows.find(row => row[id.field] === data[id.field]);
+
+	columns.value.forEach(column => {
+		if (data[column.field]) {
+			row[column.field] = data[column.field];
+		}
+	});
+};
+
+/**
+ * Starting local filter
+ * @type {kNNSearch}
+ */
+let kNN = new kNNSearch();
+kNN.setK(kNumber.value);
+
+/**
+ * Get records
+ */
+const getTableDataList = () => {
+  axios
+    .get(url.value.get)
+    .then(response => {
+      if (!response.data.content) {
+        throw new Error(`${url.value.list} response => .data.content not found`);
       }
+      rows = response.data.content;
+			rows.forEach(row => localRows.push(row));
+    });
+}
 
-      this.tableData = this.tableData.filter(row => row[pk.field] !== data[pk.field]);
-    },
-    /**
-     * Delete row from local list
-     * @param {Object} data
-     */
-    processEditedRow(data) {
-      let pk = this.pk();
+/**
+ * Hooking...
+ */
+onMounted(() => {
+  getTableDataList();
+});
 
-      if (!data[pk.field]) {
-        throw new Error("Can't find a PK field to be updated!");
-      }
+/**
+ * Get filtered rows
+ */
+const applyResults = () => {
+  let results = kNN.applySearch(rows, columns.value);
+  localRows.splice(0);
+  results.forEach(row => localRows.push(row));
+	searchFocus.value = false;
+}
 
-      let row = this.tableData.find(row => row[pk.field] === data[pk.field]);
-
-      this.columns.forEach(column => {
-        if (data[column.field]) {
-          row[column.field] = data[column.field];
-        }
-      });
-    },
-    /**
-     * Close edit form
-     */
-    closeEditRow() {
-      this.editDialogVisible = false;
-    },
-    /**
-     * Try to find the primary column for table
-     * @returns {Object}
-     */
-    pk() {
-      let pk = this.columns.find(column => column.isPk);
-
-      if (!pk) {
-        throw new Error("Can't find a PK column!");
-      }
-
-      return pk;
-    },
-    /**
-     * Display a success message
-     * @param {String} message
-     */
-    okMessage(message) {
-      ElNotification({ title: "Success", message, type: "success" })
-    },
-    /**
-     * Display an error message
-     * @param {String} message
-     */
-    errorMessage(message) {
-      ElNotification({ title: "Error", message, type: "error" })
-    },
-    /**
-     * Custom date time format
-     * @param {String} value
-     * @returns {String}
-     */
-    dateFormat(value) {
-      return value ? DateTimeTransformer.transform(value) : "-";
-    },
-    /**
-     * Local filtration by bool column
-     * @param value
-     * @param row
-     * @param column
-     * @returns {boolean}
-     */
-    filterHandler(value, row, column) {
-      const property = column['property']
-      return row[property] === value;
-    }
+/**
+ * On change keywords
+ * @param event
+ */
+let onQueryEnter = (event) => {
+  if (event.keyCode === 13) {
+    kNN.setVector(query.value);
+    applyResults();
   }
 };
+
+/**
+ * On change k number
+ * @param event
+ */
+let onKNumberEnter = (event) => {
+  if (event.keyCode === 13) {
+    kNN.setK(kNumber.value);
+    applyResults();
+  }
+};
+
+/**
+ * Perform search by button click
+ */
+let clickApply = () => {
+  kNN.setK(kNumber.value);
+  kNN.setVector(query.value);
+  applyResults();
+}
+
+/**
+ * Custom date time format
+ * @param {String} value
+ * @returns {String}
+ */
+const dateFormat = (value) => {
+	return value ? DateTimeTransformer.transform(value) : "-";
+};
+
 </script>
 
-<style scoped>
-.table-list {
-  width: 100%;
+<style lang="scss">
+.container-table {
+  font-size: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+	background-color: #fff;
 }
 
-.dialog-message {
-  display: block;
-  text-align: center;
+.header-bar {
+	padding: 10px 10px 0 10px;
+	display: flex;
+	justify-content: right;
+	align-items: flex-end;
+
+	input {
+		padding: 5px;
+		border: solid 1px #dadada;
+	}
 }
+
+.header-search {
+
+  input.keywords,
+  input.knn,
+  input.button {
+    padding: 7px;
+	  margin-bottom: 10px;
+    border: solid 1px #c3c3c3;
+    border-radius: 5px;
+    box-shadow: #cdcdcd 1px 1px 3px;
+  }
+
+  input.keywords {
+    width: 300px;
+  }
+
+  input.knn {
+    width: 50px;
+  }
+
+  input.button {
+    margin-left: 3px;
+    cursor: pointer;
+  }
+
+  input.button:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-bar {
+    flex-direction: column;
+  }
+
+  .header-bar > div {
+    margin-bottom: 10px;
+  }
+}
+
+.table-section {
+  display: flex;
+  overflow: auto;
+  margin: 5px 10px 10px 10px;
+  border-bottom: solid 1px #dadada;
+
+  .table {
+    display: table;
+    text-align: left;
+    border: solid 1px #dadada;
+    border-top: none;
+    border-bottom: none;
+
+    .header {
+      display: table-row;
+      position: sticky;
+      top: 0;
+	    z-index: 1;
+
+      > div {
+        display: table-cell;
+        background-color: #f3f4f6;
+        border-top: solid 1px #dadada;
+        border-bottom: solid 1px #dadada;
+        font-weight: 600;
+        color: #036593;
+        padding: 7px;
+      }
+
+      .w1 {
+        width: 1%;
+      }
+
+      .w10 {
+        width: 10%;
+      }
+
+      .w30 {
+        width: 30%;
+      }
+
+	    .w100 {
+		    width: 100%;
+	    }
+
+	    .wp80 {
+		    width: 10px;
+	    }
+    }
+
+	  .align-center {
+		  display: block;
+		  text-align: center;
+	  }
+
+    .content {
+      display: table-row;
+
+      &:nth-child(odd) > div {
+        background-color: #f0fdf4;
+      }
+
+      &:hover > div {
+        background-color: #4bb0df;
+        color: #fff;
+      }
+
+      > div {
+	      background-color: #fff;
+        display: table-cell;
+        padding: 7px;
+      }
+
+	    .actions {
+		    display: flex;
+		    flex-direction: row;
+		    flex-wrap: nowrap;
+
+		    span {
+			    display: inline-block;
+			    cursor: pointer;
+			    border-radius: 25px;
+			    width: 25px;
+			    height: 25px;
+			    font-size: 14px;
+			    color: #fff;
+			    text-align: center;
+			    align-items: center;
+			    align-content: center;
+			    margin: 0 2px;
+		    }
+
+		    span.red {
+			    border: solid 1px #f35959;
+			    background-color: #ffa1a1;
+		    }
+
+		    span.blue {
+			    border: solid 1px #7f7fe8;
+			    background-color: #b6b6e4;
+		    }
+	    }
+    }
+  }
+}
+
 </style>
+<script setup lang="ts">
+</script>
