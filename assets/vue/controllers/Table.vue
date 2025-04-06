@@ -5,6 +5,7 @@
 		  v-show="searchFocus"
 		  title="Search for all columns"
 		  ok-label="Search"
+		  size="small"
 	    @close="closeSearch"
 		  @ok="clickApply"
     >
@@ -111,6 +112,7 @@
 	<x-panel
 		v-if="deleteDialogVisible"
 		title="Delete row"
+		size="small"
 		@close="closeDeleteRow"
 		@ok="confirmDeleteRow"
 	>

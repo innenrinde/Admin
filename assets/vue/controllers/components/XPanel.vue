@@ -3,7 +3,10 @@
 		<div class="shadow"
 			@click="closeAction"
 		/>
-		<div class="panel">
+		<div
+			class="panel"
+			:class="size"
+		>
 			<div class="title">{{ title }}</div>
 			<div class="slot-content">
 				<slot name="content"/>
@@ -31,6 +34,10 @@ export default {
 	name: "XPanel",
 	components: {XButton},
 	props: {
+		size: {
+			type: String,
+			default: () => ""
+		},
 		title: {
 			type: String,
 			default: () => ""
@@ -88,11 +95,12 @@ export default {
 
 	.panel {
 		position: fixed;
-		top: 150px;
+		top: 0;
+		margin: 20px;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, 0%);
 		width: 50%;
-		height: 200px;
+		height: calc(100% - 65px);
 		min-width: 200px;
 		max-width: 600px;
 		display: flex;
@@ -123,6 +131,14 @@ export default {
 			border-top: solid 1px #efefef;
 		}
 	}
+
+	.small {
+		height: 200px;
+	}
+
+	.medium {
+		height: 400px;
+	}
 }
 
 @keyframes fadeBackgroundShadow {
@@ -136,10 +152,10 @@ export default {
 
 @keyframes panelAnimation {
 	from {
-		top: -50%;
+		top: -100%;
 	}
 	to {
-		top: 150px;
+		top: 0;
 	}
 }
 </style>
