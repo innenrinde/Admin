@@ -174,6 +174,15 @@ class Indicator
         return $this->category;
     }
 
+    public function getCategoryTitle(): String
+    {
+        try {
+            return $this->category->getTitle();
+        } catch (\Exception $err) {
+            return "";
+        }
+    }
+
     public function setCategory(?Category $category): static
     {
         $this->category = $category;

@@ -125,7 +125,7 @@ class IndicatorController extends CrudController
         $data = array_map(function (Indicator $row) {
             return [
                 'id' => $row->getId(),
-                'category' => $row->getCategory() ? $row->getCategory()->getTitle() : '',
+                'category' => $row->getCategoryTitle(),
                 'title' => $row->getTitle(),
                 'address' => $row->getAddress(),
                 'transaction' => $row->getTransaction(),
