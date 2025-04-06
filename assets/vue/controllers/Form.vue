@@ -30,6 +30,7 @@
 
     <el-form-item :label="empty">
       <el-button
+	      v-if="hasSaveButton"
         type="primary"
         @click="confirmSave"
       >
@@ -73,7 +74,11 @@ export default {
     hasCloseButton: {
       type: Boolean,
       default: () => false
-    }
+    },
+	  hasSaveButton: {
+		  type: Boolean,
+		  default: () => false
+	  }
   },
   data() {
     return {
@@ -82,17 +87,22 @@ export default {
     };
   },
   methods: {
+		getValues() {
+			let values = { ... this.form };
+			this.columns.forEach(column => {
+				if (column.type === "datetime") {
+					values[column.field] = DateTimeTransformer.reverseTransform(values[column.field]);
+				}
+			});
+
+			return values;
+		},
     /**
      * Perform save data
      */
      confirmSave() {
 
-      let values = { ... this.form };
-      this.columns.forEach(column => {
-        if (column.type === "datetime") {
-          values[column.field] = DateTimeTransformer.reverseTransform(values[column.field]);
-        }
-      });
+      let values = this.getValues();
 
       if (this.url.put) {
         axios

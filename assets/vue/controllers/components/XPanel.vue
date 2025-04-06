@@ -1,35 +1,61 @@
 <template>
 	<div class="panel-content">
 		<div class="shadow"
-			@click="close"
+			@click="closeAction"
 		/>
 		<div class="panel">
-			<slot name="content" />
+			<div class="title">{{ title }}</div>
+			<div class="slot-content">
+				<slot name="content"/>
+			</div>
+			<div class="actions">
+				<x-button
+					title="Close"
+					type="secondary"
+					@click="closeAction"
+				/>
+				<x-button
+					:title="okLabel"
+					type="primary"
+					@click="confirmAction"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import XButton from "./XButton.vue";
+
 export default {
 	name: "XPanel",
+	components: {XButton},
 	props: {
 		title: {
 			type: String,
 			default: () => ""
 		},
-		items: {
-			type: Array,
-			default: () => []
-		},
+		okLabel: {
+			type: String,
+			default: () => "Yes"
+		}
 	},
 	data() {
 		return {
 		};
 	},
 	methods: {
-		close() {
-			console.log("close");
+		/**
+		 * Emmit closing panel
+		 */
+		closeAction() {
 			this.$emit("close");
+		},
+		/**
+		 * Emmit user confirmation
+		 */
+		confirmAction() {
+			this.$emit("ok");
 		}
 	}
 };
@@ -71,7 +97,7 @@ export default {
 		max-width: 600px;
 		display: flex;
 		flex-direction: column;
-		padding: 20px;
+		padding: 10px;
 		background-color: #fff;
 		border: solid 1px #fff;
 		box-shadow: 1px 1px 50px #d3d3d3;
@@ -79,6 +105,23 @@ export default {
 		text-align: center;
 		overflow: auto;
 		animation: panelAnimation 0.3s;
+
+		.title {
+			font-size: 14px;
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+
+		.slot-content {
+			height: 100%;
+			overflow: auto;
+		}
+
+		.actions {
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: solid 1px #efefef;
+		}
 	}
 }
 

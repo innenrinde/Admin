@@ -1,7 +1,6 @@
 <template>
 	<button
 		:class="type"
-		@click="click"
 	>
 		{{ title }}
 	</button>
@@ -21,9 +20,6 @@ export default {
 		}
 	},
 	methods: {
-		click() {
-			this.$emit("click");
-		}
 	}
 };
 </script>

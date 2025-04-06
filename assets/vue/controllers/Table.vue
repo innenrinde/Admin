@@ -3,7 +3,10 @@
 
 	  <x-panel
 		  v-show="searchFocus"
+		  title="Search for all columns"
+		  ok-label="Search"
 	    @close="closeSearch"
+		  @ok="clickApply"
     >
 		  <template #content>
 			  <div class="header-search">
@@ -26,14 +29,6 @@
 						  placeholder="define k number"
 						  v-model="kNumber"
 						  @keydown="onKNumberEnter"
-					  />
-				  </div>
-				  <div>
-					  <input
-						  class="button"
-						  type="button"
-						  value="Apply"
-						  @click="clickApply"
 					  />
 				  </div>
 			  </div>
@@ -115,41 +110,27 @@
 
 	<x-panel
 		v-if="deleteDialogVisible"
+		title="Delete row"
 		@close="closeDeleteRow"
+		@ok="confirmDeleteRow"
 	>
 		<template #content>
-			Delete row
-			<span>Do you want to delete the row #{{ selectedRow[pk().field] }} ?</span>
-
-			<div>
-				<x-button
-					title="No"
-					type="secondary"
-					@click="closeDeleteRow"
-				/>
-				<x-button
-					title="Yes"
-					type="primary"
-					@click="confirmDeleteRow"
-				/>
-			</div>
-
+			<span>Are you sure that you want to delete the row #{{ selectedRow[pk().field] }} ?</span>
 		</template>
 	</x-panel>
 
 	<x-panel
 		v-if="editDialogVisible"
+		title="Edit row"
+		ok-label="Save"
 		@close="closeEditRow"
+		@ok="confirmEditRow"
 	>
 		<template #content>
-			<span>Edit row</span>
 			<Form
-				v-if="editDialogVisible"
+				ref="form"
 				:columns="columns"
 				:values="editForm"
-				:has-close-button="true"
-				@save="confirmEditRow"
-				@close="closeEditRow"
 			/>
 		</template>
 	</x-panel>
@@ -187,14 +168,22 @@ let deleteDialogVisible = ref(false);
 let editForm = null;
 let editDialogVisible = ref(false);
 
+let form = ref(null);
+
 let searchFocus = ref(false);
 const inputSearch = useTemplateRef("realQueryText");
 
+/**
+ * Show advanced search
+ */
 const openSearch = () => {
 	searchFocus.value = true;
 	inputSearch.value.focus();
 }
 
+/**
+ * Close advanced search
+ */
 const closeSearch = () => {
 	searchFocus.value = false;
 }
@@ -275,9 +264,9 @@ const editRow = (row) => {
 /**
  * Perform edit
  */
-const confirmEditRow = (values) => {
+const confirmEditRow = () => {
 	axios
-		.post(url.value.post, values)
+		.post(url.value.post, form.value.getValues())
 		.then(response => {
 			HttpRequestService.parseResponse(response, () => {
 				processEditedRow(response.data.content);
@@ -418,8 +407,7 @@ const dateFormat = (value) => {
 .header-search {
 
   input.keywords,
-  input.knn,
-  input.button {
+  input.knn {
     padding: 7px;
 	  margin-bottom: 10px;
     border: solid 1px #c3c3c3;
@@ -433,15 +421,6 @@ const dateFormat = (value) => {
 
   input.knn {
     width: 50px;
-  }
-
-  input.button {
-    margin-left: 3px;
-    cursor: pointer;
-  }
-
-  input.button:hover {
-    background-color: #f3f4f6;
   }
 }
 
