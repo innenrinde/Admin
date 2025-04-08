@@ -2,7 +2,7 @@
 Manage tables content
 
 Test this: https://admin.powerfullapp.ro/
-Using credentials: admin@test.com / admin
+Using credentials: admin[at]test.com / admin
 
 
 ## Use a single configuration to list and to edit an entity
