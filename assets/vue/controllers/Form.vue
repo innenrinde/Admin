@@ -1,59 +1,73 @@
 <template>
-  <el-form :model="form" label-width="auto">
 
-    <el-form-item v-if="title" :label="empty">
-      <h1>{{ title }}</h1>
-    </el-form-item>
+	<div>
+		<div v-if="title">
+			<h1>{{ title }}</h1>
+		</div>
 
-    <el-form-item
-      v-for="column in columns.filter(item => !item.isPk)"
-      :key="column"
-      :label="column.title"
+		<div
+			v-for="column in columns.filter(item => !item.isPk)"
+		  :key="column"
     >
-      <el-date-picker v-if="column.type === 'datetime'" type="datetime" v-model="form[column.field]" />
-      <el-switch v-else-if="column.type === 'checkbox'" v-model="form[column.field]" />
-      <el-select
-          v-else-if="column.type === 'choice'"
-          v-model="form[column.field]"
-          placeholder="- select an option -"
-          size="large"
-      >
-        <el-option
-          v-for="option in column.options"
-          :key="option"
-          :label="option.label"
-          :value="option.value"
-        />
-      </el-select>
-      <el-input v-else v-model="form[column.field]" :placeholder="column.placeholder ?? ''" />
-    </el-form-item>
+			<div>{{ column.title }}</div>
+			<div>
+				<x-select
+					v-if="column.type === 'choice'"
+					v-model="form[column.field]"
+					:options="column.options"
+				/>
+				<x-checkbox
+					v-else-if="column.type === 'checkbox'"
+					v-model="form[column.field]"
+				/>
+				<x-date
+					v-else-if="column.type === 'datetime'"
+					v-model="form[column.field]"
+				/>
+				<x-password
+					v-else-if="column.type === 'password'"
+					v-model="form[column.field]"
+					:placeholder="column.placeholder ?? ''"
+				/>
+				<x-input
+					v-else
+					v-model="form[column.field]"
+					:placeholder="column.placeholder ?? ''"
+				/>
+			</div>
+		</div>
 
-    <el-form-item :label="empty">
-      <el-button
-	      v-if="hasSaveButton"
-        type="primary"
-        @click="confirmSave"
-      >
-        Save
-      </el-button>
-      <el-button
-        v-if="hasCloseButton"
-        type="secondary"
-        @click="confirmClose"
-      >
-        Close
-      </el-button>
-    </el-form-item>
-  </el-form>
+		<x-button
+			v-if="hasCloseButton"
+			type="secondary"
+			title="Close"
+			@click="confirmClose"
+		/>
+		<x-button
+			v-if="hasSaveButton"
+			type="primary"
+			title="Save"
+			@click="confirmSave"
+		/>
+
+	</div>
+
 </template>
 
 <script>
 import axios from "axios";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
+import XButton from "./components/XButton.vue";
+import XInput from "./components/XInput.vue";
+import XPassword from "./components/XPassword.vue";
+import XSelect from "./components/XSelect.vue";
+import XCheckbox from "./components/XCheckbox.vue";
+import XDate from "./components/XDate.vue";
 
 export default {
   name: "Form",
+	components: { XInput, XPassword, XSelect, XCheckbox, XDate, XButton },
   props: {
     title: {
       type: String,
@@ -77,7 +91,7 @@ export default {
     },
 	  hasSaveButton: {
 		  type: Boolean,
-		  default: () => false
+		  default: () => true
 	  }
   },
   data() {

@@ -133,6 +133,8 @@
 				ref="form"
 				:columns="columns"
 				:values="editForm"
+				:has-close-button="false"
+				:has-save-button="false"
 			/>
 		</template>
 	</x-panel>
@@ -146,7 +148,6 @@ import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import axios from "axios";
 import XPanel from "./components/XPanel.vue";
-import XButton from "./components/XButton.vue";
 
 const props = defineProps({
   columns: Array,
