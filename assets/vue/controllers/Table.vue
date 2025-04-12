@@ -1,44 +1,8 @@
 <template>
   <div class="container-table">
 
-	  <x-panel
-		  v-show="searchFocus"
-		  title="Search for all columns"
-		  ok-label="Search"
-		  size="small"
-	    @close="closeSearch"
-		  @ok="clickApply"
-    >
-		  <template #content>
-			  <div class="header-search">
-				  <div>
-					  Search by
-					  <input
-						  ref="realQueryText"
-						  class="keywords"
-						  type="text"
-						  placeholder="type here a phrase and then Enter..."
-						  v-model="query"
-						  @keydown="onQueryEnter"
-					  />
-				  </div>
-				  <div>
-					  k =
-					  <input
-						  class="knn"
-						  type="text"
-						  placeholder="define k number"
-						  v-model="kNumber"
-						  @keydown="onKNumberEnter"
-					  />
-				  </div>
-			  </div>
-		  </template>
-	  </x-panel>
-
     <div class="header-bar">
-			<input
-				v-show="!searchFocus"
+			<x-input
 				type="text"
 				placeholder="Search..."
 				v-model="query"
@@ -102,9 +66,9 @@
 		        </span>
 	        </div>
 
-        </div>
+        </div> <!--END row-->
 
-      </div>
+      </div> <!--END table-->
     </div>
 
   </div>
@@ -139,15 +103,23 @@
 		</template>
 	</x-panel>
 
+	<search-panel
+		v-show="searchFocus"
+		@close="closeSearch"
+		@ok="applySearch"
+	/>
+
 </template>
 
 <script setup>
-import { defineProps, defineModel, toRefs, reactive, ref, useTemplateRef, onMounted } from "vue";
+import { defineProps, defineModel, toRefs, reactive, ref, onMounted, useTemplateRef } from "vue";
 import { kNNSearch } from "../lib/kNNSearch";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import axios from "axios";
 import XPanel from "./components/XPanel.vue";
+import XInput from "./components/XInput.vue";
+import SearchPanel from "./SearchPanel.vue";
 
 const props = defineProps({
   columns: Array,
@@ -155,8 +127,7 @@ const props = defineProps({
   url: Object,
 });
 
-const query = defineModel("vector");
-const kNumber = defineModel({ default: 100 });
+const query = defineModel("");
 
 const { columns, url } = toRefs(props);
 
@@ -172,16 +143,13 @@ let editForm = null;
 let editDialogVisible = ref(false);
 
 let form = ref(null);
-
 let searchFocus = ref(false);
-const inputSearch = useTemplateRef("realQueryText");
 
 /**
  * Show advanced search
  */
 const openSearch = () => {
 	searchFocus.value = true;
-	inputSearch.value.focus();
 }
 
 /**
@@ -235,9 +203,8 @@ const confirmDeleteRow = () => {
 
 /**
  * Close confirm dialog to delete a row
- * @param {Object} data
  */
-const closeDeleteRow = (data) => {
+const closeDeleteRow = () => {
 	deleteDialogVisible.value = false;
 }
 
@@ -310,7 +277,6 @@ const processEditedRow = (data) => {
  * @type {kNNSearch}
  */
 let kNN = new kNNSearch();
-kNN.setK(kNumber.value);
 
 /**
  * Get records
@@ -345,33 +311,12 @@ const applyResults = () => {
 }
 
 /**
- * On change keywords
- * @param event
- */
-let onQueryEnter = (event) => {
-  if (event.keyCode === 13) {
-    kNN.setVector(query.value);
-    applyResults();
-  }
-};
-
-/**
- * On change k number
- * @param event
- */
-let onKNumberEnter = (event) => {
-  if (event.keyCode === 13) {
-    kNN.setK(kNumber.value);
-    applyResults();
-  }
-};
-
-/**
  * Perform search by button click
  */
-let clickApply = () => {
-  kNN.setK(kNumber.value);
-  kNN.setVector(query.value);
+let applySearch = ({ value, k }) => {
+	query.value = value;
+  kNN.setK(k);
+  kNN.setVector(value);
   applyResults();
 }
 
@@ -403,29 +348,9 @@ const dateFormat = (value) => {
 
 	input {
 		padding: 5px;
-		border: solid 1px #dadada;
 	}
 }
 
-.header-search {
-
-  input.keywords,
-  input.knn {
-    padding: 7px;
-	  margin-bottom: 10px;
-    border: solid 1px #c3c3c3;
-    border-radius: 5px;
-    box-shadow: #cdcdcd 1px 1px 3px;
-  }
-
-  input.keywords {
-    width: 300px;
-  }
-
-  input.knn {
-    width: 50px;
-  }
-}
 
 @media (max-width: 600px) {
   .header-bar {
