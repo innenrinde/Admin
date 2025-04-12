@@ -29,7 +29,7 @@ export default {
 .secondary {
 	border-radius: 5px;
 	padding: 7px;
-	margin: 2px;
+	margin: 2px 4px 2px 0;
 	min-width: 80px;
 	cursor: pointer;
 }

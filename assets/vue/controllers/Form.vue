@@ -5,50 +5,58 @@
 			<h1>{{ title }}</h1>
 		</div>
 
-		<div
-			v-for="column in columns.filter(item => !item.isPk)"
-		  :key="column"
-    >
-			<div>{{ column.title }}</div>
-			<div>
-				<x-select
-					v-if="column.type === 'choice'"
-					v-model="form[column.field]"
-					:options="column.options"
-				/>
-				<x-checkbox
-					v-else-if="column.type === 'checkbox'"
-					v-model="form[column.field]"
-				/>
-				<x-date
-					v-else-if="column.type === 'datetime'"
-					v-model="form[column.field]"
-				/>
-				<x-password
-					v-else-if="column.type === 'password'"
-					v-model="form[column.field]"
-					:placeholder="column.placeholder ?? ''"
-				/>
-				<x-input
-					v-else
-					v-model="form[column.field]"
-					:placeholder="column.placeholder ?? ''"
-				/>
+		<div class="form-content">
+			<div
+				v-for="column in columns.filter(item => !item.isPk)"
+			  :key="column"
+				class="form-line"
+	    >
+				<div>{{ column.title }}</div>
+				<div>
+					<x-select
+						v-if="column.type === 'choice'"
+						v-model="form[column.field]"
+						:options="column.options"
+					/>
+					<x-checkbox
+						v-else-if="column.type === 'checkbox'"
+						v-model="form[column.field]"
+					/>
+					<x-date
+						v-else-if="column.type === 'datetime'"
+						v-model="form[column.field]"
+					/>
+					<x-password
+						v-else-if="column.type === 'password'"
+						v-model="form[column.field]"
+						:placeholder="column.placeholder ?? ''"
+					/>
+					<x-input
+						v-else
+						v-model="form[column.field]"
+						:placeholder="column.placeholder ?? ''"
+					/>
+				</div>
+			</div>
+
+			<div class="form-line">
+				<div></div>
+				<div>
+					<x-button
+						v-if="hasCloseButton"
+						type="secondary"
+						title="Close"
+						@click="confirmClose"
+					/>
+					<x-button
+						v-if="hasSaveButton"
+						type="primary"
+						title="Save"
+						@click="confirmSave"
+					/>
+				</div>
 			</div>
 		</div>
-
-		<x-button
-			v-if="hasCloseButton"
-			type="secondary"
-			title="Close"
-			@click="confirmClose"
-		/>
-		<x-button
-			v-if="hasSaveButton"
-			type="primary"
-			title="Save"
-			@click="confirmSave"
-		/>
 
 	</div>
 
@@ -141,4 +149,23 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+	margin: 0;
+	font-size: 16px;
+}
+
+.form-content {
+	display: table;
+	margin: 10px 0;
+	text-align: left;
+
+	.form-line {
+		display: table-row;
+
+		div {
+			display: table-cell;
+			padding: 5px 5px 5px 0;
+		}
+	}
+}
 </style>

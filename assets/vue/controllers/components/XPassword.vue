@@ -20,4 +20,18 @@ const { placeholder } = toRefs(props);
 </script>
 
 <style scoped lang="scss">
+input {
+	padding: 10px;
+	border: solid 1px #a3a3a3;
+	border-radius: 5px;
+	box-shadow: #cdcdcd 1px 1px 2px;
+	width: 300px;
+}
+
+input:focus {
+	appearance: none;
+	outline: none;
+	border: solid 1px #a3a3a3;
+	background-color: #e4ffcb;
+}
 </style>
