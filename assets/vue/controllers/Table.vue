@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineModel, toRefs, reactive, ref, onMounted, useTemplateRef } from "vue";
+import { defineProps, defineModel, toRefs, reactive, ref, onMounted } from "vue";
 import { kNNSearch } from "../lib/kNNSearch";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";

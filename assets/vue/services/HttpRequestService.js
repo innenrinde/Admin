@@ -1,4 +1,4 @@
-import { ElNotification } from 'element-plus';
+import { NotificationService } from "./NotificationService";
 
 class HttpRequestService {
 
@@ -26,7 +26,7 @@ class HttpRequestService {
             typeof callbackSuccess === "function" ? callbackSuccess() : "";
         } else {
             this.errorMessage(message);
-            typeof callbackError() === "function" ? callbackError() : "";
+            typeof callbackError === "function" ? callbackError() : "";
         }
     }
 
@@ -35,7 +35,7 @@ class HttpRequestService {
      * @param {String} message
      */
     okMessage(message) {
-        ElNotification({ title: "Success", message, type: "success" })
+        NotificationService.message({ title: "Success", message, type: "success" });
     }
 
     /**
@@ -43,7 +43,7 @@ class HttpRequestService {
      * @param {String} message
      */
     errorMessage(message) {
-        ElNotification({ title: "Error", message, type: "error" })
+        NotificationService.message({ title: "Error", message, type: "error" });
     }
 }
 

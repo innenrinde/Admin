@@ -177,7 +177,7 @@ class Indicator
     public function getCategoryTitle(): String
     {
         try {
-            return $this->category->getTitle();
+            return $this->category?->getTitle() ?? "";
         } catch (\Exception $err) {
             return "";
         }
