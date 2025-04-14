@@ -1,5 +1,6 @@
 import renderComponent from "../lib/renderComponent";
 import XMessage from "../controllers/components/XMessage.vue";
+import XConfirm from "../controllers/components/XConfirm.vue";
 
 class NotificationService {
 
@@ -37,6 +38,42 @@ class NotificationService {
             },
             appContext: null
         });
+    }
+
+    /**
+     * Crate a confirmation dialogue
+     * @param {string} title
+     * @param {string} message
+     * @param {callback} okAction
+     * @param {callback} closeAction
+     */
+    confirm({ title, message, okAction, closeAction }) {
+        let container = document.createElement("div");
+        container.id = String(Math.random());
+        document.body.appendChild(container);
+
+        let renderer = renderComponent({
+            el: container,
+            component: XConfirm,
+            props: {
+                title,
+                message,
+                onOk: () => {
+                    close();
+                    okAction ? okAction() : "";
+                },
+                onClose: () => {
+                    close();
+                    closeAction ? closeAction() : "";
+                }
+            },
+            appContext: null
+        });
+
+        const close = () => {
+            renderer();
+            document.body.removeChild(container);
+        }
     }
 
 }

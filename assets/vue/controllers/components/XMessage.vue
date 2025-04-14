@@ -30,7 +30,7 @@ const { title, message, type } = toRefs(props);
 const closedAnimation = ref(false);
 
 /**
- * Hooking...
+ * Set timeout to auto close notification
  */
 onMounted(() => {
 	setTimeout(() => {
@@ -66,7 +66,7 @@ const closeMessage = () => {
 	text-align: left;
 	overflow: hidden;
 	z-index: 9999;
-	animation: panelAnimation 0.3s;
+	animation: openAnimation 0.3s;
 
 	.title {
 		font-size: 14px;
@@ -91,7 +91,7 @@ const closeMessage = () => {
 	animation: closeAnimation 0.2s;
 }
 
-@keyframes panelAnimation {
+@keyframes openAnimation {
 	from {
 		right: -100%;
 	}

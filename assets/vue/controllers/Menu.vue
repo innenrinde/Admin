@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { ElMessageBox } from 'element-plus';
+import { NotificationService } from "../services/NotificationService";
 
 const DEFAULT_OPENEDS_KEY = "defaultOpeneds";
 
@@ -109,20 +109,13 @@ export default {
 		 */
 		goToRoute(menu) {
 			if (menu.confirm) {
-				ElMessageBox.confirm(
-					'Are you sure that you want to continue?',
-					menu.title,
-					{
-						confirmButtonText: 'OK',
-						cancelButtonText: 'Cancel',
-						type: 'info',
-					}
-				)
-					.then(() => {
+				NotificationService.confirm({
+					title: menu.title,
+					message: "Are you sure that you want to continue?",
+					okAction: () => {
 						document.location.href = menu.route;
-					})
-					.catch(() => {
-					});
+					}
+				});
 			} else {
 				document.location.href = menu.route;
 			}
