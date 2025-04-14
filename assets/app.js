@@ -8,18 +8,15 @@ import './bootstrap.js';
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
-import ElementPlus from 'element-plus';
-import * as ElementPlusIconsVue from '@element-plus/icons-vue';
-import 'element-plus/dist/index.css';
+import "./styles/app.css";
 import moment from "moment";
-import Form from './vue/controllers/Form.vue';
+import Form from "./vue/controllers/Form.vue";
 
 /* import the fontawesome core */
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { library } from "@fortawesome/fontawesome-svg-core";
 
 /* import font awesome icon component */
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 /* import specific icons */
 import {
@@ -49,12 +46,6 @@ document.addEventListener('vue:before-mount', (event) => {
         props, // The props that will be injected to the component
         app, // The Vue application instance
     } = event.detail;
-
-    app.use(ElementPlus);
-
-    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-        app.component(key, component);
-    }
 
     app.component("Form", Form);
 
