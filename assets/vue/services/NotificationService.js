@@ -3,6 +3,8 @@ import XMessage from "../controllers/components/XMessage.vue";
 
 class NotificationService {
 
+    #messagesContainer = null;
+
     /**
      * Open a simple notification
      * @param {String} title
@@ -10,9 +12,17 @@ class NotificationService {
      * @param {String} type 'error' or 'success'
      */
     message({ title, message, type }) {
-        const container = document.createElement("div");
+        if (!this.#messagesContainer) {
+            this.#messagesContainer = document.createElement("div");
+            this.#messagesContainer.classList.add("messages-list");
+            this.#messagesContainer.id = String(Math.random());
+            document.body.appendChild(this.#messagesContainer);
+        }
+
+        let container = document.createElement("div");
         container.id = String(Math.random());
-        document.body.appendChild(container);
+        this.#messagesContainer.appendChild(container);
+
         let renderer = renderComponent({
             el: container,
             component: XMessage,
@@ -22,7 +32,7 @@ class NotificationService {
                 type,
                 onClose: () => {
                     renderer();
-                    document.body.removeChild(container);
+                    this.#messagesContainer.removeChild(container);
                 }
             },
             appContext: null

@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="message-content"
-		:class="{ 'error': type === 'error', 'success': type === 'success' }"
+		:class="{ 'error': type === 'error', 'success': type === 'success', 'closed': closedAnimation }"
 		@click="closeMessage"
 	>
 		<div class="title">
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, toRefs, onMounted } from "vue";
+import { defineProps, defineEmits, toRefs, onMounted, ref } from "vue";
 
 const emit = defineEmits(["close"]);
 
@@ -27,28 +27,32 @@ const props = defineProps({
 
 const { title, message, type } = toRefs(props);
 
+const closedAnimation = ref(false);
+
 /**
  * Hooking...
  */
 onMounted(() => {
 	setTimeout(() => {
 		closeMessage();
-	}, 3000);
+	}, 8000);
 });
 
 /**
  * Close message panel
  */
 const closeMessage = () => {
-	emit("close");
+	closedAnimation.value = true;
+	setTimeout(() => {
+		emit("close");
+	}, 200);
 };
 
 </script>
 
 <style scoped lang="scss">
 .message-content {
-	position: fixed;
-	top: 0;
+	position: relative;
 	right: 0;
 	margin: 5px;
 	width: 300px;
@@ -60,7 +64,8 @@ const closeMessage = () => {
 	box-shadow: 1px 1px 5px #d3d3d3;
 	border-radius: 5px;
 	text-align: left;
-	overflow: auto;
+	overflow: hidden;
+	z-index: 9999;
 	animation: panelAnimation 0.3s;
 
 	.title {
@@ -82,12 +87,25 @@ const closeMessage = () => {
 	color: #008000;
 }
 
+.closed {
+	animation: closeAnimation 0.2s;
+}
+
 @keyframes panelAnimation {
 	from {
 		right: -100%;
 	}
 	to {
 		right: 0;
+	}
+}
+
+@keyframes closeAnimation {
+	from {
+		right: 0;
+	}
+	to {
+		right: -100%;
 	}
 }
 </style>
