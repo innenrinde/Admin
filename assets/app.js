@@ -27,6 +27,8 @@ import {
     faMagnifyingGlass,
     faChevronLeft,
     faChevronRight,
+    faCircleExclamation,
+    faCircleCheck,
     faList,
     faPlus,
     faUser,
@@ -34,7 +36,8 @@ import {
     faChartColumn,
     faPowerOff
 } from '@fortawesome/free-solid-svg-icons';
-import { faTrashCan, faPenToSquare, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import {NotificationService} from "./vue/services/NotificationService";
 
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
@@ -66,8 +69,11 @@ document.addEventListener('vue:before-mount', (event) => {
     library.add(faChartColumn);
     library.add(faPowerOff);
     library.add(faMagnifyingGlass);
+    library.add(faCircleExclamation);
 
     app.component('font-awesome-icon', FontAwesomeIcon);
 
     app.config.globalProperties.$moment = moment;
+
+    NotificationService.setAppContext(app._context);
 });

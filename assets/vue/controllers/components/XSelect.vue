@@ -1,18 +1,27 @@
 <template>
-	<select
-		v-model="model"
+
+	<x-input
+		v-model="label"
+		@focus="openList"
+	/>
+
+	<div
+		v-if="showList"
+		class="options-list"
 	>
-		<option
+		<div
 			v-for="option in options"
-			:value="option.value"
+			@click="selectValue(option)"
 		>
 			{{ option.label }}
-		</option>
-	</select>
+		</div>
+	</div>
+
 </template>
 
 <script setup>
-import { defineModel, defineProps, toRefs } from "vue";
+import { defineModel, defineProps, toRefs, ref } from "vue";
+import XInput from "./XInput.vue";
 
 const model = defineModel();
 
@@ -22,10 +31,18 @@ const props = defineProps({
 
 const { options } = toRefs(props);
 
-options.value.unshift({
-	value: undefined,
-	label: "- select an option -"
-});
+const label = ref(model.value?.label);
+const showList = ref(false);
+
+const openList = () => {
+	showList.value = true;
+}
+
+const selectValue = (option) => {
+	label.value = option.label;
+	model.value = option;
+	showList.value = false;
+}
 
 </script>
 

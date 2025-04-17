@@ -134,7 +134,7 @@ const doAction = (callback) => {
 	}
 
 	.closed {
-		animation: closedAnimation 0.2s;
+		animation: closedAnimation 0.3s;
 	}
 }
 

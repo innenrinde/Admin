@@ -123,9 +123,15 @@ class IndicatorController extends CrudController
         $rows = $this->em->getRepository(Indicator::class)->findAll();
 
         $data = array_map(function (Indicator $row) {
+
+            $category = $row->getCategory();
+
             return [
                 'id' => $row->getId(),
-                'category' => $row->getCategoryTitle(),
+                'category' => [
+                    'id' => $category ? $category->getId() : null,
+                    'label' => $category ? $category->getTitle() : null,
+                ],
                 'title' => $row->getTitle(),
                 'address' => $row->getAddress(),
                 'transaction' => $row->getTransaction(),

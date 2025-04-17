@@ -46,6 +46,9 @@
 	          <span v-else-if="column.type === 'datetime'">
 		          {{ dateFormat(row[column.field]) }}
 	          </span>
+	          <span v-else-if="column.type === 'choice'">
+		          {{ row[column.field].label }}
+	          </span>
 	          <span v-else>{{ row[column.field] }}</span>
           </div>
 
@@ -132,7 +135,7 @@ const query = defineModel("");
 const { columns, url } = toRefs(props);
 
 const visibleColumns = columns.value.filter(column => !column.hidden);
-
+console.log(visibleColumns);
 let rows = [];
 let localRows = reactive([]);
 

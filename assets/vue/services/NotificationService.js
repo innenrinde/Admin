@@ -4,7 +4,13 @@ import XConfirm from "../controllers/components/XConfirm.vue";
 
 class NotificationService {
 
+    #appContext = null;
+
     #messagesContainer = null;
+
+    setAppContext(value) {
+        this.#appContext = value;
+    }
 
     /**
      * Open a simple notification
@@ -36,7 +42,7 @@ class NotificationService {
                     this.#messagesContainer.removeChild(container);
                 }
             },
-            appContext: null
+            appContext: this.#appContext
         });
     }
 

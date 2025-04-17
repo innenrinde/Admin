@@ -139,7 +139,7 @@ readonly class TableBuilder
     private function choiceType(array $column, array $data): object|null
     {
         if (isset($column['entity'])) {
-            return $this->em->getRepository($column['entity'])->find($data[$column['field']] ?? "");
+            return $this->em->getRepository($column['entity'])->find($data[$column['field']]['value'] ?? "");
         }
 
         return null;

@@ -7,7 +7,9 @@
 		<div class="title">
 			{{ title }}
 		</div>
-		<div>
+		<div class="content">
+			<font-awesome-icon :icon="['fas', 'circle-exclamation']" v-if="type === 'error'" />
+			<font-awesome-icon :icon="['fas', 'circle-check']" v-if="type === 'success'" />
 			{{ message }}
 		</div>
 
@@ -45,7 +47,7 @@ const closeMessage = () => {
 	closedAnimation.value = true;
 	setTimeout(() => {
 		emit("close");
-	}, 200);
+	}, 100);
 };
 
 </script>
@@ -58,11 +60,11 @@ const closeMessage = () => {
 	width: 300px;
 	min-width: 200px;
 	max-width: 600px;
-	padding: 10px;
+	padding: 15px;
 	background-color: #fff;
 	border: solid 1px #c8c8c8;
 	box-shadow: 1px 1px 5px #d3d3d3;
-	border-radius: 5px;
+	border-radius: 7px;
 	text-align: left;
 	overflow: hidden;
 	z-index: 9999;
@@ -73,17 +75,24 @@ const closeMessage = () => {
 		font-weight: bold;
 		margin-bottom: 10px;
 	}
+
+	.content {
+		display: flex;
+		align-items: center;
+	}
 }
 
-.error {
-	border-color: #FF0000FF;
-	box-shadow: 1px 1px 5px #ff9494;
+.error svg,
+.success svg {
+	margin-right: 10px;
+	font-size: 26px;
+}
+
+.error svg {
 	color: #FF0000FF;
 }
 
-.success {
-	border-color: #008000;
-	box-shadow: 1px 1px 5px #69aa69;
+.success svg {
 	color: #008000;
 }
 

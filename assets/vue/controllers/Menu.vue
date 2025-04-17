@@ -170,7 +170,7 @@ export default {
 		border-radius: 5px;
 		cursor: pointer;
 		margin-top: 1px;
-		font-weight: bold;
+		font-weight: 600;
 
 		&:hover {
 			background-color: #0076ae;
