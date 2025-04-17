@@ -2,15 +2,23 @@
 
 	<x-input
 		v-model="label"
-		@focus="openList"
+		readonly
+		:icon="showList ? ['fas', 'chevron-up'] : ['fas', 'chevron-down']"
+		class="pointer"
+		@click="clickInput"
+		@blur="blurInput"
 	/>
 
 	<div
-		v-if="showList"
 		class="options-list"
+		:class="{ 'opened-list': showList, 'closed-list': !showList }"
+		@mouseleave="mouseLeaveList"
+		@mouseover="mouseOverList"
 	>
 		<div
 			v-for="option in options"
+			:key="option"
+			:class="{ 'selected' : option.value === model?.value }"
 			@click="selectValue(option)"
 		>
 			{{ option.label }}
@@ -34,10 +42,46 @@ const { options } = toRefs(props);
 const label = ref(model.value?.label);
 const showList = ref(false);
 
-const openList = () => {
-	showList.value = true;
+/**
+ * Flag to know if a list with options is opened
+ * @type {boolean}
+ */
+let overList = false;
+
+/**
+ * Simulate opening list
+ */
+const clickInput = () => {
+	showList.value = !showList.value;
 }
 
+/**
+ * Try to close list. We clicked ooutside
+ */
+const blurInput = () => {
+	if (!overList) {
+		showList.value = false;
+	}
+}
+
+/**
+ * List can be closed
+ */
+const mouseLeaveList = () => {
+	overList = false;
+}
+
+/**
+ * Keep list opened
+ */
+const mouseOverList = () => {
+	overList = true;
+}
+
+/**
+ * Select a value from list
+ * @param {Object} option
+ */
 const selectValue = (option) => {
 	label.value = option.label;
 	model.value = option;
@@ -47,19 +91,49 @@ const selectValue = (option) => {
 </script>
 
 <style scoped lang="scss">
-select {
-	padding: 10px;
-	border: solid 1px #a3a3a3;
-	border-radius: 5px;
-	box-shadow: #cdcdcd 1px 1px 2px;
-	width: 323px;
+.pointer :deep(input) {
 	cursor: pointer;
 }
 
-select:focus {
-	appearance: none;
-	outline: none;
+.options-list {
 	border: solid 1px #a3a3a3;
-	background-color: #ffffcb;
+	background-color: #ffffeb;
+	border-radius: 5px;
+	box-shadow: #cdcdcd 2px 2px 4px;
+	position: absolute;
+	width: 320px;
+	max-height: 200px;
+	overflow: auto;
+	overflow-x: hidden;
+
+	div {
+		padding: 10px;
+		cursor: pointer;
+	}
+
+	div.selected,
+	div:hover {
+		background-color: #cdcdcd;
+	}
 }
+
+.opened-list {
+	height: auto;
+	animation: openAnimation 0.3s;
+}
+
+.closed-list {
+	height: 0;
+	display: none;
+}
+
+@keyframes openAnimation {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 100%;
+	}
+}
+
 </style>

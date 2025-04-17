@@ -162,7 +162,7 @@ h1 {
 	.form-line {
 		display: table-row;
 
-		div {
+		> div {
 			display: table-cell;
 			padding: 5px 5px 5px 0;
 		}

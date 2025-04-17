@@ -1,24 +1,59 @@
 <template>
-	<input
-		v-model="model"
-		:placeholder="placeholder"
-	/>
+		<div
+			@click="emitFocus"
+			class="input-container"
+		>
+			<input
+				v-model="model"
+				:placeholder="placeholder"
+				:readonly="readonly"
+				@blur="emitBlur"
+			/>
+			<font-awesome-icon
+				v-if="icon"
+				:icon="icon"
+				class="icon"
+			/>
+		</div>
 </template>
 
 <script setup>
-import { defineModel, defineProps, toRefs } from "vue";
+import {defineEmits, defineModel, defineProps, toRefs} from "vue";
 
-	const model = defineModel();
+const model = defineModel();
 
-	const props = defineProps({
-		placeholder: String,
-	});
+const emit = defineEmits(["focus", "blur"]);
+
+const props = defineProps({
+	placeholder: String,
+	readonly: Boolean,
+	icon: Array,
+});
 
 const { placeholder } = toRefs(props);
+
+/**
+ * simulate to focus input element
+ */
+const emitFocus = () => {
+	emit("focus");
+}
+
+/**
+ * simulate blur input element
+ */
+const emitBlur = () => {
+	emit("blur");
+}
 
 </script>
 
 <style scoped lang="scss">
+.input-container {
+	display: flex;
+	align-items: center;
+}
+
 input {
 	padding: 10px;
 	border: solid 1px #a3a3a3;
@@ -31,6 +66,14 @@ input:focus {
 	appearance: none;
 	outline: none;
 	border: solid 1px #a3a3a3;
-	background-color: #ffffcb;
+	background-color: #ffffeb;
+}
+
+.icon {
+	margin-left: -30px;
+	font-size: 18px;
+	background-color: #fff;
+	border-radius: 20px;
+	padding: 4px;
 }
 </style>
