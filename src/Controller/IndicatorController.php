@@ -129,7 +129,7 @@ class IndicatorController extends CrudController
             return [
                 'id' => $row->getId(),
                 'category' => [
-                    'id' => $category ? $category->getId() : null,
+                    'value' => $category ? $category->getId() : null,
                     'label' => $category ? $category->getTitle() : null,
                 ],
                 'title' => $row->getTitle(),
