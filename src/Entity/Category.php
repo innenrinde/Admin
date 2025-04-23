@@ -26,6 +26,9 @@ class Category
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $modified_date = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $id_reference = null;
+
     public function __construct()
     {
         $this->created_date = new \DateTime();
@@ -82,5 +85,15 @@ class Category
         $this->modified_date = $modified_date;
 
         return $this;
+    }
+
+    public function getIdReference(): ?int
+    {
+        return $this->id_reference;
+    }
+
+    public function setIdReference(?int $id_reference): void
+    {
+        $this->id_reference = $id_reference;
     }
 }

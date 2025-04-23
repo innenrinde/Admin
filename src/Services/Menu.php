@@ -75,6 +75,27 @@ class Menu
             ]
         ];
 
+        $menusList[] = [
+            "title" => "Data objects",
+            "icon" => "DataAnalysis",
+            "children" => [
+                [
+                    "title" => "Data objects list",
+                    "icon" => "chart-column",
+                    "route" => $this->router->generate("app_objectdata"),
+                    "active" => $this->router->getContext()->getPathInfo() === "/objectdata",
+                    "confirm" => false,
+                ],
+                [
+                    "title" => "Add a data object",
+                    "icon" => "plus",
+                    "route" => $this->router->generate("app_objectdata_add"),
+                    "active" => $this->router->getContext()->getPathInfo() === "/objectdata/add",
+                    "confirm" => false,
+                ]
+            ]
+        ];
+
         if ($this->security->getUser()->isAdmin()) {
             $menusList[] = [
                 "title" => "Users",

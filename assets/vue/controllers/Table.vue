@@ -5,6 +5,7 @@
 			<x-input
 				type="text"
 				placeholder="Search..."
+				readonly
 				v-model="query"
 				@focus="openSearch"
 			/>
@@ -48,6 +49,14 @@
 	          </span>
 	          <span v-else-if="column.type === 'choice'">
 		          {{ row[column.field].label }}
+	          </span>
+						<span v-else-if="column.type === 'file'">
+							<span v-if="row[column.field]">[img]</span>
+<!--		          <img-->
+<!--								v-if="row[column.field]"-->
+<!--								:src="row[column.field]"-->
+<!--								width="50"-->
+<!--							/>-->
 	          </span>
 	          <span v-else>{{ row[column.field] }}</span>
           </div>
@@ -435,13 +444,12 @@ const dateFormat = (value) => {
       > div {
 	      background-color: #fff;
         display: table-cell;
+				vertical-align: middle;
         padding: 7px;
       }
 
 	    .actions {
-		    display: flex;
-		    flex-direction: row;
-		    flex-wrap: nowrap;
+		    text-wrap : nowrap;
 
 		    span {
 			    display: inline-block;

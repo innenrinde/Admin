@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Data objects{% endblock %}
+
+{% block body %}
+
+    <div class="table-container" {{ vue_component('Table', {
+        'url': {
+            'get': path('app_objectdata_list'),
+            'post': path('app_objectdata_edit'),
+            'delete': path('app_objectdata_delete'),
+        },
+        'columns': columns
+    }) }} />
+
+{% endblock %}

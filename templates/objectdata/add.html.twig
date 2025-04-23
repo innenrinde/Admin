@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create a data object{% endblock %}
+
+{% block body %}
+
+    <div class="form-container" {{ vue_component('Form', {
+        'title': 'Create data object',
+        'url': {
+            'put': path('app_objectdata_create'),
+        },
+        'columns': columns,
+        'values': {}
+    }) }} />
+
+{% endblock %}
