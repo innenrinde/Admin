@@ -23,7 +23,7 @@
           >
             {{ column.title }}
           </div>
-	        <div class="wp80">
+	        <div class="w1">
 						<!-- Operations-->
 	        </div>
         </div>
@@ -378,14 +378,11 @@ const dateFormat = (value) => {
   display: flex;
   overflow: auto;
   margin: 5px 10px 10px 10px;
-  border-bottom: solid 1px #dadada;
+  border: solid 1px #dadada;
 
   .table {
     display: table;
     text-align: left;
-    border: solid 1px #dadada;
-    border-top: none;
-    border-bottom: none;
 
     .header {
       display: table-row;
@@ -396,7 +393,6 @@ const dateFormat = (value) => {
       > div {
         display: table-cell;
         background-color: #f3f4f6;
-        border-top: solid 1px #dadada;
         border-bottom: solid 1px #dadada;
         font-weight: 600;
         color: #036593;

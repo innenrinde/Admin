@@ -143,8 +143,25 @@ export default {
 <style scoped lang="scss">
 .menu-panel {
 	width: 200px;
+	height: 100%;
 	background-color: #02557c;
 	color: #fff;
+	display: flex;
+	flex-direction: column;
+
+	::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 5px grey;
+		border-radius: 5px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: #0076ae;
+		border-radius: 5px;
+	}
 }
 
 .icon-panel {
@@ -160,6 +177,7 @@ export default {
   flex-direction: column;
   height: 100%;
 	padding: 5px;
+	overflow-y: auto;
 
 	.level1-item-title {
 		display: flex;
