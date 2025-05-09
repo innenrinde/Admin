@@ -51,7 +51,8 @@
 	</x-panel>
 
 	<search-panel
-		v-show="searchFocus"
+		v-if="searchFocus"
+		:query-text="query"
 		@close="closeSearch"
 		@ok="applySearch"
 	/>
@@ -77,8 +78,6 @@ const props = defineProps({
 const query = defineModel("");
 
 const { columns, url } = toRefs(props);
-
-const visibleColumns = columns.value.filter(column => !column.hidden);
 
 let rows = [];
 let localRows = reactive([]);

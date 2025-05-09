@@ -37,7 +37,7 @@ import {
     faPowerOff
 } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
-import {NotificationService} from "./vue/services/NotificationService";
+import { NotificationService } from "./vue/services/NotificationService";
 
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
@@ -51,6 +51,15 @@ document.addEventListener('vue:before-mount', (event) => {
     } = event.detail;
 
     app.component("Form", Form);
+
+    app.directive("focus", {
+        // When the bound element is mounted into the DOM...
+        mounted(el, binding) {
+            if (binding.value) {
+                el.focus();
+            }
+        }
+    });
 
     /* add font awesome icons to the library */
     library.add(faTrashCan);

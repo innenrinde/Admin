@@ -17,13 +17,13 @@
         <div class="{{ isSignInPage ? 'container' : 'container-account' }}">
             {% if not isSignInPage and not app.user %}
             <div class="header">
-                <div class="title">MyAppCustomTitle</div>
+                <div class="title">SyncArt</div>
             </div>
             {% endif %}
 
             <div class="content">
                 {% if app.user %}
-                <div class="content-menu" {{ vue_component('Menu', { 'title': 'Stocks', 'items': menu.menus }) }}></div>
+                <div class="content-menu" {{ vue_component('Menu', { 'title': 'SyncArt', 'items': menu.menus }) }}></div>
                 {%  endif %}
                 <div class="content-body">{% block body %}{% endblock %}</div>
             </div>

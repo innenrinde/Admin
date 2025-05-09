@@ -150,7 +150,7 @@ export default {
 	flex-direction: column;
 
 	::-webkit-scrollbar {
-		width: 10px;
+		width: 7px;
 	}
 
 	::-webkit-scrollbar-track {

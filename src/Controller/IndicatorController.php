@@ -38,6 +38,7 @@ class IndicatorController extends CrudController
                 'type' => NumberType::class,
                 'field' => 'id',
                 'isPk' => true,
+                'width' => 'w1',
                 'constraints' => [
                     NullForCreation::class => 'No id found',
                 ]

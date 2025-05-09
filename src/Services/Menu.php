@@ -54,7 +54,7 @@ class Menu
             ];
         }
 
-        $menusList[] = [
+        /*$menusList[] = [
             "title" => "Indicators",
             "icon" => "DataAnalysis",
             "children" => [
@@ -73,7 +73,7 @@ class Menu
                     "confirm" => false,
                 ]
             ]
-        ];
+        ];*/
 
         $menusList[] = [
             "title" => "Data objects",

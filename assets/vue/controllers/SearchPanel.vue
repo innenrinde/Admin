@@ -14,11 +14,11 @@
 						Search by
 					</label>
 					<x-input
-						ref="realQueryText"
 						class="keywords"
 						type="text"
 						placeholder="type here a phrase and then Enter..."
 						v-model="query"
+						:focus="true"
 						@keydown="onQueryEnter"
 					/>
 				</div>
@@ -41,14 +41,27 @@
 </template>
 
 <script setup>
-import { defineEmits, defineModel } from "vue";
+import { defineEmits, defineModel, defineProps, toRefs, onMounted } from "vue";
 import XInput from "./components/XInput.vue";
 import XPanel from "./components/XPanel.vue";
+
+const props = defineProps({
+	queryText: { type: String, default: "" }
+});
+
+const { queryText } = toRefs(props);
 
 const emit = defineEmits(["ok", "close"]);
 
 const query = defineModel("");
 const kNumber = defineModel({ default: 100 });
+
+/**
+ * Catch event
+ */
+onMounted(() => {
+	query.value = queryText.value;
+});
 
 /**
  * Enter on keywords field

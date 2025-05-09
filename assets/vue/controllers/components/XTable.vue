@@ -1,5 +1,7 @@
 <template>
-	<div class="table-section">
+	<div
+		class="table-section"
+	>
 		<div class="table">
 			<div
 				class="header"
@@ -17,9 +19,10 @@
 			</div>
 
 			<div
-				v-for="row in rows"
+				v-for="(row, index) in rows"
 				:key="row"
 				class="content"
+				:data-index="index"
 			>
 				<div
 					v-for="column in visibleColumns"
@@ -29,7 +32,11 @@
 						v-if="column.type === 'checkbox'"
 						class="align-center"
 					>
-						<font-awesome-icon :icon="['far', 'circle-check']" v-if="row[column.field]" />
+						<font-awesome-icon
+							v-if="row[column.field]"
+							:icon="['fas', 'circle-check']"
+							class="icon-check"
+						/>
 						<span v-else>-</span>
 					</span>
 					<span v-else-if="column.type === 'datetime'">
@@ -38,14 +45,11 @@
 					<span v-else-if="column.type === 'choice'">
 						{{ row[column.field].label }}
 					</span>
-					<span v-else-if="column.type === 'file'">
-							<span v-if="row[column.field]">[img]</span>
-						<!--		          <img-->
-						<!--								v-if="row[column.field]"-->
-						<!--								:src="row[column.field]"-->
-						<!--								width="50"-->
-						<!--							/>-->
-	          </span>
+					<span v-else-if="column.type === 'file' && row[column.field]">
+							<x-image
+								:src="row[column.field]"
+							/>
+					</span>
 					<span v-else>{{ row[column.field] }}</span>
 				</div>
 
@@ -73,8 +77,12 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs, defineEmits } from "vue";
+import { defineProps, toRefs, defineEmits, defineAsyncComponent } from "vue";
 import DateTimeTransformer from "../../transformers/DateTimeTransformer";
+
+const XImage = defineAsyncComponent(
+	() => import("./XImage.vue")
+);
 
 const emit = defineEmits(["edit", "delete"]);
 
@@ -83,7 +91,7 @@ const props = defineProps({
 	rows: Array,
 });
 
-const { columns, url } = toRefs(props);
+const { columns, rows } = toRefs(props);
 
 const visibleColumns = columns.value.filter(column => !column.hidden);
 
@@ -183,6 +191,11 @@ const dateFormat = (value) => {
 				display: table-cell;
 				vertical-align: middle;
 				padding: 7px;
+			}
+
+			:deep(.icon-check) {
+				font-size: 16px;
+				color: green;
 			}
 
 			.actions {

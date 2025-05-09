@@ -5,6 +5,7 @@
 		>
 			<input
 				v-model="model"
+				v-focus="focus"
 				:placeholder="placeholder"
 				:readonly="readonly"
 				@blur="emitBlur"
@@ -28,9 +29,8 @@ const props = defineProps({
 	placeholder: String,
 	readonly: Boolean,
 	icon: Array,
+	focus: { type: Boolean, default: false },
 });
-
-const { placeholder } = toRefs(props);
 
 /**
  * simulate to focus input element
