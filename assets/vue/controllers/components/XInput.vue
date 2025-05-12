@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import {defineEmits, defineModel, defineProps, toRefs} from "vue";
+import { defineEmits, defineModel, defineProps } from "vue";
 
 const model = defineModel();
 

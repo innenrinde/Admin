@@ -48,6 +48,7 @@ class CategoryController extends CrudController
         private readonly HttpService $httpService,
         private readonly TableBuilder $tableBuilder
     ) {
+        parent::__construct($this->em);
     }
 
     #[Route('/categories', name: 'app_categories')]
@@ -61,16 +62,24 @@ class CategoryController extends CrudController
     #[Route('/categories/list', name: 'app_categories_list', methods: ['GET'])]
     public function getRows(Request $request): JsonResponse
     {
-        $rows = $this->em->getRepository(Category::class)->findAll();
 
-        $data = array_map(function (Category $row) {
+//        $page = $request->query->get('page') ?? 0;
+//        $limit = $request->query->get('limit') ?? 10;
+
+//        $rows = $this->em->getRepository(Category::class)->findAll();
+//        $rows = $this->em->getRepository(Category::class)->findBy([], null, $limit, $page*$limit);
+//        $total = $this->em->getRepository(Category::class)->count();
+
+        $data = $this->filteredRows(Category::class, $request->query->all());
+
+        $rows = array_map(function (Category $row) {
             return [
                 'id' => $row->getId(),
                 'title' => $row->getTitle(),
             ];
-        }, $rows);
+        }, $data['rows']);
 
-        return $this->httpService->response($data);
+        return $this->httpService->response($rows, $data['pager']);
     }
 
     /**

@@ -31,6 +31,9 @@ class ObjectDataController extends CrudController
         private readonly HttpService $httpService,
         private readonly TableBuilder $tableBuilder
     ) {
+
+        parent::__construct($this->em);
+
         $this->columns = [
             [
                 'title' => 'ID',
@@ -133,9 +136,11 @@ class ObjectDataController extends CrudController
     #[Route('/objectdata/list', name: 'app_objectdata_list')]
     public function getRows(Request $request): JsonResponse
     {
-        $rows = $this->em->getRepository(ObjectData::class)->findAll();
+//        $rows = $this->em->getRepository(ObjectData::class)->findAll();
 
-        $data = array_map(function (ObjectData $row) {
+        $data = $this->filteredRows(ObjectData::class, $request->query->all());
+
+        $rows = array_map(function (ObjectData $row) {
 
             $category = $row->getCategory();
 
@@ -154,9 +159,9 @@ class ObjectDataController extends CrudController
 //                'description' => $row->getDescription(),
 //                'tags' => $row->getTags(),
             ];
-        }, $rows);
+        }, $data['rows']);
 
-        return $this->httpService->response($data);
+        return $this->httpService->response($rows, $data['pager']);
     }
 
     /**

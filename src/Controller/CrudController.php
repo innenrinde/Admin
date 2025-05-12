@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -9,6 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class CrudController extends AbstractController
 {
+    protected function __construct(
+        private readonly EntityManagerInterface $em,
+    ) {
+    }
+
     /**
      * @return Response
      */
@@ -47,20 +53,25 @@ abstract class CrudController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @param string $entity
+     * @param array $params
+     * @return array
      */
-    protected function isEdit(Request $request): bool
+    protected function filteredRows(string $entity, array $params): array
     {
-        return $request->getMethod() === "POST";
-    }
+        $page = $params['page'] ?? 0;
+        $limit = $params['limit'] ?? 1000;
 
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    protected function isCreate(Request $request): bool
-    {
-        return $request->getMethod() === "PUT";
+        $rows = $this->em->getRepository($entity)->findBy([], null, $limit, $page*$limit);
+        $total = $this->em->getRepository($entity)->count();
+
+        return [
+            'rows' => $rows,
+            'pager' => [
+                'total' => $total,
+                'page' => $page,
+                'limit' => $limit,
+            ],
+        ];
     }
 }

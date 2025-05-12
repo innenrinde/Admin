@@ -14,8 +14,10 @@
     <x-table
 			:columns="columns"
 			:rows="localRows"
+			:pager="pager"
 			@edit="editRow"
 			@delete="deleteRow"
+			@change-page="changePage"
 		/>
 
   </div>
@@ -78,6 +80,12 @@ const props = defineProps({
 const query = defineModel("");
 
 const { columns, url } = toRefs(props);
+
+let pager = reactive({
+	total: 0,
+	page: 0,
+	// limit: 0
+});
 
 let rows = [];
 let localRows = reactive([]);
@@ -229,14 +237,33 @@ let kNN = new kNNSearch();
  */
 const getTableDataList = () => {
   axios
-    .get(url.value.get)
+    .get(url.value.get, {
+			params: { ...pager }
+		})
     .then(response => {
       if (!response.data.content) {
         throw new Error(`${url.value.list} response => .data.content not found`);
       }
+
       rows = response.data.content;
+
+			let responsePager = response.data.pager;
+			pager.total = Number(responsePager.total);
+			pager.page = Number(responsePager.page);
+			pager.limit = Number(responsePager.limit);
+
+			localRows.splice(0);
 			rows.forEach(row => localRows.push(row));
     });
+}
+
+/**
+ * Change pages
+ * @param {object} data
+ */
+const changePage = (data) => {
+	pager = data;
+	getTableDataList();
 }
 
 /**

@@ -54,7 +54,7 @@ const props = defineProps({
 const { src, alt } = toRefs(props);
 
 let showImage = ref(false);
-let srcLocal = ref("/assets/img/bk.gif");
+let srcLocal = ref(null);
 
 const openImage = () => {
 	showImage.value = true;

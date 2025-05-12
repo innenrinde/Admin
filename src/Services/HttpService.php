@@ -17,7 +17,7 @@ class HttpService
         $count = count($arguments);
 
         if ($function_name === "response") {
-            if ($count === 1) {
+            if ($count === 1 || $count === 2) {
                 return $this->responseContent(...$arguments);
             } else if ($count === 3 || $count === 4) {
                 return $this->responseWithMessage(...$arguments);
@@ -49,8 +49,8 @@ class HttpService
      * @param array $content
      * @return JsonResponse
      */
-    private function responseContent(array $content): JsonResponse
+    private function responseContent(array $content, array $pager = null): JsonResponse
     {
-        return new JsonResponse([ 'content' => $content ], Response::HTTP_OK);
+        return new JsonResponse([ 'content' => $content, 'pager' => $pager ], Response::HTTP_OK);
     }
 }

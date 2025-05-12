@@ -73,25 +73,40 @@
 			</div> <!--END row-->
 
 		</div> <!--END table-->
+
 	</div>
+
+	<div
+		class="pager"
+	>
+		<x-pager
+			:total="pager.total"
+			:page="pager.page"
+			:limit="pager.limit"
+			@page="changePage"
+		/>
+	</div>
+
 </template>
 
 <script setup>
 import { defineProps, toRefs, defineEmits, defineAsyncComponent } from "vue";
 import DateTimeTransformer from "../../transformers/DateTimeTransformer";
+import XPager from "./XPager.vue";
 
 const XImage = defineAsyncComponent(
 	() => import("./XImage.vue")
 );
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["edit", "delete", "changePage"]);
 
 const props = defineProps({
 	columns: Array,
 	rows: Array,
+	pager: Object,
 });
 
-const { columns, rows } = toRefs(props);
+const { columns, rows, pager } = toRefs(props);
 
 const visibleColumns = columns.value.filter(column => !column.hidden);
 
@@ -112,6 +127,14 @@ const editRow = (row) => {
 }
 
 /**
+ * Emit pager options
+ * @param pager
+ */
+const changePage = (pager) => {
+	emit("changePage", pager);
+}
+
+/**
  * Custom date time format
  * @param {String} value
  * @returns {String}
@@ -126,7 +149,7 @@ const dateFormat = (value) => {
 .table-section {
 	display: flex;
 	overflow: auto;
-	margin: 5px 10px 10px 10px;
+	margin: 5px 10px 0 10px;
 	border: solid 1px #dadada;
 
 	.table {
@@ -227,5 +250,12 @@ const dateFormat = (value) => {
 			}
 		}
 	}
+}
+
+.pager {
+	border: solid 1px #dadada;
+	border-top: none;
+	background-color: #f3f4f6;
+	margin: 0 10px 10px 10px;
 }
 </style>
