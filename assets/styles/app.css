@@ -20,25 +20,91 @@ body {
     align-content: center;
     text-align: center;
     height: 100%;
-    background-color: #418465;
-    background-image: url("/assets/img/background.jpg");
+    background-color: #296b8b;
+    background-image: url("/assets/img/bk.jpg");
     background-size: 100%;
 }
 
+.container .presentation {
+    top: 0;
+    margin: 20px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+.container .presentation > div:first-child {
+    display: flex;
+}
+
+.container .presentation div:first-child div {
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    background-position: left;
+    padding-left: 30px;
+    margin-right: 30px;
+    text-align: left;
+    color: #ededed;
+    font-size: 16px;
+    text-shadow: 1px 1px #02557c;
+}
+
+.container .presentation div:first-child div:first-child {
+    background-image: url("/assets/img/vue-logo.png");
+}
+
+.container .presentation div:first-child div:last-child {
+    background-image: url("/assets/img/symfony-logo.png");
+}
+
+.container .presentation > div:last-child {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.container .presentation > div:last-child div {
+    animation: textAnimation 2s;
+    overflow: hidden;
+    height: 22px;
+}
+
+@keyframes textAnimation {
+    from {
+        height: 0;
+    }
+    50% {
+        height: 0;
+    }
+    to {
+        height: 22px;
+    }
+}
+
+.container .presentation > div:last-child div {
+    color: #fff;
+    text-align: left;
+    text-shadow: 1px 1px #02557c;
+    line-height: 1.8em;
+}
+
 .container .panel {
-    width: 300px;
-    margin-right: calc(50% - 150px);
-    margin-left: calc(50% - 150px);
-    border: solid 1px #000;
+    width: 400px;
+    height: 200px;
+    margin-right: calc(50% - 200px);
+    margin-left: calc(50% - 200px);
     background-color: #fff;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #474747;
 }
 
 .container h1 {
     font-size: 18px;
     margin: 0 0 5px 0;
+    color: #000;
 }
 
 .container .panel div {
@@ -50,14 +116,52 @@ body {
 }
 
 .container .panel div label {
-    width: 30%;
+    width: 20%;
     text-align: right;
     margin-right: 5px;
 }
 
 .container .panel div input {
-    border: solid 1px #000;
-    padding: 5px;
+    border: solid 1px #02557c;
+    padding: 7px;
+    width: 250px;
+}
+
+.container .panel div input:focus {
+    appearance: none;
+    outline: none;
+    background-color: #ffffca;
+}
+
+.container .panel div button {
+    appearance: none;
+    outline: none;
+    background-color: #0076ae;
+    border: solid 1px #02557c;
+    width: 265px;
+    padding: 7px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.container .panel div button:hover {
+    background-color: #02557c;
+    animation: fadeBackgroundBtn 0.5s;
+}
+
+.alert-danger {
+    color: red;
+    padding: 7px;
+    background-color: #efefef;
+}
+
+@keyframes fadeBackgroundBtn {
+    from {
+        background-color: #0076ae;
+    }
+    to {
+        background-color: #02557c;
+    }
 }
 
 .container .panel a {
@@ -83,17 +187,17 @@ body {
 }
 
 .container-account .header {
-    display: flex;
-    flex-direction: row;
-    color: #fff;
-    background-color: #418465;
-    border-bottom: solid 2px #000;
-    align-items: center;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    padding: 10px;
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*color: #fff;*/
+    /*background-color: #418465;*/
+    /*border-bottom: solid 2px #000;*/
+    /*align-items: center;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*z-index: 9999;*/
+    /*padding: 10px;*/
 }
 
 .container-account .content {
