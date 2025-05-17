@@ -5,6 +5,7 @@
 {% block body %}
 
     <div class="table-container" {{ vue_component('Table', {
+        'title': "Available users list",
         'url': {
             'get': path('app_users_list'),
             'post': path('app_users_edit'),

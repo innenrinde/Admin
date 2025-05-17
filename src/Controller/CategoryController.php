@@ -63,13 +63,6 @@ class CategoryController extends CrudController
     public function getRows(Request $request): JsonResponse
     {
 
-//        $page = $request->query->get('page') ?? 0;
-//        $limit = $request->query->get('limit') ?? 10;
-
-//        $rows = $this->em->getRepository(Category::class)->findAll();
-//        $rows = $this->em->getRepository(Category::class)->findBy([], null, $limit, $page*$limit);
-//        $total = $this->em->getRepository(Category::class)->count();
-
         $data = $this->filteredRows(Category::class, $request->query->all());
 
         $rows = array_map(function (Category $row) {

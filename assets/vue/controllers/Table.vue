@@ -2,6 +2,9 @@
   <div class="container-table">
 
     <div class="header-bar">
+
+			<h1><span>{{ pager.total }} records</span><b>{{ title }}</b></h1>
+
 			<x-input
 				type="text"
 				placeholder="Search..."
@@ -12,6 +15,7 @@
     </div>
 
     <x-table
+			v-show="pager.total"
 			:columns="columns"
 			:rows="localRows"
 			:pager="pager"
@@ -72,14 +76,15 @@ import SearchPanel from "./SearchPanel.vue";
 import XTable from "./components/XTable.vue";
 
 const props = defineProps({
-  columns: Array,
+	title: String,
+	columns: Array,
   rows: Array,
   url: Object,
 });
 
 const query = defineModel("");
 
-const { columns, url } = toRefs(props);
+const { title, columns, url } = toRefs(props);
 
 let pager = reactive({
 	total: 0,
@@ -305,10 +310,25 @@ let applySearch = ({ value, k }) => {
 }
 
 .header-bar {
-	padding: 10px 10px 0 10px;
+	padding: 20px 10px 0 10px;
 	display: flex;
-	justify-content: right;
-	align-items: flex-end;
+	align-items: center;
+
+	h1 {
+		display: inline-block;
+		font-size: 14px;
+		font-weight: 400;
+		width: 100%;
+		color: #036593;
+
+		span {
+			background-color: #efefef;
+			margin-right: 10px;
+			padding: 2px 10px 2px 10px;
+			border-radius: 15px;
+			font-size: 12px;
+		}
+	}
 
 	input {
 		padding: 5px;

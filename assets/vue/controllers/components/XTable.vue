@@ -16,6 +16,9 @@
 				<div class="w1">
 					<!-- Operations-->
 				</div>
+				<div class="w1 align-center">
+					#
+				</div>
 			</div>
 
 			<div
@@ -46,9 +49,9 @@
 						{{ row[column.field].label }}
 					</span>
 					<span v-else-if="column.type === 'file' && row[column.field]">
-							<x-image
-								:src="row[column.field]"
-							/>
+						<x-image
+							:src="row[column.field]"
+						/>
 					</span>
 					<span v-else>{{ row[column.field] }}</span>
 				</div>
@@ -68,6 +71,10 @@
 					>
 						<font-awesome-icon :icon="['far', 'pen-to-square']" />
 					</span>
+				</div>
+
+				<div class="align-center">
+					{{ index + localPager.page * localPager.limit + 1 }}
 				</div>
 
 			</div> <!--END row-->
@@ -108,7 +115,11 @@ const props = defineProps({
 
 const { columns, rows, pager } = toRefs(props);
 
+// extract only visible columns for table header
 const visibleColumns = columns.value.filter(column => !column.hidden);
+
+// local data pages to calculate row's index
+let localPager = pager;
 
 /**
  * Emit deleting row
@@ -131,6 +142,7 @@ const editRow = (row) => {
  * @param pager
  */
 const changePage = (pager) => {
+	localPager = pager;
 	emit("changePage", pager);
 }
 
@@ -169,6 +181,7 @@ const dateFormat = (value) => {
 				font-weight: 600;
 				color: #036593;
 				padding: 7px;
+				white-space: nowrap;
 			}
 
 			.w1 {
@@ -177,6 +190,10 @@ const dateFormat = (value) => {
 
 			.w10 {
 				width: 10%;
+			}
+
+			.w20 {
+				width: 20%;
 			}
 
 			.w30 {
@@ -201,7 +218,7 @@ const dateFormat = (value) => {
 			display: table-row;
 
 			&:nth-child(odd) > div {
-				background-color: #f0fdf4;
+				background-color: #f6f6f6;
 			}
 
 			&:hover > div {
@@ -239,13 +256,21 @@ const dateFormat = (value) => {
 				}
 
 				span.red {
-					border: solid 1px #f35959;
-					background-color: #ffa1a1;
+					border: solid 1px #ff1d1d;
+					background-color: #f37a7a;
+				}
+
+				span.red:hover {
+					background-color: #ff1d1d;
 				}
 
 				span.blue {
-					border: solid 1px #7f7fe8;
-					background-color: #b6b6e4;
+					border: solid 1px #02557c;
+					background-color: #1f86b6;
+				}
+
+				span.blue:hover {
+					background-color: #02557c;
 				}
 			}
 		}

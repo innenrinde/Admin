@@ -10,6 +10,11 @@
 			alt=""
 			:src="srcLocal"
 		>
+		<font-awesome-icon
+			v-else
+			class="no-image"
+			:icon="['far', 'image']"
+		/>
 	</div>
 
 	<div
@@ -71,13 +76,19 @@ const closeAction = () => {
 .thumb {
 	width: 30px;
 	height: 30px;
-	background-color: #cee1ff;
-	border: solid 1px #9fbdef;
+	background-color: #dadada;
+	border: solid 1px #cacaca;
 	cursor: pointer;
 	overflow: hidden;
 	display: flex;
+	flex-direction: column;
 	align-content: center;
 	justify-content: center;
+
+	.no-image {
+		font-size: 20px;
+		color: #cacaca;
+	}
 }
 
 img {

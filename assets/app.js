@@ -34,9 +34,13 @@ import {
     faUser,
     faUsers,
     faChartColumn,
-    faPowerOff
+    faPowerOff,
+    faForward,
+    faForwardStep,
+    faBackward,
+    faBackwardStep,
 } from '@fortawesome/free-solid-svg-icons';
-import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faTrashCan, faPenToSquare, faImage } from '@fortawesome/free-regular-svg-icons';
 import { NotificationService } from "./vue/services/NotificationService";
 
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
@@ -79,6 +83,11 @@ document.addEventListener('vue:before-mount', (event) => {
     library.add(faPowerOff);
     library.add(faMagnifyingGlass);
     library.add(faCircleExclamation);
+    library.add(faForward);
+    library.add(faForwardStep);
+    library.add(faBackward);
+    library.add(faBackwardStep);
+    library.add(faImage);
 
     app.component('font-awesome-icon', FontAwesomeIcon);
 

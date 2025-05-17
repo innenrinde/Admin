@@ -28,17 +28,42 @@ class ObjectData
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $details = null;
 
+    // creditLine
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $info1 = null;
 
+    // culture
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $info2 = null;
+    private ?string $culture = null;
+
+    // objectBeginDate
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?string $objectBeginDate = null;
+
+    // objectEndDate
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?string $objectEndDate = null;
+
+    // dimensions
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $dimensions = null;
+
+    // country
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $country = null;
+
+    // objectURL
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $objectURL = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $imageUrl = null;
 
     #[ORM\Column(options: ["default" => false])]
     private bool $removed = false;
+
+    #[ORM\Column(options: ["default" => false])]
+    private bool $processed = false;
 
     public function __construct()
     {
@@ -108,5 +133,85 @@ class ObjectData
     public function setInfo1(?string $info1): void
     {
         $this->info1 = $info1;
+    }
+
+    public function getObjectURL(): ?string
+    {
+        return $this->objectURL;
+    }
+
+    public function setObjectURL(?string $objectURL): void
+    {
+        $this->objectURL = $objectURL;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): void
+    {
+        $this->country = $country;
+    }
+
+    public function getDimensions(): ?string
+    {
+        return $this->dimensions;
+    }
+
+    public function setDimensions(?string $dimensions): void
+    {
+        $this->dimensions = $dimensions;
+    }
+
+    public function getObjectEndDate(): ?string
+    {
+        return $this->objectEndDate;
+    }
+
+    public function setObjectEndDate(?string $objectEndDate): void
+    {
+        $this->objectEndDate = $objectEndDate;
+    }
+
+    public function getObjectBeginDate(): ?string
+    {
+        return $this->objectBeginDate;
+    }
+
+    public function setObjectBeginDate(?string $objectBeginDate): void
+    {
+        $this->objectBeginDate = $objectBeginDate;
+    }
+
+    public function getCulture(): ?string
+    {
+        return $this->culture;
+    }
+
+    public function setCulture(?string $culture): void
+    {
+        $this->culture = $culture;
+    }
+
+    public function getCreatedDate(): ?\DateTimeInterface
+    {
+        return $this->createdDate;
+    }
+
+    public function setCreatedDate(?\DateTimeInterface $createdDate): void
+    {
+        $this->createdDate = $createdDate;
+    }
+
+    public function isProcessed(): bool
+    {
+        return $this->processed;
+    }
+
+    public function setProcessed(bool $processed): void
+    {
+        $this->processed = $processed;
     }
 }

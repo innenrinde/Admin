@@ -56,7 +56,7 @@ class ObjectDataController extends CrudController
                 'entity' => Category::class,
                 'field' => 'category',
                 'options' => $this->getCategoriesList(),
-                'width' => 'w30',
+                'width' => 'w10',
                 'constraints' => [
                     NotBlank::class => 'Please select a category',
                 ]
@@ -65,16 +65,34 @@ class ObjectDataController extends CrudController
                 'title' => 'Title',
                 'type' => TextType::class,
                 'field' => 'title',
-                'width' => 'w30',
+//                'width' => 'w20',
                 'constraints' => [
                     NotBlank::class => 'Please enter a title',
                 ]
             ],
             [
+                'title' => 'Culture',
+                'type' => TextType::class,
+                'field' => 'culture',
+                'width' => 'w10',
+            ],
+            [
+                'title' => 'Year',
+                'type' => TextType::class,
+                'field' => 'year',
+                'width' => 'w10',
+            ],
+            [
+                'title' => 'Dimensions',
+                'type' => TextType::class,
+                'field' => 'dimensions',
+                'width' => 'w20',
+            ],
+            [
                 'title' => 'Credit line',
                 'type' => TextType::class,
                 'field' => 'info1',
-                'width' => 'w30',
+                'width' => 'w20',
             ],
 //            [
 //                'title' => 'Address',
@@ -136,7 +154,6 @@ class ObjectDataController extends CrudController
     #[Route('/objectdata/list', name: 'app_objectdata_list')]
     public function getRows(Request $request): JsonResponse
     {
-//        $rows = $this->em->getRepository(ObjectData::class)->findAll();
 
         $data = $this->filteredRows(ObjectData::class, $request->query->all());
 
@@ -153,11 +170,9 @@ class ObjectDataController extends CrudController
                 'title' => $row->getTitle(),
                 'imageUrl' => $row->getImageUrl(),
                 'info1' => $row->getInfo1(),
-//                'address' => $row->getAddress(),
-//                'transaction' => $row->getTransaction(),
-//                'ip' => $row->getIp(),
-//                'description' => $row->getDescription(),
-//                'tags' => $row->getTags(),
+                'culture' => $row->getCulture(),
+                'year' => $row->getObjectBeginDate() + $row->getObjectEndDate(),
+                'dimensions' => $row->getDimensions(),
             ];
         }, $data['rows']);
 

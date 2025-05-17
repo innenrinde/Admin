@@ -5,6 +5,7 @@
 {% block body %}
 
     <div class="table-container" {{ vue_component('Table', {
+        'title': "Museum items",
         'url': {
             'get': path('app_objectdata_list'),
             'post': path('app_objectdata_edit'),

@@ -5,6 +5,7 @@
 {% block body %}
 
     <div class="table-container" {{ vue_component('Table', {
+        'title': "Categories of objects",
         'url': {
             'get': path('app_categories_list'),
             'post': path('app_categories_edit'),

@@ -95,6 +95,7 @@ class UserController extends CrudController
         private readonly HttpService $httpService,
         private readonly TableBuilder $tableBuilder
     ) {
+        parent::__construct($this->em);
     }
 
     #[Route('/users', name: 'app_users')]
@@ -108,9 +109,10 @@ class UserController extends CrudController
     #[Route('/users/list', name: 'app_users_list')]
     public function getRows(Request $request): JsonResponse
     {
-        $users = $this->em->getRepository(User::class)->findAll();
 
-        $data = array_map(function (User $user) {
+        $data = $this->filteredRows(User::class, $request->query->all());
+
+        $rows = array_map(function (User $user) {
             return [
                 'id' => $user->getId(),
                 'name' => $user->getName(),
@@ -123,9 +125,9 @@ class UserController extends CrudController
                 'isAdmin' => $user->isAdmin(),
                 'zkp' => $user->isZkp()
             ];
-        }, $users);
+        }, $data['rows']);
 
-        return $this->httpService->response($data);
+        return $this->httpService->response($rows, $data['pager']);
     }
 
     /**
