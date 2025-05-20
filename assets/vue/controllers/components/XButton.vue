@@ -6,22 +6,16 @@
 	</button>
 </template>
 
-<script>
-export default {
-	name: "XButton",
-	props: {
-		title: {
-			type: String,
-			default: () => ""
-		},
-		type: {
-			type: String,
-			default: () => ""
-		}
-	},
-	methods: {
-	}
-};
+<script setup>
+import { defineProps, toRefs } from "vue";
+
+const props = defineProps({
+	title: String,
+	type: String,
+});
+
+const { title, type } = toRefs(props);
+
 </script>
 
 <style scoped lang="scss">

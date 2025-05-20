@@ -82,7 +82,7 @@ const closeAction = () => {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	align-content: center;
+	align-items: center;
 	justify-content: center;
 
 	.no-image {

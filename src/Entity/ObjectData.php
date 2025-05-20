@@ -214,4 +214,22 @@ class ObjectData
     {
         $this->processed = $processed;
     }
+
+    public function getCategoryId(): ?String
+    {
+        try {
+            return $this->category?->getId();
+        } catch (\Exception $err) {
+            return null;
+        }
+    }
+
+    public function getCategoryTitle(): String
+    {
+        try {
+            return $this->category?->getTitle() ?? "";
+        } catch (\Exception $err) {
+            return "";
+        }
+    }
 }

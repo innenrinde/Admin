@@ -40,6 +40,7 @@ const props = defineProps({
 const { options } = toRefs(props);
 
 const label = ref(model.value?.label);
+
 const showList = ref(false);
 
 /**

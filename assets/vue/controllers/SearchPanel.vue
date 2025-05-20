@@ -14,7 +14,6 @@
 						Search by
 					</label>
 					<x-input
-						class="keywords"
 						type="text"
 						placeholder="type here a phrase and then Enter..."
 						v-model="query"
@@ -24,15 +23,37 @@
 				</div>
 				<div>
 					<label>
-						using K =
+						Using K value
 					</label>
 					<x-input
-						class="knn"
 						type="text"
 						placeholder="define k number"
 						v-model="kNumber"
 						@keydown="onKNumberEnter"
 					/>
+				</div>
+				<div>
+					<label>
+						Mode
+					</label>
+					<span
+						class="mode"
+					>
+						<x-checkbox
+							label="client side"
+							v-model="searchMode.client"
+							disabled="true"
+						/>
+					</span>
+					<span
+						class="mode"
+					>
+						<x-checkbox
+							label="server side"
+							v-model="searchMode.server"
+							disabled="true"
+						/>
+					</span>
 				</div>
 			</div>
 		</template>
@@ -44,6 +65,7 @@
 import { defineEmits, defineModel, defineProps, toRefs, onMounted } from "vue";
 import XInput from "./components/XInput.vue";
 import XPanel from "./components/XPanel.vue";
+import XCheckbox from "./components/XCheckbox.vue";
 
 const props = defineProps({
 	queryText: { type: String, default: "" }
@@ -55,6 +77,11 @@ const emit = defineEmits(["ok", "close"]);
 
 const query = defineModel("");
 const kNumber = defineModel({ default: 100 });
+
+let searchMode = {
+	client: true,
+	server: false
+}
 
 /**
  * Catch event
@@ -109,9 +136,15 @@ const apply = () => {
 	align-items: center;
 	margin: 5px 10px;
 
-	label {
+	> label {
 		text-align: left;
 		width: 80px;
 	}
 }
+
+.mode {
+	margin-left: 10px;
+	display: flex;
+}
+
 </style>

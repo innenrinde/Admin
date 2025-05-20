@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
+use App\Builder\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,36 +27,36 @@ class AccountController extends AbstractController
     private $columns = [
         [
             'title' => 'ID',
-            'type' => 'number',
+            'type' => NumberType::class,
             'field' => 'id',
             'isPk' => true,
         ],
         [
             'title' => 'Name',
-            'type' => 'string',
+            'type' => TextType::class,
             'field' => 'name',
         ],
         [
             'title' => 'Surname',
-            'type' => 'string',
+            'type' => TextType::class,
             'field' => 'surname',
         ],
         [
             'title' => 'Email',
-            'type' => 'string',
+            'type' => EmailType::class,
             'field' => 'email',
             'width' => 200,
         ],
         [
             'title' => 'Password',
-            'type' => 'string',
+            'type' => PasswordType::class,
             'field' => 'password',
             'width' => 200,
             'placeholder' => 'Leave empty if you don\'t want to change password',
         ],
         [
             'title' => 'ZKP',
-            'type' => 'boolean',
+            'type' => CheckboxType::class,
             'field' => 'zkp',
         ]
     ];
@@ -59,7 +65,8 @@ class AccountController extends AbstractController
         private readonly EntityManagerInterface $em,
         private readonly Security $security,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly HttpService $httpService
+        private readonly HttpService $httpService,
+        private readonly TableBuilder $tableBuilder
     ) {
     }
 
@@ -78,7 +85,7 @@ class AccountController extends AbstractController
         ];
 
         return $this->render('account/index.html.twig', [
-            'columns' => $this->columns,
+            'columns' => $this->tableBuilder->getColumns($this->columns),
             'values' => $values,
         ]);
     }

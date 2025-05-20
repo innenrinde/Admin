@@ -194,6 +194,7 @@ const editRow = (row) => {
  * Perform edit
  */
 const confirmEditRow = () => {
+	console.log(form.value);
 	axios
 		.post(url.value.post, form.value.getValues())
 		.then(response => {
@@ -247,7 +248,7 @@ const getTableDataList = () => {
 		})
     .then(response => {
       if (!response.data.content) {
-        throw new Error(`${url.value.list} response => .data.content not found`);
+        throw new Error(`${url.value.get} response => .data.content not found`);
       }
 
       rows = response.data.content;

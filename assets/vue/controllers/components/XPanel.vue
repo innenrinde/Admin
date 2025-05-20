@@ -27,44 +27,32 @@
 	</div>
 </template>
 
-<script>
+<script setup>
 import XButton from "./XButton.vue";
+import { defineProps, defineEmits, toRefs } from "vue";
 
-export default {
-	name: "XPanel",
-	components: {XButton},
-	props: {
-		size: {
-			type: String,
-			default: () => ""
-		},
-		title: {
-			type: String,
-			default: () => ""
-		},
-		okLabel: {
-			type: String,
-			default: () => "Yes"
-		}
-	},
-	data() {
-		return {
-		};
-	},
-	methods: {
-		/**
-		 * Emmit closing panel
-		 */
-		closeAction() {
-			this.$emit("close");
-		},
-		/**
-		 * Emmit user confirmation
-		 */
-		confirmAction() {
-			this.$emit("ok");
-		}
-	}
+const props = defineProps({
+	size: String,
+	title: String,
+	okLabel: { type: String, default: "Yes" }
+});
+
+const { size, title, okLabel } = toRefs(props);
+
+const emit = defineEmits(["ok", "close"]);
+
+/**
+ * Emmit user confirmation
+ */
+const confirmAction = () => {
+	emit("ok");
+}
+
+/**
+ * Emmit closing panel
+ */
+const closeAction = () => {
+	emit("close");
 };
 </script>
 
@@ -133,7 +121,7 @@ export default {
 	}
 
 	.small {
-		height: 200px;
+		height: 240px;
 	}
 
 	.medium {

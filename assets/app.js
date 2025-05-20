@@ -39,6 +39,8 @@ import {
     faForwardStep,
     faBackward,
     faBackwardStep,
+    faChartSimple,
+    faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan, faPenToSquare, faImage } from '@fortawesome/free-regular-svg-icons';
 import { NotificationService } from "./vue/services/NotificationService";
@@ -88,6 +90,8 @@ document.addEventListener('vue:before-mount', (event) => {
     library.add(faBackward);
     library.add(faBackwardStep);
     library.add(faImage);
+    library.add(faChartSimple);
+    library.add(faArrowUpRightFromSquare);
 
     app.component('font-awesome-icon', FontAwesomeIcon);
 

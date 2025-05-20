@@ -32,6 +32,21 @@ class Menu
         $menusList = [];
 
         if ($this->security->getUser()->isAdmin()) {
+
+            $menusList[] = [
+                "title" => "Dashboard",
+                "icon" => "list",
+                "children" => [
+                    [
+                        "title" => "Summary data",
+                        "icon" => "chart-simple",
+                        "route" => $this->router->generate("app_dashboard"),
+                        "active" => $this->router->getContext()->getPathInfo() === "/dashboard",
+                        "confirm" => false,
+                    ],
+                ]
+            ];
+
             $menusList[] = [
                 "title" => "Categories",
                 "icon" => "list",

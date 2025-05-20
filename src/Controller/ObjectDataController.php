@@ -79,7 +79,7 @@ class ObjectDataController extends CrudController
             [
                 'title' => 'Year',
                 'type' => TextType::class,
-                'field' => 'year',
+                'field' => 'objectBeginDate',
                 'width' => 'w10',
             ],
             [
@@ -158,20 +158,17 @@ class ObjectDataController extends CrudController
         $data = $this->filteredRows(ObjectData::class, $request->query->all());
 
         $rows = array_map(function (ObjectData $row) {
-
-            $category = $row->getCategory();
-
             return [
                 'id' => $row->getId(),
                 'category' => [
-                    'value' => $category ? $category->getId() : null,
-                    'label' => $category ? $category->getTitle() : null,
+                    'value' => $row->getCategoryId(),
+                    'label' => $row->getCategoryTitle(),
                 ],
                 'title' => $row->getTitle(),
                 'imageUrl' => $row->getImageUrl(),
                 'info1' => $row->getInfo1(),
                 'culture' => $row->getCulture(),
-                'year' => $row->getObjectBeginDate() + $row->getObjectEndDate(),
+                'objectBeginDate' => $row->getObjectBeginDate() + $row->getObjectEndDate(),
                 'dimensions' => $row->getDimensions(),
             ];
         }, $data['rows']);

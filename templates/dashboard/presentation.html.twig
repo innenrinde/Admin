@@ -1,0 +1,172 @@
+<div class="presentation-content">
+    <div class="components">
+        <label>VueJS Available Components to Build Admin Templates<br>
+        v1.0 collection</label>
+        <pre>
+XButton
+XChart
+XCheckbox
+XConfirm
+XDate
+XImage
+XInput
+XMessage
+XPager
+XPanel
+XPassword
+XSelect
+XTable
+        </pre>
+    </div>
+    <div class="apis">
+        <label>API Endpoints required to generate a table section</label>
+        <div class="url">
+            <span class="verb get">GET</span>
+            categories/list?total=0&page=0
+        </div>
+        <pre>
+{
+  "content": [{
+    "id": 26,
+    "title": "American Decorative Arts"
+  }],
+  "pager": {
+    "total": 21,
+    "page": 0,
+    "limit": 1000
+  }
+}
+        </pre>
+
+        <div class="url">
+            <span class="verb post">POST</span>
+            categories/edit
+        </div>
+        <pre>
+{
+  "id": 28,
+  "title": "Arms and Armor"
+}
+        </pre>
+        <pre>
+{
+  "id": 28,
+  "success": true,
+  "message": "Category successfully edited",
+  "content": {
+    "id": 28,
+    "title": "Arms and Armor"
+  }
+}
+        </pre>
+        <div class="url">
+            <span class="verb put">PUT</span>
+            categories/creat
+        </div>
+        <pre>
+{
+  "title": "New category"
+}
+        </pre>
+        <pre>
+{
+  "id": 50,
+  "success": true,
+  "message": "Category successfully created",
+  "content": {
+    "title": "New category"
+  }
+}
+        </pre>
+        <div class="url">
+            <span class="verb delete">DELETE</span>
+            categories/delete
+        </div>
+        <pre>
+50
+        </pre>
+        <pre>
+{
+  "id": 50,
+  "success": true,
+  "message": "Category successfully deleted"
+}
+        </pre>
+    </div>
+</div>
+
+<style lang="scss">
+    .presentation-content {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        overflow: none;
+
+        .components {
+            width: 50%;
+            border-right: solid 1px #c8c8c8;
+        }
+
+        .apis {
+            width: 50%;
+            overflow: auto;
+            background-color: #fbfbfb;
+        }
+
+        label {
+            display: block;
+            padding: 10px;
+        }
+
+        .verb {
+            display: inline-block;
+            font-weight: 600;
+            color: #fff;
+            padding: 0 10px;
+        }
+
+        .get {
+            background-color: #2b7fff90;
+        }
+
+        .post {
+            background-color: #00bc7d90;
+        }
+
+        .put {
+            background-color: #f0b10090;
+        }
+
+        .delete {
+            background-color: #fb2c3690;
+        }
+
+        .url {
+            font-weight: 600;
+            padding: 10px;
+        }
+
+        pre {
+            margin: 0;
+            padding: 10px;
+        }
+
+        .components pre {
+            line-height: 1.8em;
+        }
+
+        div::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        div::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+            border-radius: 5px;
+        }
+
+        div::-webkit-scrollbar-thumb {
+            background: #0076ae;
+            border-radius: 5px;
+        }
+    }
+</style>

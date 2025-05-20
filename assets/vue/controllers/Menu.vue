@@ -11,7 +11,7 @@
 			>
 				<div
 					class="level1-item-title"
-					:class="{ 'level1-item-title-active': item.show }"
+					:class="{ 'level1-item-title-active': item.show || isActiveSubMenu(item) }"
 					@click="expandItem(item, index)"
 				>
 					<div class="icon">
@@ -22,7 +22,7 @@
 
 				<div
 					class="children"
-					:class="{ 'hide-item': !item.show, 'display-item': item.show }"
+					:class="{ 'hide-item': !item.show, 'display-item': item.show || isActiveSubMenu(item) }"
 				>
 					<div
 						v-for="child of item.children"
@@ -47,96 +47,102 @@
 	</div>
 </template>
 
-<script>
+<script setup>
 import { NotificationService } from "../services/NotificationService";
+import { defineProps, toRefs, ref, onBeforeMount } from "vue";
 
 const DEFAULT_OPENEDS_KEY = "defaultOpeneds";
 
-export default {
-	name: "Menu",
-	props: {
-		title: {
-			type: String,
-			default: () => ""
-		},
-		items: {
-			type: Array,
-			default: () => []
-		},
-	},
-	data() {
-		return {
-			localItems: [],
-			defaultOpeneds: [],
-		};
-	},
-	beforeMount() {
-		this.localItems = [ ...this.items ];
-		this.defaultOpeneds = this.getFromStorage(DEFAULT_OPENEDS_KEY);
+const props = defineProps({
+	title: String,
+	items: Array,
+});
 
-		this.localItems.map((item, index) => {
-			if (this.defaultOpeneds.includes(index)) {
-				item.show = true;
-			}
-		});
-	},
-	methods: {
-		/**
-		 * Get a value from storage by key
-		 * @param {String} key
-		 * @returns {Array}
-		 */
-		getFromStorage(key) {
-			if (localStorage) {
-				let values = localStorage.getItem(key);
-				return values ? values.split("-").map(item => parseInt(item)) : [];
-			}
-			return [];
-		},
-		/**
-		 * Keep an array value into storage
-		 * @param {String} key
-		 * @param {Array} values
-		 */
-		saveIntoStorage(key, values) {
-			if (localStorage) {
-				localStorage.setItem(key, values.join("-"));
-			}
-		},
-		/**
-		 * Redirect to url
-		 * @param {Object} menu
-		 */
-		goToRoute(menu) {
-			if (menu.confirm) {
-				NotificationService.confirm({
-					title: menu.title,
-					message: "Are you sure that you want to continue?",
-					okAction: () => {
-						document.location.href = menu.route;
-					}
-				});
-			} else {
+const { title, items } = toRefs(props);
+
+let localItems = ref([]);
+let defaultOpeneds = ref([]);
+
+/**
+ * Init items menu opened by default
+ */
+onBeforeMount(() => {
+	localItems.value = [ ...items.value ];
+	defaultOpeneds.value = getFromStorage(DEFAULT_OPENEDS_KEY);
+
+	localItems.value.map((item, index) => {
+		if (defaultOpeneds.value.includes(index)) {
+			item.show = true;
+		}
+	});
+});
+
+/**
+ * Get a value from storage by key
+ * @param {String} key
+ * @returns {Array}
+ */
+const getFromStorage = (key) => {
+	if (localStorage) {
+		let values = localStorage.getItem(key);
+		return values ? values.split("-").map(item => parseInt(item)) : [];
+	}
+	return [];
+};
+
+/**
+ * Keep an array value into storage
+ * @param {String} key
+ * @param {Array} values
+ */
+const saveIntoStorage = (key, values) => {
+	if (localStorage) {
+		localStorage.setItem(key, values.join("-"));
+	}
+};
+
+/**
+ * Redirect to url
+ * @param {Object} menu
+ */
+const goToRoute = (menu)=> {
+	if (menu.confirm) {
+		NotificationService.confirm({
+			title: menu.title,
+			message: "Are you sure that you want to continue?",
+			okAction: () => {
 				document.location.href = menu.route;
 			}
-		},
-		/**
-		 * Show/hide children
-		 * @param {Object} item
-		 * @param index
-		 */
-		expandItem(item, index) {
-			item.show = !item.show;
-
-			if (this.defaultOpeneds.includes(index)) {
-				this.defaultOpeneds = this.defaultOpeneds.filter(item => item !== index);
-			} else {
-				this.defaultOpeneds.push(index);
-			}
-
-			this.saveIntoStorage(DEFAULT_OPENEDS_KEY, this.defaultOpeneds);
-		}
+		});
+	} else {
+		document.location.href = menu.route;
 	}
+};
+
+/**
+ * Show/hide children
+ * @param {Object} item
+ * @param index
+ */
+const expandItem = (item, index) => {
+	item.show = isActiveSubMenu(item) ? true : !item.show;
+
+	if (defaultOpeneds.value.includes(index)) {
+		defaultOpeneds.value = defaultOpeneds.value.filter(item => item !== index);
+	} else {
+		defaultOpeneds.value.push(index);
+	}
+
+	saveIntoStorage(DEFAULT_OPENEDS_KEY, defaultOpeneds.value);
+};
+
+/**
+ * Check if a main menu (level 1) can be displayed (it has at least one child active)
+ * @param {Object} item
+ * @return {Boolean}
+ */
+const isActiveSubMenu = (item) => {
+	return item.children.find(child => child.active);
 };
 </script>
 

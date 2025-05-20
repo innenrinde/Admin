@@ -62,7 +62,7 @@
 
 </template>
 
-<script>
+<script setup>
 import axios from "axios";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
@@ -72,79 +72,74 @@ import XPassword from "./components/XPassword.vue";
 import XSelect from "./components/XSelect.vue";
 import XCheckbox from "./components/XCheckbox.vue";
 import XDate from "./components/XDate.vue";
+import { defineProps, toRefs, ref, onBeforeMount, defineEmits } from "vue";
 
-export default {
-  name: "Form",
-	components: { XInput, XPassword, XSelect, XCheckbox, XDate, XButton },
-  props: {
-    title: {
-      type: String,
-      default: () => ""
-    },
-    columns: {
-      type: Array,
-      default: () => []
-    },
-    values: {
-      type: Object,
-      default: () => {}
-    },
-    url: {
-      type: Object,
-      default: () => { return {}; }
-    },
-    hasCloseButton: {
-      type: Boolean,
-      default: () => false
-    },
-	  hasSaveButton: {
-		  type: Boolean,
-		  default: () => true
-	  }
-  },
-  data() {
-    return {
-      form: this.values,
-      empty: " ",
-    };
-  },
-  methods: {
-		getValues() {
-			let values = { ... this.form };
-			this.columns.forEach(column => {
-				if (column.type === "datetime") {
-					values[column.field] = DateTimeTransformer.reverseTransform(values[column.field]);
-				}
+const props = defineProps({
+	title: String,
+	columns: Array,
+	values: Object,
+	url: Object,
+	hasCloseButton: Boolean,
+	hasSaveButton: { type: Boolean, default: true }
+});
+
+const { title, columns, values, url, hasCloseButton, hasSaveButton } = toRefs(props);
+
+const emit = defineEmits(["sve", "close"]);
+
+let form = ref({});
+
+/**
+ * Init form values
+ */
+onBeforeMount(() => {
+	form = values;
+});
+
+/**
+ * Get form values
+ * @return {Object}
+ */
+const getValues = () => {
+	let values = { ... form.value };
+	columns.value.forEach(column => {
+		if (column.type === "datetime") {
+			values[column.field] = DateTimeTransformer.reverseTransform(values[column.field]);
+		}
+	});
+
+	return values;
+};
+
+defineExpose({
+	getValues
+});
+
+/**
+ * Perform save data
+ */
+const confirmSave = () => {
+
+	let values = getValues();
+
+	if (url.value.put) {
+		axios
+			.put(url.value.put, values)
+			.then(response => {
+				HttpRequestService.parseResponse(response, () => {
+					console.log(response.data.content);
+				});
 			});
+	} else {
+		emit("save", values);
+	}
+};
 
-			return values;
-		},
-    /**
-     * Perform save data
-     */
-     confirmSave() {
-
-      let values = this.getValues();
-
-      if (this.url.put) {
-        axios
-          .put(this.url.put, values)
-          .then(response => {
-            HttpRequestService.parseResponse(response, () => {
-              console.log(response.data.content);
-            });
-          });
-      } else {
-        this.$emit("save", values);
-      }
-    },
-    /**
-     * Close action
-     */
-    confirmClose() {
-       this.$emit("close");
-    }
-  }
+/**
+ * Close action
+ */
+const confirmClose = () => {
+	emit("close");
 };
 </script>
 
