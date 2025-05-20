@@ -1,97 +1,150 @@
 <div class="presentation-content">
     <div class="components">
-        <label>VueJS Available Components to Build Admin Templates<br>
-        v1.0 collection</label>
-        <pre>
-XButton
-XChart
-XCheckbox
-XConfirm
-XDate
-XImage
-XInput
-XMessage
-XPager
-XPanel
-XPassword
-XSelect
-XTable
-        </pre>
+        <div class="header">
+            VueJS Available Components to Build Admin Templates
+            <br>
+            v1.0 collection
+        </div>
+        <div class="scrolled-content">
+            <ul>
+                <li>XTable</li>
+                <li>
+                    Component to display a list of objects.
+                    <br>It's full based on a list of standardized endpoints.
+                    <br>You must define a list of columns with labels, types or other rules to validate data.
+                    <br>Other actions, such as "deletion" or "edition", can be activated.
+                </li>
+                <li>XPager</li>
+                <li>
+                    Component to manage the list of pages for XTable.
+                    <br>We must know number of total records and page limit to display.
+                    <br>Compatible with a GET/list endpoint.
+                </li>
+                <li>XButton</li>
+                <li>
+                    A button with predefined label and actions.
+                    <br>We can chose between different types of status colors.
+                </li>
+                <li>XChart</li>
+                <li>
+                    A general component to display a chart.
+                </li>
+                <li>XCheckbox</li>
+                <li>
+                    Customized checkbox element, an object with true/false positions.
+                </li>
+                <li>XConfirm</li>
+                <li>
+                    Inline popup to confirm an actions.
+                    <br>A predefined callback method will be called.
+                </li>
+                <li>XDate</li>
+                <li>
+                    Input to choose a date.
+                    It will be based on a custom calendar.
+                </li>
+                <li>XImage</li>
+                <li></li>
+                <li>XInput</li>
+                <li></li>
+                <li>XMessage</li>
+                <li>
+                    Sticky message on top right of screen.
+                    <br>With multiple statuses: success, error etc.
+                </li>
+                <li>XPanel</li>
+                <li>
+                    Centered panel where we can render a custom html content.
+                </li>
+                <li>XPassword</li>
+                <li></li>
+                <li>XSelect</li>
+                <li>
+                    Custom drop-down list with options for a single choise.
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="apis">
-        <label>API Endpoints required to generate a table section</label>
-        <div class="url">
-            <span class="verb get">GET</span>
-            categories/list?total=0&page=0
+        <div class="header">
+            API Endpoints required to generate a table section
+            <br>
+            standards pour v1.0
         </div>
-        <pre>
-{
-  "content": [{
-    "id": 26,
-    "title": "American Decorative Arts"
-  }],
-  "pager": {
-    "total": 21,
-    "page": 0,
-    "limit": 1000
-  }
-}
-        </pre>
+        <div class="scrolled-content">
+            <div class="url">
+                <span class="verb get">GET</span>
+                categories/list?total=0&page=0
+            </div>
+            <pre>
+    {
+      "content": [{
+        "id": 26,
+        "title": "American Decorative Arts"
+      }],
+      "pager": {
+        "total": 21,
+        "page": 0,
+        "limit": 1000
+      }
+    }
+            </pre>
 
-        <div class="url">
-            <span class="verb post">POST</span>
-            categories/edit
+            <div class="url">
+                <span class="verb post">POST</span>
+                categories/edit
+            </div>
+            <pre>
+    {
+      "id": 28,
+      "title": "Arms and Armor"
+    }
+            </pre>
+            <pre>
+    {
+      "id": 28,
+      "success": true,
+      "message": "Category successfully edited",
+      "content": {
+        "id": 28,
+        "title": "Arms and Armor"
+      }
+    }
+            </pre>
+            <div class="url">
+                <span class="verb put">PUT</span>
+                categories/creat
+            </div>
+            <pre>
+    {
+      "title": "New category"
+    }
+            </pre>
+            <pre>
+    {
+      "id": 50,
+      "success": true,
+      "message": "Category successfully created",
+      "content": {
+        "title": "New category"
+      }
+    }
+            </pre>
+            <div class="url">
+                <span class="verb delete">DELETE</span>
+                categories/delete
+            </div>
+            <pre>
+    50
+            </pre>
+            <pre>
+    {
+      "id": 50,
+      "success": true,
+      "message": "Category successfully deleted"
+    }
+            </pre>
         </div>
-        <pre>
-{
-  "id": 28,
-  "title": "Arms and Armor"
-}
-        </pre>
-        <pre>
-{
-  "id": 28,
-  "success": true,
-  "message": "Category successfully edited",
-  "content": {
-    "id": 28,
-    "title": "Arms and Armor"
-  }
-}
-        </pre>
-        <div class="url">
-            <span class="verb put">PUT</span>
-            categories/creat
-        </div>
-        <pre>
-{
-  "title": "New category"
-}
-        </pre>
-        <pre>
-{
-  "id": 50,
-  "success": true,
-  "message": "Category successfully created",
-  "content": {
-    "title": "New category"
-  }
-}
-        </pre>
-        <div class="url">
-            <span class="verb delete">DELETE</span>
-            categories/delete
-        </div>
-        <pre>
-50
-        </pre>
-        <pre>
-{
-  "id": 50,
-  "success": true,
-  "message": "Category successfully deleted"
-}
-        </pre>
     </div>
 </div>
 
@@ -104,55 +157,88 @@ XTable
 
         .components {
             width: 50%;
+            overflow: none;
+            display: flex;
+            flex-direction: column;
             border-right: solid 1px #c8c8c8;
+
+            .header {
+                padding: 10px;
+            }
+
+            .scrolled-content {
+                overflow: auto;
+
+                ul {
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+
+                    li:nth-child(2n+1) {
+                        padding: 5px 10px;
+                        background-color: #e7e7e7;
+                        font-size: 14px;
+                        margin-bottom: 10px;
+                    }
+
+                    li:nth-child(2n) {
+                        padding: 5px 10px;
+                        background-color: #fff;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
         }
 
         .apis {
             width: 50%;
-            overflow: auto;
+            overflow: none;
+            display: flex;
+            flex-direction: column;
             background-color: #fbfbfb;
-        }
 
-        label {
-            display: block;
-            padding: 10px;
-        }
+            .header {
+                padding: 10px;
+            }
 
-        .verb {
-            display: inline-block;
-            font-weight: 600;
-            color: #fff;
-            padding: 0 10px;
-        }
+            .scrolled-content {
+                overflow: auto;
 
-        .get {
-            background-color: #2b7fff90;
-        }
+                .verb {
+                    display: inline-block;
+                    font-weight: 600;
+                    color: #fff;
+                    padding: 0 10px;
+                    width: 40px;
+                    text-align: center;
+                }
 
-        .post {
-            background-color: #00bc7d90;
-        }
+                .get {
+                    background-color: #2b7fff90;
+                }
 
-        .put {
-            background-color: #f0b10090;
-        }
+                .post {
+                    background-color: #00bc7d90;
+                }
 
-        .delete {
-            background-color: #fb2c3690;
-        }
+                .put {
+                    background-color: #f0b10090;
+                }
 
-        .url {
-            font-weight: 600;
-            padding: 10px;
-        }
+                .delete {
+                    background-color: #fb2c3690;
+                }
 
-        pre {
-            margin: 0;
-            padding: 10px;
-        }
+                .url {
+                    font-weight: 600;
+                    padding: 10px;
+                }
 
-        .components pre {
-            line-height: 1.8em;
+                pre {
+                    margin: 0;
+                    padding: 10px;
+                }
+            }
         }
 
         div::-webkit-scrollbar {
@@ -165,7 +251,7 @@ XTable
         }
 
         div::-webkit-scrollbar-thumb {
-            background: #0076ae;
+            background: #898989;
             border-radius: 5px;
         }
     }

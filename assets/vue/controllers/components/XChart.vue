@@ -50,14 +50,13 @@ const gotoLink = () => {
 	padding: 10px;
 	border: solid 1px #aaaaaa;
 	background-color: #fbfbfb;
-	//box-shadow: #dadada 2px 2px 3px;
 	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
 	cursor: pointer;
 
 	&:hover {
-		box-shadow: #979797 0 0 7px;
+		box-shadow: #787878 0 0 10px;
 		animation: bkAnimation 0.3s;
 
 		.chart-label span {
@@ -116,7 +115,7 @@ const gotoLink = () => {
 		box-shadow: none;
 	}
 	to {
-		box-shadow: #979797 0 0 7px;
+		box-shadow: #787878 0 0 10px;
 	}
 }
 
