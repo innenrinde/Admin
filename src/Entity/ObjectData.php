@@ -215,6 +215,16 @@ class ObjectData
         $this->processed = $processed;
     }
 
+    public function isRemoved(): bool
+    {
+        return $this->removed;
+    }
+
+    public function setRemoved(bool $removed): void
+    {
+        $this->removed = $removed;
+    }
+
     public function getCategoryId(): ?String
     {
         try {
