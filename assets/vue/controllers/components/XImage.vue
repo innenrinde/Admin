@@ -89,6 +89,14 @@ const closeAction = () => {
 		font-size: 20px;
 		color: #cacaca;
 	}
+
+	&:hover {
+		border: solid 1px #0088ca;
+
+		.no-image {
+			color: #036593;
+		}
+	}
 }
 
 img {

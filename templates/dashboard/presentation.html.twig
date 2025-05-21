@@ -1,9 +1,14 @@
 <div class="presentation-content">
     <div class="components">
         <div class="header">
-            VueJS Available Components to Build Admin Templates
-            <br>
-            v1.0 collection
+            <span>
+                VueJS Available Components to Build Admin Templates
+                <br>
+                (v1.0 collection)
+            </span>
+            <span class="github-text">
+                <a href="https://github.com/innenrinde/xcomponents" target="_blank"> >>> Visit repo</a>
+            </span>
         </div>
         <div class="scrolled-content">
             <ul>
@@ -60,7 +65,7 @@
                 <li></li>
                 <li>XSelect</li>
                 <li>
-                    Custom drop-down list with options for a single choise.
+                    Custom drop-down list with options for a single choice.
                 </li>
             </ul>
         </div>
@@ -69,7 +74,7 @@
         <div class="header">
             API Endpoints required to generate a table section
             <br>
-            standards pour v1.0
+            (v1.0 structure)
         </div>
         <div class="scrolled-content">
             <div class="url">
@@ -164,6 +169,27 @@
 
             .header {
                 padding: 10px;
+                display: flex;
+                align-items: center;
+
+                span:first-child {
+                    width: 100%;
+                }
+
+                .github-text {
+                    white-space: nowrap;
+                    padding: 5px;
+
+                    a {
+                        text-decoration: none;
+                        color: #02557c;
+                        font-weight: 600;
+                    }
+
+                    a:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
 
             .scrolled-content {
@@ -178,6 +204,7 @@
                         padding: 5px 10px;
                         background-color: #e7e7e7;
                         font-size: 14px;
+                        font-weight: 600;
                         margin-bottom: 10px;
                     }
 

@@ -60,7 +60,7 @@ abstract class CrudController extends AbstractController
     protected function filteredRows(string $entity, array $params): array
     {
         $page = $params['page'] ?? 0;
-        $limit = $params['limit'] ?? 1000;
+        $limit = $params['limit'] ?? 500;
 
         $rows = $this->em->getRepository($entity)->findBy([], null, $limit, $page*$limit);
         $total = $this->em->getRepository($entity)->count();
