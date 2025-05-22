@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Api\Pager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,23 +55,20 @@ abstract class CrudController extends AbstractController
 
     /**
      * @param string $entity
-     * @param array $params
+     * @param Pager $pager
      * @return array
      */
-    protected function filteredRows(string $entity, array $params): array
+    protected function filteredRows(string $entity, Pager $pager): array
     {
-        $page = isset($params['page']) ? intval($params['page']) : 0;
-        $limit = isset($params['limit']) && $params['limit'] ? intval($params['limit']) : 500;
-
-        $rows = $this->em->getRepository($entity)->findBy([], null, $limit, $page*$limit);
+        $rows = $this->em->getRepository($entity)->findBy([], null, $pager->limit, $pager->offset);
         $total = $this->em->getRepository($entity)->count();
 
         return [
             'rows' => $rows,
             'pager' => [
                 'total' => $total,
-                'page' => $page,
-                'limit' => $limit,
+                'page' => $pager->page,
+                'limit' => $pager->limit,
             ],
         ];
     }

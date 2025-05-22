@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Api\Constraints\NotBlank;
 use App\Api\Constraints\NullForCreation;
+use App\Api\Pager;
 use App\Api\TableBuilder;
 use App\Entity\Category;
 use App\Entity\ObjectData;
@@ -146,16 +147,15 @@ class ObjectDataController extends CrudController
     #[Route('/objectdata', name: 'app_objectdata')]
     public function index(): Response
     {
-        return $this->render('objectdata/index.html.twig', []);
+        return $this->render('objectdata/index.html.twig');
     }
 
     #[Route('/objectdata/list', name: 'app_objectdata_list')]
     public function getRows(Request $request): JsonResponse
     {
-
         $columns = $this->tableBuilder->getColumns($this->columns);
 
-        $data = $this->filteredRows(ObjectData::class, $request->query->all());
+        $data = $this->filteredRows(ObjectData::class, new Pager($request->query->all()));
 
         $rows = array_map(function (ObjectData $row) {
             return [

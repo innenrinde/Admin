@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Api\Constraints\NullForCreation;
+use App\Api\Pager;
 use App\Api\TableBuilder;
 use App\Entity\Category;
 use App\Services\HttpService;
@@ -54,16 +55,15 @@ class CategoryController extends CrudController
     #[Route('/categories', name: 'app_categories')]
     public function index(): Response
     {
-        return $this->render('category/index.html.twig', []);
+        return $this->render('category/index.html.twig');
     }
 
     #[Route('/categories/list', name: 'app_categories_list', methods: ['GET'])]
     public function getRows(Request $request): JsonResponse
     {
-
         $columns = $this->tableBuilder->getColumns($this->columns);
 
-        $data = $this->filteredRows(Category::class, $request->query->all());
+        $data = $this->filteredRows(Category::class, new Pager($request->query->all()));
 
         $rows = array_map(function (Category $row) {
             return [

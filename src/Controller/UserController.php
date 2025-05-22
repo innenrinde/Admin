@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Api\Constraints\EmailFormat;
 use App\Api\Constraints\NullForCreation;
+use App\Api\Pager;
 use App\Api\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
@@ -101,7 +102,7 @@ class UserController extends CrudController
     #[Route('/users', name: 'app_users')]
     public function index(): Response
     {
-        return $this->render('user/index.html.twig', []);
+        return $this->render('user/index.html.twig');
     }
 
     #[Route('/users/list', name: 'app_users_list')]
@@ -110,7 +111,7 @@ class UserController extends CrudController
 
         $columns = $this->tableBuilder->getColumns($this->columns);
 
-        $data = $this->filteredRows(User::class, $request->query->all());
+        $data = $this->filteredRows(User::class, new Pager($request->query->all()));
 
         $rows = array_map(function (User $user) {
             return [
