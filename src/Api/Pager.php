@@ -2,6 +2,10 @@
 
 namespace App\Api;
 
+/**
+ * Manage limits options for db selection rows
+ * Retrieve values from an associative array
+ */
 readonly class Pager
 {
     /**

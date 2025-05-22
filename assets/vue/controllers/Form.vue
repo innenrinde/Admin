@@ -7,7 +7,7 @@
 
 		<div class="form-content">
 			<div
-				v-for="column in columns.filter(item => !item.isPk)"
+				v-for="column in localColumns.filter(item => !item.isPk)"
 			  :key="column"
 				class="form-line"
 	    >
@@ -76,23 +76,69 @@ import { defineProps, toRefs, ref, onBeforeMount, defineEmits } from "vue";
 
 const props = defineProps({
 	title: String,
-	columns: Array,
-	values: Object,
+	columns: {
+		type: Array,
+		default: []
+	},
+	values: {
+		type: Object,
+		default: {}
+	},
 	url: Object,
-	hasCloseButton: Boolean,
-	hasSaveButton: { type: Boolean, default: true }
+	hasCloseButton: {
+		type: Boolean,
+		default: false
+	},
+	hasSaveButton: {
+		type: Boolean,
+		default: true
+	}
 });
 
 const { title, columns, values, url, hasCloseButton, hasSaveButton } = toRefs(props);
 
 const emit = defineEmits(["sve", "close"]);
 
+/**
+ *
+ * @type {Ref<UnwrapRef<*[]>, UnwrapRef<*[]> | *[]>}
+ */
+let localColumns = ref([]);
+
+/**
+ * All form values
+ * @type {Object}
+ */
 let form = ref({});
+
+/**
+ *
+ */
+const getColumnsStructure = () => {
+	if (columns.value.length) {
+		localColumns = columns;
+		return;
+	}
+
+	if (url.value.get) {
+		axios
+			.get(url.value.get, {
+				params: {
+					list: ['columns']
+				}
+			})
+			.then(response => {
+				console.log(response);
+				localColumns.value = response.data.columns;
+			});
+	}
+};
 
 /**
  * Init form values
  */
 onBeforeMount(() => {
+	getColumnsStructure();
 	form = values;
 });
 
@@ -111,6 +157,9 @@ const getValues = () => {
 	return values;
 };
 
+/**
+ * We need to do some actions from a parent component
+ */
 defineExpose({
 	getValues
 });

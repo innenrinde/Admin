@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Api\Constraints\EmailFormat;
 use App\Api\Constraints\NullForCreation;
+use App\Api\HttpResponse;
+use App\Api\ListOptions;
 use App\Api\Pager;
 use App\Api\TableBuilder;
 use App\Entity\User;
@@ -108,27 +110,32 @@ class UserController extends CrudController
     #[Route('/users/list', name: 'app_users_list')]
     public function getRows(Request $request): JsonResponse
     {
+        $httpResponse = new HttpResponse();
+        $options = new ListOptions($request->query->all());
 
-        $columns = $this->tableBuilder->getColumns($this->columns);
+        if ($options->withColumns) {
+            $httpResponse->setColumns($this->tableBuilder->getColumns($this->columns));
+        }
 
-        $data = $this->filteredRows(User::class, new Pager($request->query->all()));
+        if ($options->withRows) {
+            $data = $this->filteredRows(User::class, new Pager($request->query->all()));
+            $httpResponse->setRows($data, function (User $user) {
+                return [
+                    'id' => $user->getId(),
+                    'name' => $user->getName(),
+                    'surname' => $user->getSurname(),
+                    'email' => $user->getUserIdentifier(),
+                    'lastLogged' => $this->dateFormat($user->getLastLogged()),
+                    'registerDate' => $this->dateFormat($user->getRegisterDate()),
+                    'isVerified' => $user->isVerified(),
+                    'isActive' => $user->isActive(),
+                    'isAdmin' => $user->isAdmin(),
+                    'zkp' => $user->isZkp()
+                ];
+            });
+        }
 
-        $rows = array_map(function (User $user) {
-            return [
-                'id' => $user->getId(),
-                'name' => $user->getName(),
-                'surname' => $user->getSurname(),
-                'email' => $user->getUserIdentifier(),
-                'lastLogged' => $this->dateFormat($user->getLastLogged()),
-                'registerDate' => $this->dateFormat($user->getRegisterDate()),
-                'isVerified' => $user->isVerified(),
-                'isActive' => $user->isActive(),
-                'isAdmin' => $user->isAdmin(),
-                'zkp' => $user->isZkp()
-            ];
-        }, $data['rows']);
-
-        return $this->httpService->response($rows, $columns, $data['pager']);
+        return $this->httpService->response($httpResponse);
     }
 
     /**
@@ -140,9 +147,7 @@ class UserController extends CrudController
     #[Route('/users/add', name: 'app_users_add')]
     public function addRow(Request $request): Response
     {
-        return $this->render('user/add.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-        ]);
+        return $this->render('user/add.html.twig');
     }
 
     /**

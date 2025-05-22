@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Api\Constraints\NotBlank;
 use App\Api\Constraints\NullForCreation;
+use App\Api\HttpResponse;
+use App\Api\ListOptions;
 use App\Api\Pager;
 use App\Api\TableBuilder;
 use App\Entity\Category;
@@ -153,27 +155,33 @@ class ObjectDataController extends CrudController
     #[Route('/objectdata/list', name: 'app_objectdata_list')]
     public function getRows(Request $request): JsonResponse
     {
-        $columns = $this->tableBuilder->getColumns($this->columns);
+        $httpResponse = new HttpResponse();
+        $options = new ListOptions($request->query->all());
 
-        $data = $this->filteredRows(ObjectData::class, new Pager($request->query->all()));
+        if ($options->withColumns) {
+            $httpResponse->setColumns($this->tableBuilder->getColumns($this->columns));
+        }
 
-        $rows = array_map(function (ObjectData $row) {
-            return [
-                'id' => $row->getId(),
-                'category' => [
-                    'value' => $row->getCategoryId(),
-                    'label' => $row->getCategoryTitle(),
-                ],
-                'title' => $row->getTitle(),
-                'imageUrl' => $row->getImageUrl(),
-                'info1' => $row->getInfo1(),
-                'culture' => $row->getCulture(),
-                'objectBeginDate' => $row->getObjectBeginDate() + $row->getObjectEndDate(),
-                'dimensions' => $row->getDimensions(),
-            ];
-        }, $data['rows']);
+        if ($options->withRows) {
+            $data = $this->filteredRows(ObjectData::class, new Pager($request->query->all()));
+            $httpResponse->setRows($data, function (ObjectData $row) {
+                return [
+                    'id' => $row->getId(),
+                    'category' => [
+                        'value' => $row->getCategoryId(),
+                        'label' => $row->getCategoryTitle(),
+                    ],
+                    'title' => $row->getTitle(),
+                    'imageUrl' => $row->getImageUrl(),
+                    'info1' => $row->getInfo1(),
+                    'culture' => $row->getCulture(),
+                    'objectBeginDate' => $row->getObjectBeginDate() + $row->getObjectEndDate(),
+                    'dimensions' => $row->getDimensions(),
+                ];
+            });
+        }
 
-        return $this->httpService->response($rows, $columns, $data['pager']);
+        return $this->httpService->response($httpResponse);
     }
 
     /**
@@ -185,9 +193,7 @@ class ObjectDataController extends CrudController
     #[Route('/objectdata/add', name: 'app_objectdata_add')]
     public function addRow(Request $request): Response
     {
-        return $this->render('objectdata/add.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-        ]);
+        return $this->render('objectdata/add.html.twig');
     }
 
     /**

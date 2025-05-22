@@ -138,7 +138,6 @@ const closeSearch = () => {
  * @returns {any}
  */
 const pk = () => {
-	console.log(columns);
 	let pk = columns.find(column => column.isPk);
 
 	if (!pk) {
@@ -260,7 +259,8 @@ const getTableDataList = () => {
   axios
     .get(url.value.get, {
 			params: {
-				...pager
+				...pager,
+				list: ['columns', 'rows']
 			}
 		})
     .then(response => {

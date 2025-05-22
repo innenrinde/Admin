@@ -7,10 +7,9 @@
     <div class="form-container" {{ vue_component('Form', {
         'title': 'Create category',
         'url': {
+            'get': path('app_categories_list'),
             'put': path('app_categories_create'),
-        },
-        'columns': columns,
-        'values': {}
+        }
     }) }} />
 
 {% endblock %}

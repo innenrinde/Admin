@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Api\Constraints\NullForCreation;
+use App\Api\HttpResponse;
+use App\Api\ListOptions;
 use App\Api\Pager;
 use App\Api\TableBuilder;
 use App\Entity\Category;
@@ -61,18 +63,24 @@ class CategoryController extends CrudController
     #[Route('/categories/list', name: 'app_categories_list', methods: ['GET'])]
     public function getRows(Request $request): JsonResponse
     {
-        $columns = $this->tableBuilder->getColumns($this->columns);
+        $httpResponse = new HttpResponse();
+        $options = new ListOptions($request->query->all());
 
-        $data = $this->filteredRows(Category::class, new Pager($request->query->all()));
+        if ($options->withColumns) {
+            $httpResponse->setColumns($this->tableBuilder->getColumns($this->columns));
+        }
 
-        $rows = array_map(function (Category $row) {
-            return [
-                'id' => $row->getId(),
-                'title' => $row->getTitle(),
-            ];
-        }, $data['rows']);
+        if ($options->withRows) {
+            $data = $this->filteredRows(Category::class, new Pager($request->query->all()));
+            $httpResponse->setRows($data, function (Category $row) {
+                return [
+                    'id' => $row->getId(),
+                    'title' => $row->getTitle(),
+                ];
+            });
+        }
 
-        return $this->httpService->response($rows, $columns, $data['pager']);
+        return $this->httpService->response($httpResponse);
     }
 
     /**
@@ -84,9 +92,7 @@ class CategoryController extends CrudController
     #[Route('/categories/add', name: 'app_categories_add', methods: ['GET'])]
     public function addRow(Request $request): Response
     {
-        return $this->render('category/add.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-        ]);
+        return $this->render('category/add.html.twig');
     }
 
     /**

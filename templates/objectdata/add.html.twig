@@ -7,10 +7,9 @@
     <div class="form-container" {{ vue_component('Form', {
         'title': 'Create data object',
         'url': {
+            'get': path('app_objectdata_list'),
             'put': path('app_objectdata_create'),
-        },
-        'columns': columns,
-        'values': {}
+        }
     }) }} />
 
 {% endblock %}
