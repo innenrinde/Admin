@@ -17,7 +17,14 @@ class HttpService
         $count = count($arguments);
 
         if ($function_name === "response") {
-            if ($count === 1 || $count === 2) {
+            if (
+                $count === 3 &&
+                gettype($arguments[0]) === gettype($arguments[1]) &&
+                gettype($arguments[1]) === gettype($arguments[2]) &&
+                gettype($arguments[2]) === "array"
+            ) {
+                return $this->responseList(...$arguments);
+            } else if ($count === 1 || $count === 2) {
                 return $this->responseContent(...$arguments);
             } else if ($count === 3 || $count === 4) {
                 return $this->responseWithMessage(...$arguments);
@@ -51,6 +58,15 @@ class HttpService
      */
     private function responseContent(array $content, array $pager = null): JsonResponse
     {
-        return new JsonResponse([ 'content' => $content, 'pager' => $pager ], Response::HTTP_OK);
+        return new JsonResponse([ 'rows' => $content, 'pager' => $pager ], Response::HTTP_OK);
+    }
+
+    /**
+     * @param array $content
+     * @return JsonResponse
+     */
+    public function responseList(array $rows, array $columns, array $pager = null): JsonResponse
+    {
+        return new JsonResponse([ 'rows' => $rows, 'columns' => $columns, 'pager' => $pager ], Response::HTTP_OK);
     }
 }

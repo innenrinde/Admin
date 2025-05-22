@@ -54,14 +54,14 @@ class CategoryController extends CrudController
     #[Route('/categories', name: 'app_categories')]
     public function index(): Response
     {
-        return $this->render('category/index.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-        ]);
+        return $this->render('category/index.html.twig', []);
     }
 
     #[Route('/categories/list', name: 'app_categories_list', methods: ['GET'])]
     public function getRows(Request $request): JsonResponse
     {
+
+        $columns = $this->tableBuilder->getColumns($this->columns);
 
         $data = $this->filteredRows(Category::class, $request->query->all());
 
@@ -72,7 +72,7 @@ class CategoryController extends CrudController
             ];
         }, $data['rows']);
 
-        return $this->httpService->response($rows, $data['pager']);
+        return $this->httpService->response($rows, $columns, $data['pager']);
     }
 
     /**

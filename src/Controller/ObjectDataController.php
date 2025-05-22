@@ -146,14 +146,14 @@ class ObjectDataController extends CrudController
     #[Route('/objectdata', name: 'app_objectdata')]
     public function index(): Response
     {
-        return $this->render('objectdata/index.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-        ]);
+        return $this->render('objectdata/index.html.twig', []);
     }
 
     #[Route('/objectdata/list', name: 'app_objectdata_list')]
     public function getRows(Request $request): JsonResponse
     {
+
+        $columns = $this->tableBuilder->getColumns($this->columns);
 
         $data = $this->filteredRows(ObjectData::class, $request->query->all());
 
@@ -173,7 +173,7 @@ class ObjectDataController extends CrudController
             ];
         }, $data['rows']);
 
-        return $this->httpService->response($rows, $data['pager']);
+        return $this->httpService->response($rows, $columns, $data['pager']);
     }
 
     /**

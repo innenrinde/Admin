@@ -101,14 +101,14 @@ class UserController extends CrudController
     #[Route('/users', name: 'app_users')]
     public function index(): Response
     {
-        return $this->render('user/index.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-        ]);
+        return $this->render('user/index.html.twig', []);
     }
 
     #[Route('/users/list', name: 'app_users_list')]
     public function getRows(Request $request): JsonResponse
     {
+
+        $columns = $this->tableBuilder->getColumns($this->columns);
 
         $data = $this->filteredRows(User::class, $request->query->all());
 
@@ -127,7 +127,7 @@ class UserController extends CrudController
             ];
         }, $data['rows']);
 
-        return $this->httpService->response($rows, $data['pager']);
+        return $this->httpService->response($rows, $columns, $data['pager']);
     }
 
     /**

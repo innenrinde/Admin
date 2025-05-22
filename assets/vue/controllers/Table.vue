@@ -15,7 +15,7 @@
     </div>
 
     <x-table
-			v-show="pager.total"
+			v-if="columns.length"
 			:columns="columns"
 			:rows="localRows"
 			:pager="pager"
@@ -77,22 +77,37 @@ import XTable from "./components/XTable.vue";
 
 const props = defineProps({
 	title: String,
-	columns: Array,
-  rows: Array,
+	columns: Array, // @DEPRECATED
+  rows: Array, // @DEPRECATED
   url: Object,
 });
 
 const query = defineModel("");
 
-const { title, columns, url } = toRefs(props);
+const { title, url } = toRefs(props);
 
 let pager = reactive({
 	total: 0,
 	page: 0,
-	// limit: 0
+	limit: 0,
 });
 
+/**
+ * List of columns fetched by api; no columns is like no table to display
+ * @type {Reactive<*[]>}
+ */
+let columns = reactive([]);
+
+/**
+ * all rows fetched by api
+ * @type {Array}
+ */
 let rows = [];
+
+/**
+ * locally filtered rows if a such action is performed
+ * @type {Reactive<*[]>}
+ */
 let localRows = reactive([]);
 
 let selectedRow = null;
@@ -194,7 +209,6 @@ const editRow = (row) => {
  * Perform edit
  */
 const confirmEditRow = () => {
-	console.log(form.value);
 	axios
 		.post(url.value.post, form.value.getValues())
 		.then(response => {
@@ -244,14 +258,17 @@ let kNN = new kNNSearch();
 const getTableDataList = () => {
   axios
     .get(url.value.get, {
-			params: { ...pager }
+			params: {
+				...pager
+			}
 		})
     .then(response => {
-      if (!response.data.content) {
-        throw new Error(`${url.value.get} response => .data.content not found`);
+      if (!response.data) {
+        throw new Error(`${url.value.get} response => .data not found`);
       }
 
-      rows = response.data.content;
+      columns = response.data.columns ?? [];
+      rows = response.data.rows ?? [];
 
 			let responsePager = response.data.pager;
 			pager.total = Number(responsePager.total);
@@ -316,7 +333,7 @@ let applySearch = ({ value, k }) => {
 	align-items: center;
 
 	h1 {
-		display: inline-block;
+		display: flex;
 		font-size: 14px;
 		font-weight: 400;
 		width: 100%;
@@ -328,6 +345,8 @@ let applySearch = ({ value, k }) => {
 			padding: 2px 10px 2px 10px;
 			border-radius: 15px;
 			font-size: 12px;
+			white-space: nowrap;
+			align-content: center;
 		}
 	}
 

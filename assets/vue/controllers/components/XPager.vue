@@ -70,20 +70,23 @@ const { total, limit } = toRefs(props);
 let selectedPage = ref(1);
 
 /**
- * Calculate number of pages
+ * total number of pages
  * @type {number}
  */
 let noPages = 0;
-let pagesToShow = [];
-watch(total, (value) => {
-	noPages = limit.value ? Math.ceil(value/limit.value) : 0;
-	createListOfPages();
-});
 
 /**
- * Create range pages to be displayed into list during navigation
+ * list of pages to be displayed during navigation
+ * @type {[]}
+ */
+let pagesToShow = [];
+
+/**
+ * Create range pages to be displayed into list of visible pages
  */
 const createListOfPages = () => {
+	noPages = limit.value ? Math.ceil(total.value/limit.value) : 0;
+
 	let start = selectedPage.value - 3;
 	let stop = selectedPage.value + 3;
 
@@ -125,6 +128,9 @@ const emitPage = (page) => {
 	selectedPage.value = page;
 	createListOfPages();
 }
+
+// TODO: watch total number or on mounted
+createListOfPages();
 
 </script>
 
