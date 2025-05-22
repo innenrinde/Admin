@@ -2,8 +2,6 @@
 
 namespace App\Filters;
 
-use App\Entity\Indicator;
-use App\Entity\User;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 

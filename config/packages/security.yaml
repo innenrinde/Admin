@@ -39,7 +39,6 @@ security:
         - { path: ^/users, roles: ROLE_ADMIN }
         - { path: ^/account, roles: ROLE_USER }
         - { path: ^/categories, roles: ROLE_ADMIN }
-        - { path: ^/indicators, roles: ROLE_USER }
         - { path: ^/objectdata, roles: ROLE_USER }
         - { path: ^/dashboard, roles: ROLE_USER }
 

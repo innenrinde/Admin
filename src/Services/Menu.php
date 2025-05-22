@@ -69,27 +69,6 @@ class Menu
             ];
         }
 
-        /*$menusList[] = [
-            "title" => "Indicators",
-            "icon" => "DataAnalysis",
-            "children" => [
-                [
-                    "title" => "Indicators list",
-                    "icon" => "chart-column",
-                    "route" => $this->router->generate("app_indicators"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/indicators",
-                    "confirm" => false,
-                ],
-                [
-                    "title" => "Add indicator",
-                    "icon" => "plus",
-                    "route" => $this->router->generate("app_indicators_add"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/indicators/add",
-                    "confirm" => false,
-                ]
-            ]
-        ];*/
-
         $menusList[] = [
             "title" => "Data objects",
             "icon" => "DataAnalysis",

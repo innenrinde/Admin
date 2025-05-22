@@ -138,7 +138,8 @@ const closeSearch = () => {
  * @returns {any}
  */
 const pk = () => {
-	let pk = columns.value.find(column => column.isPk);
+	console.log(columns);
+	let pk = columns.find(column => column.isPk);
 
 	if (!pk) {
 		throw new Error("Can't find a PK column!");
@@ -239,7 +240,7 @@ const processEditedRow = (data) => {
 
 	let row = localRows.find(row => row[id.field] === data[id.field]);
 
-	columns.value.forEach(column => {
+	columns.forEach(column => {
 		if (data[column.field]) {
 			row[column.field] = data[column.field];
 		}
@@ -300,7 +301,7 @@ onMounted(() => {
  * Get filtered rows
  */
 const applyResults = () => {
-  let results = kNN.applySearch(rows, columns.value);
+  let results = kNN.applySearch(rows, columns);
   localRows.splice(0);
   results.forEach(row => localRows.push(row));
 	searchFocus.value = false;
