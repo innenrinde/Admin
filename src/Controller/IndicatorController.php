@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Builder\Constraints\IpFormat;
-use App\Builder\Constraints\NotBlank;
-use App\Builder\Constraints\NullForCreation;
-use App\Builder\TableBuilder;
+use App\Api\Constraints\IpFormat;
+use App\Api\Constraints\NotBlank;
+use App\Api\Constraints\NullForCreation;
+use App\Api\TableBuilder;
 use App\Entity\Category;
 use App\Entity\Indicator;
 use App\Services\HttpService;

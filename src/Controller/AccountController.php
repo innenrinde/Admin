@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Builder\TableBuilder;
+use App\Api\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;

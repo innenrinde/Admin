@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Builder\Constraints;
+namespace App\Api\Constraints;
 
 /**
- * Check if a value is a valid IP address
+ * Check if a value is empty or not
  */
-class IpFormat implements ConstraintInterface
+class NotBlank implements ConstraintInterface
 {
     /**
      * @param array $container
@@ -15,6 +15,6 @@ class IpFormat implements ConstraintInterface
      */
     public function isValid(array $container, string $field, bool $isCreate = true): bool
     {
-        return isset($container[$field]) && preg_match('/^(\d+\.)(\d+\.)(\d+\.)(\d+)$/', $container[$field]);
+        return isset($container[$field]) && $container[$field];
     }
 }

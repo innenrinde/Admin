@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Builder\Constraints;
+namespace App\Api\Constraints;
 
 /**
  * Check if a value is empty or not

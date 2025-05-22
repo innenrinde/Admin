@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Builder\Constraints;
+namespace App\Api\Constraints;
 
 /**
- * Check if a value is empty or not
+ * Check if a value is a valid IP address
  */
-class NotBlank implements ConstraintInterface
+class EmailFormat implements ConstraintInterface
 {
     /**
      * @param array $container
@@ -15,6 +15,6 @@ class NotBlank implements ConstraintInterface
      */
     public function isValid(array $container, string $field, bool $isCreate = true): bool
     {
-        return isset($container[$field]) && $container[$field];
+        return isset($container[$field]) && filter_var($container[$field], FILTER_VALIDATE_EMAIL);
     }
 }

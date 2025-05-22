@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Builder\Constraints\EmailFormat;
-use App\Builder\Constraints\NullForCreation;
-use App\Builder\TableBuilder;
+use App\Api\Constraints\EmailFormat;
+use App\Api\Constraints\NullForCreation;
+use App\Api\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;

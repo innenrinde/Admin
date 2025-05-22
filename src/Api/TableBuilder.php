@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Builder;
+namespace App\Api;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

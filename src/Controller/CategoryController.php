@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Builder\Constraints\NullForCreation;
-use App\Builder\TableBuilder;
+use App\Api\Constraints\NullForCreation;
+use App\Api\TableBuilder;
 use App\Entity\Category;
 use App\Services\HttpService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Builder\Constraints\NotBlank;
+use App\Api\Constraints\NotBlank;
 
 class CategoryController extends CrudController
 {
