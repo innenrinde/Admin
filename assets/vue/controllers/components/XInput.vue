@@ -56,23 +56,23 @@ const emitBlur = () => {
 
 input {
 	padding: 10px;
-	border: solid 1px #a3a3a3;
+	border: solid 1px var(--input-border-color);
 	border-radius: 5px;
-	box-shadow: #cdcdcd 1px 1px 2px;
+	box-shadow: var(--input-shadow-color) 1px 1px 2px;
 	width: 300px;
 }
 
 input:focus {
 	appearance: none;
 	outline: none;
-	border: solid 1px #a3a3a3;
-	background-color: #ffffeb;
+	border: solid 1px var(--input-border-color);
+	background-color: var(--input-background-focus-color);
 }
 
 .icon {
 	margin-left: -30px;
 	font-size: 18px;
-	background-color: #fff;
+	background-color: var(--primary-background-color);
 	border-radius: 20px;
 	padding: 4px;
 }

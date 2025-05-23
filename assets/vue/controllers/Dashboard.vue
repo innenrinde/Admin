@@ -42,7 +42,7 @@ const { charts, presentation } = toRefs(props);
 
 	.presentation {
 		margin: 0 25px 25px 25px;
-		border: solid 1px #c8c8c8;
+		border: solid 1px var(--table-border-color);
 		border-radius: 7px;
 		overflow: auto;
 	}

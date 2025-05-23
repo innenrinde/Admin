@@ -97,10 +97,10 @@ const selectValue = (option) => {
 }
 
 .options-list {
-	border: solid 1px #a3a3a3;
-	background-color: #ffffeb;
+	border: solid 1px var(--input-border-color);
+	background-color: var(--input-background-focus-color);
 	border-radius: 5px;
-	box-shadow: #cdcdcd 2px 2px 4px;
+	box-shadow: var(--input-shadow-color) 2px 2px 4px;
 	position: absolute;
 	width: 320px;
 	max-height: 200px;
@@ -114,7 +114,7 @@ const selectValue = (option) => {
 
 	div.selected,
 	div:hover {
-		background-color: #cdcdcd;
+		background-color: var(--input-background-hover-color);
 	}
 }
 

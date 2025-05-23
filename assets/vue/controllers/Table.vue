@@ -325,7 +325,7 @@ let applySearch = ({ value, k }) => {
   height: 100%;
   display: flex;
   flex-direction: column;
-	background-color: #fff;
+	background-color: var(--primary-background-color);
 }
 
 .header-bar {
@@ -338,10 +338,10 @@ let applySearch = ({ value, k }) => {
 		font-size: 14px;
 		font-weight: 400;
 		width: 100%;
-		color: #036593;
+		color: var(--secondary-color);
 
 		span {
-			background-color: #efefef;
+			background-color: var(--table-header-color);
 			margin-right: 10px;
 			padding: 2px 10px 2px 10px;
 			border-radius: 15px;

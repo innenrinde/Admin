@@ -75,7 +75,7 @@ const closeAction = () => {
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: #c8c8c8;
+		background-color: var(--shadow-color);
 		opacity: 60%;
 		animation: fadeBackgroundShadow 0.5s;
 		animation-fill-mode: forwards;
@@ -94,9 +94,8 @@ const closeAction = () => {
 		display: flex;
 		flex-direction: column;
 		padding: 10px;
-		background-color: #fff;
-		border: solid 1px #fff;
-		box-shadow: 1px 1px 50px #d3d3d3;
+		background-color: var(--primary-background-color);
+		box-shadow: 1px 1px 50px var(--box-shadow-color);
 		border-radius: 10px;
 		text-align: center;
 		overflow: auto;
@@ -134,7 +133,7 @@ const closeAction = () => {
 		background-color: transparent;
 	}
 	to {
-		background-color: #c8c8c8;
+		background-color: var(--shadow-color);
 	}
 }
 

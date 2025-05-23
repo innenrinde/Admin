@@ -61,9 +61,9 @@ const closeMessage = () => {
 	min-width: 200px;
 	max-width: 600px;
 	padding: 15px;
-	background-color: #fff;
-	border: solid 1px #c8c8c8;
-	box-shadow: 1px 1px 5px #d3d3d3;
+	background-color: var(--primary-background-color);
+	border: solid 1px var(--shadow-color);
+	box-shadow: 1px 1px 5px var(--box-shadow-color);
 	border-radius: 7px;
 	text-align: left;
 	overflow: hidden;
@@ -89,11 +89,11 @@ const closeMessage = () => {
 }
 
 .error svg {
-	color: #FF0000FF;
+	color: var(--red-button-border-color);
 }
 
 .success svg {
-	color: #008000;
+	color: var(--green-button-color);
 }
 
 .closed {

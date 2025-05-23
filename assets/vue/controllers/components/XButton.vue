@@ -29,44 +29,44 @@ const { title, type } = toRefs(props);
 }
 
 .primary {
-	background-color: #0076ae;
-	border: solid 1px #0076ae;
-	color: #fff;
+	background-color: var(--primary-button-color);
+	border: solid 1px var(--primary-button-color);
+	color: var(--primary-text-color);
 }
 
 .primary:hover {
-	background-color: #008dd1;
-	border-color: #008dd1;
+	background-color: var(--primary-button-hover-color);
+	border-color: var(--primary-button-hover-color);
 	animation: primaryAnimation 0.3s;
 }
 
 .secondary {
-	background-color: #fff;
-	border: solid 1px #bcbcbc;
-	color: #000;
+	background-color: var(--secondary-button-color);
+	border: solid 1px var(--secondary-button-border-color);
+	color: var(--secondary-text-color);
 }
 
 .secondary:hover {
-	background-color: #abe2ff;
-	border: solid 1px #5dc5ff;
+	background-color: var(--secondary-button-hover-color);
+	border: solid 1px var(--secondary-button-border-hover-color);
 	animation: secondaryAnimation 0.3s;
 }
 
 @keyframes primaryAnimation {
 	from {
-		background-color: #0076ae;
+		background-color: var(--primary-button-color);
 	}
 	to {
-		background-color: #008dd1;
+		background-color: var(--primary-button-hover-color);
 	}
 }
 
 @keyframes secondaryAnimation {
 	from {
-		background-color: #fff;
+		background-color: var(--secondary-button-color);
 	}
 	to {
-		background-color: #abe2ff;
+		background-color: var(--secondary-button-hover-color);
 	}
 }
 

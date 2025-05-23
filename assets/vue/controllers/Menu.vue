@@ -150,8 +150,8 @@ const isActiveSubMenu = (item) => {
 .menu-panel {
 	width: 200px;
 	height: 100%;
-	background-color: #02557c;
-	color: #fff;
+	background-color: var(--primary-color);
+	color: var(--primary-text-color);
 	display: flex;
 	flex-direction: column;
 
@@ -160,12 +160,12 @@ const isActiveSubMenu = (item) => {
 	}
 
 	::-webkit-scrollbar-track {
-		box-shadow: inset 0 0 5px grey;
+		box-shadow: inset 0 0 5px var(--scrollbar-color);
 		border-radius: 5px;
 	}
 
 	::-webkit-scrollbar-thumb {
-		background: #0076ae;
+		background: var(--primary-button-color);
 		border-radius: 5px;
 	}
 }
@@ -190,14 +190,14 @@ const isActiveSubMenu = (item) => {
 		flex-direction: row;
 		align-items: center;
 		padding: 10px;
-		background-color: #036593;
+		background-color: var(--secondary-color);
 		border-radius: 5px;
 		cursor: pointer;
 		margin-top: 1px;
 		font-weight: 600;
 
 		&:hover {
-			background-color: #0076ae;
+			background-color: var(--primary-button-color);
 		}
 
 		.icon {
@@ -206,12 +206,12 @@ const isActiveSubMenu = (item) => {
 	}
 
 	.level1-item-title-active {
-		background-color: #0076ae;
+		background-color: var(--primary-button-color);
 		border-radius: 5px 5px 0 0;
 	}
 
 	.children {
-		background-color: #0076ae;
+		background-color: var(--primary-button-color);
 		border-radius: 0 0 5px 5px;
 		padding: 5px;
 		margin-bottom: 10px;
@@ -226,7 +226,7 @@ const isActiveSubMenu = (item) => {
 			cursor: pointer;
 
 			&:hover {
-				background-color: #036593;
+				background-color: var(--secondary-color);
 			}
 
 			.icon {
@@ -245,7 +245,7 @@ const isActiveSubMenu = (item) => {
 		}
 
 		.active-item {
-			background-color: #036593;
+			background-color: var(--secondary-color);
 
 			.icon-right {
 				display: inherit;

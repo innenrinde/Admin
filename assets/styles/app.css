@@ -12,6 +12,41 @@ body {
     -moz-osx-font-smoothing: grayscale;
     font-size: 12px;
     height: 100%;
+
+    --primary-color: #02557c;
+    --secondary-color: #036593;
+
+    --primary-background-color: #fff;
+
+    --primary-button-color: #0076ae;
+    --primary-text-color: #fff;
+    --primary-button-hover-color: #008dd1;
+
+    --secondary-button-color: #fff;
+    --secondary-button-border-color: #bcbcbc;
+    --secondary-text-color: #000;
+    --secondary-button-hover-color: #abe2ff;
+    --secondary-button-border-hover-color: #5dc5ff;
+
+    --red-button-color: #f37a7a;
+    --red-button-border-color: #ff1d1d;
+
+    --green-button-color: #008000;
+
+    --table-header-color: #f3f4f6;
+    --table-border-color: #dadada;
+    --table-alt-line-color: #f6f6f6;
+    --table-hover-line-color: #4bb0df;
+
+    --scrollbar-color: #808080;
+
+    --shadow-color: #c8c8c8;
+    --box-shadow-color: #d3d3d3;
+
+    --input-border-color: #a3a3a3;
+    --input-shadow-color: #cdcdcd;
+    --input-background-focus-color: #ffffeb;
+    --input-background-hover-color: #cdcdcd;
 }
 
 /* START not logged user */
@@ -46,7 +81,7 @@ body {
     text-align: left;
     color: #ededed;
     font-size: 16px;
-    text-shadow: 1px 1px #02557c;
+    text-shadow: 1px 1px var(--primary-color);
 }
 
 .container .presentation div:first-child div:first-child {
@@ -84,7 +119,7 @@ body {
 .container .presentation > div:last-child div {
     color: #fff;
     text-align: left;
-    text-shadow: 1px 1px #02557c;
+    text-shadow: 1px 1px var(--primary-color);
     line-height: 1.8em;
 }
 
@@ -122,7 +157,7 @@ body {
 }
 
 .container .panel div input {
-    border: solid 1px #02557c;
+    border: solid 1px var(--primary-color);
     padding: 7px;
     width: 250px;
 }
@@ -136,8 +171,8 @@ body {
 .container .panel div button {
     appearance: none;
     outline: none;
-    background-color: #0076ae;
-    border: solid 1px #02557c;
+    background-color: var(--primary-button-color);
+    border: solid 1px var(--primary-color);
     width: 265px;
     padding: 7px;
     color: #fff;
@@ -145,7 +180,7 @@ body {
 }
 
 .container .panel div button:hover {
-    background-color: #02557c;
+    background-color: var(--primary-color);
     animation: fadeBackgroundBtn 0.5s;
 }
 
@@ -157,10 +192,10 @@ body {
 
 @keyframes fadeBackgroundBtn {
     from {
-        background-color: #0076ae;
+        background-color: var(--primary-button-color);
     }
     to {
-        background-color: #02557c;
+        background-color: var(--primary-color);
     }
 }
 
@@ -184,20 +219,6 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-}
-
-.container-account .header {
-    /*display: flex;*/
-    /*flex-direction: row;*/
-    /*color: #fff;*/
-    /*background-color: #418465;*/
-    /*border-bottom: solid 2px #000;*/
-    /*align-items: center;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*z-index: 9999;*/
-    /*padding: 10px;*/
 }
 
 .container-account .content {
@@ -232,9 +253,9 @@ body {
     display: flex;
     margin: 12px;
     border-radius: 5px;
-    background-color: #fff;
-    border: solid 1px #d3d3d3;
-    box-shadow: 1px 1px 4px #d3d3d3;
+    background-color: var(--primary-background-color);
+    border: solid 1px var(--box-shadow-color);
+    box-shadow: 1px 1px 4px var(--box-shadow-color);
     overflow: auto;
     flex-direction: column;
 }

@@ -159,8 +159,8 @@ createListOfPages();
 
 			&:hover,
 			&.selected {
-				background-color: #0076ae;
-				color: #fff;
+				background-color: var(--primary-button-color);
+				color: var(--primary-text-color);
 				animation: fadeBackgroundShadow 0.2s;
 			}
 
@@ -182,11 +182,11 @@ createListOfPages();
 @keyframes fadeBackgroundShadow {
 	from {
 		background-color: transparent;
-		color: #000;
+		color: var(--secondary-text-color);
 	}
 	to {
-		background-color: #0076ae;
-		color: #fff;
+		background-color: var(--primary-button-color);
+		color: var(--primary-text-color);
 	}
 }
 </style>

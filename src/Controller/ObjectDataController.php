@@ -175,7 +175,7 @@ class ObjectDataController extends CrudController
                     'imageUrl' => $row->getImageUrl(),
                     'info1' => $row->getInfo1(),
                     'culture' => $row->getCulture(),
-                    'objectBeginDate' => $row->getObjectBeginDate() + $row->getObjectEndDate(),
+                    'objectBeginDate' => $row->getObjectBeginDate(),
                     'dimensions' => $row->getDimensions(),
                 ];
             });
