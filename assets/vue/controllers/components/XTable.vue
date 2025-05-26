@@ -160,8 +160,8 @@ const dateFormat = (value) => {
 <style scoped lang="scss">
 .table-section {
 	display: flex;
+	flex-direction: column;
 	overflow: auto;
-	margin: 5px 10px 0 10px;
 	border: solid 1px var(--table-border-color);
 
 	.table {
@@ -281,6 +281,5 @@ const dateFormat = (value) => {
 	border: solid 1px var(--table-border-color);
 	border-top: none;
 	background-color: var(--table-header-color);
-	margin: 0 10px 10px 10px;
 }
 </style>

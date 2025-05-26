@@ -8,7 +8,9 @@ import './bootstrap.js';
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import "./styles/app.css";
+import "./styles/main.scss";
+import "./styles/login.scss";
+import "./styles/app.scss";
 import moment from "moment";
 import Form from "./vue/controllers/Form.vue";
 

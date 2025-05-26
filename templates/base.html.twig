@@ -13,7 +13,12 @@
         {% endblock %}
     </head>
     <body>
-        {% set isSignInPage = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == '/' ? true : false %}
+
+        <div class="{{  app.user ? 'container-account' : 'container' }}">
+            {% block body %}{% endblock %}
+        </div>
+
+        {#{% set isSignInPage = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == '/' ? true : false %}
         <div class="{{ isSignInPage ? 'container' : 'container-account' }}">
             {% if not isSignInPage and not app.user %}
             <div class="header">
@@ -27,6 +32,6 @@
                 {%  endif %}
                 <div class="content-body">{% block body %}{% endblock %}</div>
             </div>
-        </div>
+        </div>#}
     </body>
 </html>

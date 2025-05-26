@@ -43,6 +43,7 @@ class Menu
                         "route" => $this->router->generate("app_dashboard"),
                         "active" => $this->router->getContext()->getPathInfo() === "/dashboard",
                         "confirm" => false,
+                        "component" => "Dashboard"
                     ],
                 ]
             ];
@@ -57,6 +58,12 @@ class Menu
                         "route" => $this->router->generate("app_categories"),
                         "active" => $this->router->getContext()->getPathInfo() === "/categories",
                         "confirm" => false,
+                        "component" => "Table",
+                        "url" => [
+                            "get" => $this->router->generate("app_categories_list"),
+                            "post" => $this->router->generate("app_categories_edit"),
+                            "delete" => $this->router->generate("app_categories_delete"),
+                        ],
                     ],
                     [
                         "title" => "Add category",
@@ -64,6 +71,11 @@ class Menu
                         "route" => $this->router->generate("app_categories_add"),
                         "active" => $this->router->getContext()->getPathInfo() === "/categories/add",
                         "confirm" => false,
+                        "component" => "Form",
+                        "url" => [
+                            "get" => $this->router->generate('app_categories_list'),
+                            "put" => $this->router->generate('app_categories_create')
+                        ]
                     ]
                 ]
             ];
@@ -79,6 +91,12 @@ class Menu
                     "route" => $this->router->generate("app_objectdata"),
                     "active" => $this->router->getContext()->getPathInfo() === "/objectdata",
                     "confirm" => false,
+                    "component" => "Table",
+                    "url" => [
+                        "get" => $this->router->generate('app_objectdata_list'),
+                        "put" => $this->router->generate('app_objectdata_create'),
+                        "delete" => $this->router->generate('app_objectdata_delete')
+                    ]
                 ],
                 [
                     "title" => "Add a data object",
@@ -86,6 +104,11 @@ class Menu
                     "route" => $this->router->generate("app_objectdata_add"),
                     "active" => $this->router->getContext()->getPathInfo() === "/objectdata/add",
                     "confirm" => false,
+                    "component" => "Form",
+                    "url" => [
+                        "get" => $this->router->generate('app_objectdata_list'),
+                        "put" => $this->router->generate('app_objectdata_create')
+                    ]
                 ]
             ]
         ];
@@ -101,6 +124,12 @@ class Menu
                         "route" => $this->router->generate("app_users"),
                         "active" => $this->router->getContext()->getPathInfo() === "/users",
                         "confirm" => false,
+                        "component" => "Table",
+                        "url" => [
+                            "get" => $this->router->generate("app_users_list"),
+                            "post" => $this->router->generate("app_users_edit"),
+                            "delete" => $this->router->generate("app_users_delete"),
+                        ],
                     ],
                     [
                         "title" => "Add user",
@@ -108,6 +137,11 @@ class Menu
                         "route" => $this->router->generate("app_users_add"),
                         "active" => $this->router->getContext()->getPathInfo() === "/users/add",
                         "confirm" => false,
+                        "component" => "Form",
+                        "url" => [
+                            "get" => $this->router->generate('app_users_list'),
+                            "put" => $this->router->generate('app_users_create')
+                        ]
                     ]
                 ]
             ];
@@ -123,6 +157,11 @@ class Menu
                     "route" => $this->router->generate("app_account"),
                     "active" => $this->router->getContext()->getPathInfo() === "/account",
                     "confirm" => false,
+                    "component" => "Form",
+                    "url" => [
+                        "get" => $this->router->generate('app_users_list'),
+                        "put" => $this->router->generate('app_account_edit')
+                    ]
                 ],
                 [
                     "title" => "Sign out",

@@ -1,0 +1,50 @@
+@import url(https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap);
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: "Poppins", serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 12px;
+  height: 100%;
+
+  --primary-color: #02557c;
+  --secondary-color: #036593;
+
+  --primary-background-color: #fff;
+
+  --primary-button-color: #0076ae;
+  --primary-text-color: #fff;
+  --primary-button-hover-color: #008dd1;
+
+  --secondary-button-color: #fff;
+  --secondary-button-border-color: #bcbcbc;
+  --secondary-text-color: #000;
+  --secondary-button-hover-color: #abe2ff;
+  --secondary-button-border-hover-color: #5dc5ff;
+
+  --red-button-color: #f37a7a;
+  --red-button-border-color: #ff1d1d;
+
+  --green-button-color: #008000;
+
+  --table-header-color: #f3f4f6;
+  --table-border-color: #dadada;
+  --table-alt-line-color: #f6f6f6;
+  --table-hover-line-color: #4bb0df;
+
+  --scrollbar-color: #808080;
+
+  --shadow-color: #c8c8c8;
+  --box-shadow-color: #d3d3d3;
+
+  --input-border-color: #a3a3a3;
+  --input-shadow-color: #cdcdcd;
+  --input-background-focus-color: #ffffeb;
+  --input-background-hover-color: #cdcdcd;
+}

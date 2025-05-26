@@ -27,7 +27,7 @@
 					<div
 						v-for="child of item.children"
 						:key="child"
-						@click="goToRoute(child)"
+						@click="selectMenu(child)"
 						class="level2-item-title"
 						:class="{ 'active-item': child.active }"
 					>
@@ -48,10 +48,11 @@
 </template>
 
 <script setup>
-import { NotificationService } from "../services/NotificationService";
-import { defineProps, toRefs, ref, onBeforeMount } from "vue";
+import { defineProps, toRefs, ref, onBeforeMount, defineEmits } from "vue";
 
 const DEFAULT_OPENEDS_KEY = "defaultOpeneds";
+
+const emit = defineEmits(["selectMenu"]);
 
 const props = defineProps({
 	title: String,
@@ -102,21 +103,11 @@ const saveIntoStorage = (key, values) => {
 };
 
 /**
- * Redirect to url
+ * Emit selected menu to be managed into parent component
  * @param {Object} menu
  */
-const goToRoute = (menu)=> {
-	if (menu.confirm) {
-		NotificationService.confirm({
-			title: menu.title,
-			message: "Are you sure that you want to continue?",
-			okAction: () => {
-				document.location.href = menu.route;
-			}
-		});
-	} else {
-		document.location.href = menu.route;
-	}
+const selectMenu = (menu)=> {
+	emit("selectMenu", menu);
 };
 
 /**

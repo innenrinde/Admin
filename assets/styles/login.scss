@@ -1,0 +1,161 @@
+.container {
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  height: 100%;
+  background-color: #296b8b;
+  background-image: url("/assets/img/bk.jpg");
+  background-size: 100%;
+
+  .presentation {
+    top: 0;
+    margin: 20px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    > div:first-child {
+      display: flex;
+    }
+
+    div:first-child div {
+      background-repeat: no-repeat;
+      background-size: auto 100%;
+      background-position: left;
+      padding-left: 30px;
+      margin-right: 30px;
+      text-align: left;
+      color: #ededed;
+      font-size: 16px;
+      text-shadow: 1px 1px var(--primary-color);
+    }
+
+    div:first-child div:first-child {
+      background-image: url("/assets/img/vue-logo.png");
+    }
+
+    div:first-child div:last-child {
+      background-image: url("/assets/img/symfony-logo.png");
+    }
+
+    > div:last-child {
+      display: flex;
+      flex-direction: column;
+      margin-top: 15px;
+    }
+
+    > div:last-child div {
+      animation: textAnimation 2s;
+      overflow: hidden;
+      height: 22px;
+    }
+
+    > div:last-child div {
+      color: #fff;
+      text-align: left;
+      text-shadow: 1px 1px var(--primary-color);
+      line-height: 1.8em;
+    }
+  }
+
+  .panel {
+    width: 400px;
+    height: 200px;
+    margin-right: calc(50% - 200px);
+    margin-left: calc(50% - 200px);
+    background-color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #474747;
+
+    h1 {
+      font-size: 18px;
+      margin: 0 0 5px 0;
+      color: #000;
+    }
+
+    div {
+      text-align: left;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 4px;
+
+      label {
+        width: 20%;
+        text-align: right;
+        margin-right: 5px;
+      }
+
+      input {
+        border: solid 1px var(--primary-color);
+        padding: 7px;
+        width: 250px;
+
+        &:focus {
+          appearance: none;
+          outline: none;
+          background-color: #ffffca;
+        }
+      }
+
+      button {
+        appearance: none;
+        outline: none;
+        background-color: var(--primary-button-color);
+        border: solid 1px var(--primary-color);
+        width: 265px;
+        padding: 7px;
+        color: #fff;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--primary-color);
+          animation: fadeBackgroundBtn 0.5s;
+        }
+      }
+
+      a {
+        color: #418465;
+        text-decoration: none;
+        display: inline-block;
+        padding: 2px;
+        border-radius: 3px;
+
+        &:hover {
+          color: #fff;
+          background-color: #418465;
+        }
+      }
+    }
+  }
+}
+
+@keyframes textAnimation {
+  from {
+    height: 0;
+  }
+  50% {
+    height: 0;
+  }
+  to {
+    height: 22px;
+  }
+}
+
+.alert-danger {
+  color: red;
+  padding: 7px;
+  background-color: #efefef;
+}
+
+@keyframes fadeBackgroundBtn {
+  from {
+    background-color: var(--primary-button-color);
+  }
+  to {
+    background-color: var(--primary-color);
+  }
+}

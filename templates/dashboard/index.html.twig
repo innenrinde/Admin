@@ -3,10 +3,10 @@
 {% block title %}Categories{% endblock %}
 
 {% block body %}
-
-    <div class="table-container" {{ vue_component('Dashboard', {
-        charts,
-        presentation
-    }) }} />
+    <div class="app-render" {{ vue_component('App', { 'settingsUrl': path('app_settings') }) }}></div>
+{#    <div class="table-container" {{ vue_component('Dashboard', {#}
+{#        charts,#}
+{#        presentation#}
+{#    }) }} />#}
 
 {% endblock %}

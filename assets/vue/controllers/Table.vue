@@ -85,6 +85,7 @@ const props = defineProps({
 const query = defineModel("");
 
 const { title, url } = toRefs(props);
+console.log(url);
 
 let pager = reactive({
 	total: 0,
@@ -323,13 +324,14 @@ let applySearch = ({ value, k }) => {
 .container-table {
   font-size: 12px;
   height: 100%;
+	width: 100%;
   display: flex;
   flex-direction: column;
 	background-color: var(--primary-background-color);
 }
 
 .header-bar {
-	padding: 20px 10px 0 10px;
+	padding: 0; // 10px 0 0;
 	display: flex;
 	align-items: center;
 
