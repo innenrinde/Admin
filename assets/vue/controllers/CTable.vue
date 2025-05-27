@@ -3,7 +3,7 @@
 
     <div class="header-bar">
 
-			<h1><span>{{ pager.total }} records</span><b>{{ title }}</b></h1>
+			<h1><span>{{ pager.total }} records</span><b>{{ sectionTitle }}</b></h1>
 
 			<x-input
 				type="text"
@@ -46,7 +46,7 @@
 		@ok="confirmEditRow"
 	>
 		<template #content>
-			<Form
+			<c-form
 				ref="form"
 				:columns="columns"
 				:values="editForm"
@@ -56,7 +56,7 @@
 		</template>
 	</x-panel>
 
-	<search-panel
+	<c-search-panel
 		v-if="searchFocus"
 		:query-text="query"
 		@close="closeSearch"
@@ -70,22 +70,20 @@ import { defineProps, defineModel, toRefs, reactive, ref, onMounted } from "vue"
 import { kNNSearch } from "../lib/kNNSearch";
 import { HttpRequestService } from "../services/HttpRequestService";
 import axios from "axios";
-import XPanel from "./components/XPanel.vue";
-import XInput from "./components/XInput.vue";
-import SearchPanel from "./SearchPanel.vue";
-import XTable from "./components/XTable.vue";
+import XPanel from "../components/XPanel.vue";
+import XInput from "../components/XInput.vue";
+import CSearchPanel from "./CSearchPanel.vue";
+import XTable from "../components/XTable.vue";
 
 const props = defineProps({
 	title: String,
-	columns: Array, // @DEPRECATED
-  rows: Array, // @DEPRECATED
+	sectionTitle: String,
   url: Object,
 });
 
 const query = defineModel("");
 
-const { title, url } = toRefs(props);
-console.log(url);
+const { sectionTitle, url } = toRefs(props);
 
 let pager = reactive({
 	total: 0,
@@ -331,7 +329,7 @@ let applySearch = ({ value, k }) => {
 }
 
 .header-bar {
-	padding: 0; // 10px 0 0;
+	padding: 10px 0 5px 0;
 	display: flex;
 	align-items: center;
 

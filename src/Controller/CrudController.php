@@ -17,11 +17,6 @@ abstract class CrudController extends AbstractController
     }
 
     /**
-     * @return Response
-     */
-    abstract public function index(): Response;
-
-    /**
      * @param Request $request
      * @return JsonResponse
      */

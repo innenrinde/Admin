@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="app-render" {{ vue_component('App', { 'settingsUrl': path('app_settings') }) }}></div>
+{% endblock %}

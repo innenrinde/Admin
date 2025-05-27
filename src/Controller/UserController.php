@@ -19,7 +19,6 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class UserController extends CrudController
@@ -101,12 +100,6 @@ class UserController extends CrudController
         parent::__construct($this->em);
     }
 
-    #[Route('/users', name: 'app_users')]
-    public function index(): Response
-    {
-        return $this->render('user/index.html.twig');
-    }
-
     #[Route('/users/list', name: 'app_users_list')]
     public function getRows(Request $request): JsonResponse
     {
@@ -136,18 +129,6 @@ class UserController extends CrudController
         }
 
         return $this->httpService->response($httpResponse);
-    }
-
-    /**
-     * Create an user
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    #[Route('/users/add', name: 'app_users_add')]
-    public function addRow(Request $request): Response
-    {
-        return $this->render('user/add.html.twig');
     }
 
     /**

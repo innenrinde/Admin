@@ -19,7 +19,6 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ObjectDataController extends CrudController
@@ -146,12 +145,6 @@ class ObjectDataController extends CrudController
         }, $this->em->getRepository(Category::class)->findAll());
     }
 
-    #[Route('/objectdata', name: 'app_objectdata')]
-    public function index(): Response
-    {
-        return $this->render('objectdata/index.html.twig');
-    }
-
     #[Route('/objectdata/list', name: 'app_objectdata_list')]
     public function getRows(Request $request): JsonResponse
     {
@@ -182,18 +175,6 @@ class ObjectDataController extends CrudController
         }
 
         return $this->httpService->response($httpResponse);
-    }
-
-    /**
-     * Create a data object
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    #[Route('/objectdata/add', name: 'app_objectdata_add')]
-    public function addRow(Request $request): Response
-    {
-        return $this->render('objectdata/add.html.twig');
     }
 
     /**

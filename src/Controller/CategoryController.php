@@ -15,7 +15,6 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Api\Constraints\NotBlank;
 
@@ -54,12 +53,6 @@ class CategoryController extends CrudController
         parent::__construct($this->em);
     }
 
-    #[Route('/categories', name: 'app_categories')]
-    public function index(): Response
-    {
-        return $this->render('category/index.html.twig');
-    }
-
     #[Route('/categories/list', name: 'app_categories_list', methods: ['GET'])]
     public function getRows(Request $request): JsonResponse
     {
@@ -81,18 +74,6 @@ class CategoryController extends CrudController
         }
 
         return $this->httpService->response($httpResponse);
-    }
-
-    /**
-     * Create a category
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    #[Route('/categories/add', name: 'app_categories_add', methods: ['GET'])]
-    public function addRow(Request $request): Response
-    {
-        return $this->render('category/add.html.twig');
     }
 
     /**

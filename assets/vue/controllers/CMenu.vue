@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs, ref, onBeforeMount, defineEmits } from "vue";
+import { defineProps, toRefs, onBeforeMount, defineEmits, reactive } from "vue";
 
 const DEFAULT_OPENEDS_KEY = "defaultOpeneds";
 
@@ -61,21 +61,41 @@ const props = defineProps({
 
 const { title, items } = toRefs(props);
 
-let localItems = ref([]);
-let defaultOpeneds = ref([]);
+/**
+ * List of all menus (hierarchically)
+ * @type {Reactive<*[]>}
+ */
+let localItems = reactive([]);
+
+/**
+ * Keep expanded menus to be shown after refresh
+ * @type {Array}
+ */
+let defaultOpeneds = [];
 
 /**
  * Init items menu opened by default
  */
 onBeforeMount(() => {
-	localItems.value = [ ...items.value ];
-	defaultOpeneds.value = getFromStorage(DEFAULT_OPENEDS_KEY);
+	localItems = [ ...items.value ];
 
-	localItems.value.map((item, index) => {
-		if (defaultOpeneds.value.includes(index)) {
+	// opened menu by default
+	defaultOpeneds = getFromStorage(DEFAULT_OPENEDS_KEY);
+	localItems.map((item, index) => {
+		if (defaultOpeneds.includes(index)) {
 			item.show = true;
 		}
 	});
+
+	// load first active menu
+	menus: for(let menu of localItems) {
+		for(let submenu of menu.children) {
+			if (submenu.active) {
+				emit("selectMenu", submenu);
+				break menus;
+			}
+		}
+	}
 });
 
 /**
@@ -104,10 +124,19 @@ const saveIntoStorage = (key, values) => {
 
 /**
  * Emit selected menu to be managed into parent component
- * @param {Object} menu
+ * @param {Object} submenu
  */
-const selectMenu = (menu)=> {
-	emit("selectMenu", menu);
+const selectMenu = (submenu)=> {
+
+	localItems.forEach(menu => {
+		menu.children.forEach(submenu => {
+			submenu.active = false;
+		});
+	});
+
+	submenu.active = true;
+
+	emit("selectMenu", submenu);
 };
 
 /**
@@ -118,13 +147,13 @@ const selectMenu = (menu)=> {
 const expandItem = (item, index) => {
 	item.show = isActiveSubMenu(item) ? true : !item.show;
 
-	if (defaultOpeneds.value.includes(index)) {
-		defaultOpeneds.value = defaultOpeneds.value.filter(item => item !== index);
+	if (defaultOpeneds.includes(index)) {
+		defaultOpeneds = defaultOpeneds.filter(item => item !== index);
 	} else {
-		defaultOpeneds.value.push(index);
+		defaultOpeneds.push(index);
 	}
 
-	saveIntoStorage(DEFAULT_OPENEDS_KEY, defaultOpeneds.value);
+	saveIntoStorage(DEFAULT_OPENEDS_KEY, defaultOpeneds);
 };
 
 /**

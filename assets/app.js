@@ -12,7 +12,7 @@ import "./styles/main.scss";
 import "./styles/login.scss";
 import "./styles/app.scss";
 import moment from "moment";
-import Form from "./vue/controllers/Form.vue";
+import CForm from "./vue/controllers/CForm.vue";
 
 /* import the fontawesome core */
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -58,7 +58,7 @@ document.addEventListener('vue:before-mount', (event) => {
         app, // The Vue application instance
     } = event.detail;
 
-    app.component("Form", Form);
+    app.component("CForm", CForm);
 
     app.directive("focus", {
         // When the bound element is mounted into the DOM...

@@ -1,6 +1,6 @@
 import renderComponent from "../lib/renderComponent";
-import XMessage from "../controllers/components/XMessage.vue";
-import XConfirm from "../controllers/components/XConfirm.vue";
+import XMessage from "../components/XMessage.vue";
+import XConfirm from "../components/XConfirm.vue";
 
 class NotificationService {
 

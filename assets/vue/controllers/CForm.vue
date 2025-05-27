@@ -1,8 +1,8 @@
 <template>
 
 	<div>
-		<div v-if="title">
-			<h1>{{ title }}</h1>
+		<div v-if="sectionTitle">
+			<h1>{{ sectionTitle }}</h1>
 		</div>
 
 		<div class="form-content">
@@ -66,16 +66,16 @@
 import axios from "axios";
 import { HttpRequestService } from "../services/HttpRequestService";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
-import XButton from "./components/XButton.vue";
-import XInput from "./components/XInput.vue";
-import XPassword from "./components/XPassword.vue";
-import XSelect from "./components/XSelect.vue";
-import XCheckbox from "./components/XCheckbox.vue";
-import XDate from "./components/XDate.vue";
+import XButton from "../components/XButton.vue";
+import XInput from "../components/XInput.vue";
+import XPassword from "../components/XPassword.vue";
+import XSelect from "../components/XSelect.vue";
+import XCheckbox from "../components/XCheckbox.vue";
+import XDate from "../components/XDate.vue";
 import { defineProps, toRefs, ref, onBeforeMount, defineEmits } from "vue";
 
 const props = defineProps({
-	title: String,
+	sectionTitle: String,
 	columns: {
 		type: Array,
 		default: []
@@ -95,7 +95,7 @@ const props = defineProps({
 	}
 });
 
-const { title, columns, values, url, hasCloseButton, hasSaveButton } = toRefs(props);
+const { sectionTitle, columns, values, url, hasCloseButton, hasSaveButton } = toRefs(props);
 
 const emit = defineEmits(["sve", "close"]);
 

@@ -63,9 +63,9 @@
 
 <script setup>
 import { defineEmits, defineModel, defineProps, toRefs, onMounted } from "vue";
-import XInput from "./components/XInput.vue";
-import XPanel from "./components/XPanel.vue";
-import XCheckbox from "./components/XCheckbox.vue";
+import XInput from "../components/XInput.vue";
+import XPanel from "../components/XPanel.vue";
+import XCheckbox from "../components/XCheckbox.vue";
 
 const props = defineProps({
 	queryText: { type: String, default: "" }

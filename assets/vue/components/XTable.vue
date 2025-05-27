@@ -98,7 +98,7 @@
 
 <script setup>
 import { defineProps, toRefs, defineEmits, defineAsyncComponent } from "vue";
-import DateTimeTransformer from "../../transformers/DateTimeTransformer";
+import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import XPager from "./XPager.vue";
 
 const XImage = defineAsyncComponent(

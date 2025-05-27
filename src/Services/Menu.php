@@ -40,10 +40,12 @@ class Menu
                     [
                         "title" => "Summary data",
                         "icon" => "chart-simple",
-                        "route" => $this->router->generate("app_dashboard"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/dashboard",
+                        "url" => [
+                            "get" => $this->router->generate("app_dashboard"),
+                        ],
+                        "active" => true,
                         "confirm" => false,
-                        "component" => "Dashboard"
+                        "component" => "CDashboard"
                     ],
                 ]
             ];
@@ -54,11 +56,12 @@ class Menu
                 "children" => [
                     [
                         "title" => "Categories list",
+                        "sectionTitle" => "List of available categories",
                         "icon" => "list",
-                        "route" => $this->router->generate("app_categories"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/categories",
+//                        "route" => $this->router->generate("app_categories"),
+                        "active" => false,
                         "confirm" => false,
-                        "component" => "Table",
+                        "component" => "CTable",
                         "url" => [
                             "get" => $this->router->generate("app_categories_list"),
                             "post" => $this->router->generate("app_categories_edit"),
@@ -67,11 +70,12 @@ class Menu
                     ],
                     [
                         "title" => "Add category",
+                        "sectionTitle" => "Create a new category",
                         "icon" => "plus",
-                        "route" => $this->router->generate("app_categories_add"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/categories/add",
+//                        "route" => $this->router->generate("app_categories_add"),
+                        "active" => false,
                         "confirm" => false,
-                        "component" => "Form",
+                        "component" => "CForm",
                         "url" => [
                             "get" => $this->router->generate('app_categories_list'),
                             "put" => $this->router->generate('app_categories_create')
@@ -87,11 +91,12 @@ class Menu
             "children" => [
                 [
                     "title" => "Data objects list",
+                    "sectionTitle" => "The Metropolitan Museum of Art Collection",
                     "icon" => "chart-column",
-                    "route" => $this->router->generate("app_objectdata"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/objectdata",
+//                    "route" => $this->router->generate("app_objectdata"),
+                    "active" => false,
                     "confirm" => false,
-                    "component" => "Table",
+                    "component" => "CTable",
                     "url" => [
                         "get" => $this->router->generate('app_objectdata_list'),
                         "put" => $this->router->generate('app_objectdata_create'),
@@ -100,11 +105,12 @@ class Menu
                 ],
                 [
                     "title" => "Add a data object",
+                    "sectionTitle" => "Create a new data object",
                     "icon" => "plus",
-                    "route" => $this->router->generate("app_objectdata_add"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/objectdata/add",
+//                    "route" => $this->router->generate("app_objectdata_add"),
+                    "active" => false,
                     "confirm" => false,
-                    "component" => "Form",
+                    "component" => "CForm",
                     "url" => [
                         "get" => $this->router->generate('app_objectdata_list'),
                         "put" => $this->router->generate('app_objectdata_create')
@@ -120,11 +126,12 @@ class Menu
                 "children" => [
                     [
                         "title" => "Users list",
+                        "sectionTitle" => "Users list",
                         "icon" => "users",
-                        "route" => $this->router->generate("app_users"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/users",
+//                        "route" => $this->router->generate("app_users"),
+                        "active" => false,
                         "confirm" => false,
-                        "component" => "Table",
+                        "component" => "CTable",
                         "url" => [
                             "get" => $this->router->generate("app_users_list"),
                             "post" => $this->router->generate("app_users_edit"),
@@ -133,11 +140,12 @@ class Menu
                     ],
                     [
                         "title" => "Add user",
+                        "sectionTitle" => "Create a new user",
                         "icon" => "plus",
-                        "route" => $this->router->generate("app_users_add"),
-                        "active" => $this->router->getContext()->getPathInfo() === "/users/add",
+//                        "route" => $this->router->generate("app_users_add"),
+                        "active" => false,
                         "confirm" => false,
-                        "component" => "Form",
+                        "component" => "CForm",
                         "url" => [
                             "get" => $this->router->generate('app_users_list'),
                             "put" => $this->router->generate('app_users_create')
@@ -153,11 +161,12 @@ class Menu
             "children" => [
                 [
                     "title" => "Edit profile",
+                    "sectionTitle" => "Edit your personal data",
                     "icon" => "user",
-                    "route" => $this->router->generate("app_account"),
-                    "active" => $this->router->getContext()->getPathInfo() === "/account",
+//                    "route" => $this->router->generate("app_account"),
+                    "active" => false,
                     "confirm" => false,
-                    "component" => "Form",
+                    "component" => "CForm",
                     "url" => [
                         "get" => $this->router->generate('app_users_list'),
                         "put" => $this->router->generate('app_account_edit')

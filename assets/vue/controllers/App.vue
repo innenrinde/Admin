@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import CMenu from "./Menu.vue";
+import CMenu from "./CMenu.vue";
 import axios from "axios";
 import { defineProps, onMounted, reactive, toRefs, ref, defineAsyncComponent } from "vue";
 import { NotificationService } from "../services/NotificationService";
@@ -54,6 +54,10 @@ onMounted(() => {
 		});
 });
 
+/**
+ * Get selected menu and try to load configured component
+ * @param menu
+ */
 const selectMenu = (menu) => {
 	if (menu.confirm) {
 		NotificationService.confirm({
@@ -91,7 +95,7 @@ const selectMenu = (menu) => {
 		display: flex;
 		flex-direction: column;
 		margin: 12px;
-		padding: 10px;
+		padding: 15px;
 		border-radius: 5px;
 		background-color: var(--primary-background-color);
 		border: solid 1px var(--box-shadow-color);
@@ -100,36 +104,4 @@ const selectMenu = (menu) => {
 	}
 }
 
-
-/* START left menu */
-
-/* END left menu */
-
-/* START body */
-
-
-//.table {
-//	width: 100%;
-//}
-
-.form-container,
-.table-container {
-	//width: 100%;
-	//display: flex;
-	//margin: 12px;
-	//border-radius: 5px;
-	//background-color: var(--primary-background-color);
-	//border: solid 1px var(--box-shadow-color);
-	//box-shadow: 1px 1px 4px var(--box-shadow-color);
-	//overflow: auto;
-	//flex-direction: column;
-}
-
-.form-container {
-	//padding: 20px;
-}
-
-.table-container {
-	//padding: 0;
-}
 </style>
