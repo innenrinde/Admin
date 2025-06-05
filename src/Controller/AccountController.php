@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Api\HttpResponse;
+use App\Api\ListOptions;
 use App\Api\TableBuilder;
 use App\Entity\User;
 use App\Services\HttpService;
@@ -70,24 +72,30 @@ class AccountController extends AbstractController
     ) {
     }
 
-    #[Route('/account', name: 'app_account')]
-    public function index(): Response
+    #[Route('/account/list', name: 'app_account_list')]
+    public function index(Request $request): Response
     {
-        /** @var User $user */
-        $user = $this->security->getUser();
+        $httpResponse = new HttpResponse();
+        $options = new ListOptions($request->query->all());
 
-        $values = [
-            'id' => $user->getId(),
-            'name' => $user->getName(),
-            'surname' => $user->getSurname(),
-            'email' => $user->getEmail(),
-            'zkp' => $user->isZkp(),
-        ];
+        if ($options->withColumns) {
+            $httpResponse->setColumns($this->tableBuilder->getColumns($this->columns));
+        }
 
-        return $this->render('account/index.html.twig', [
-            'columns' => $this->tableBuilder->getColumns($this->columns),
-            'values' => $values,
-        ]);
+        if ($options->withValues) {
+            /** @var User $user */
+            $user = $this->security->getUser();
+
+            $httpResponse->setValues([
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'surname' => $user->getSurname(),
+                'email' => $user->getEmail(),
+                'zkp' => $user->isZkp(),
+            ]);
+        }
+
+        return $this->httpService->response($httpResponse);
     }
 
     #[Route('/account_edit', name: 'app_account_edit')]

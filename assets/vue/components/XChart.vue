@@ -2,7 +2,7 @@
 	<div
 		class="chart-container"
 		:class="color"
-		@click="gotoLink"
+		@click="openComponent"
 	>
 		<div
 			class="chart-label"
@@ -23,22 +23,24 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs } from "vue";
+import { defineProps, toRefs, defineEmits } from "vue";
 
 const props = defineProps({
 	label: String,
 	count: Array,
 	color: String,
-	link: String,
+	component: Object,
 });
 
-const { label, count, color, link } = toRefs(props);
+const { label, count, color, component } = toRefs(props);
+
+const emit = defineEmits(["action"]);
 
 /**
- * Redirect to defined route
+ * Open defined component for chart
  */
-const gotoLink = () => {
-	document.location.href = link.value;
+const openComponent = () => {
+	emit("action", component.value);
 }
 
 </script>

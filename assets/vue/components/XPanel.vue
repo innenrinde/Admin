@@ -13,11 +13,13 @@
 			</div>
 			<div class="actions">
 				<x-button
+					v-if="buttons.includes('close')"
 					title="Close"
 					type="secondary"
 					@click="closeAction"
 				/>
 				<x-button
+					v-if="buttons.includes('ok')"
 					:title="okLabel"
 					type="primary"
 					@click="confirmAction"
@@ -34,10 +36,17 @@ import { defineProps, defineEmits, toRefs } from "vue";
 const props = defineProps({
 	size: String,
 	title: String,
-	okLabel: { type: String, default: "Yes" }
+	buttons: {
+		type: Array,
+		default: ['close', 'ok']
+	},
+	okLabel: {
+		type: String,
+		default: "Yes"
+	}
 });
 
-const { size, title, okLabel } = toRefs(props);
+const { size, title, buttons, okLabel } = toRefs(props);
 
 const emit = defineEmits(["ok", "close"]);
 

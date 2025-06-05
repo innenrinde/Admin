@@ -1,4 +1,8 @@
 <template>
+	<c-chat
+		:url="urlChat"
+		@action="selectMenu"
+	/>
 	<div class="content">
 		<div
 			v-if="menus.length"
@@ -14,6 +18,7 @@
 			<component
 				:is="currentComponent"
 				v-bind="currentComponentBindData"
+				@action="selectMenu"
 			/>
 		</div>
 	</div>
@@ -24,6 +29,7 @@ import CMenu from "./CMenu.vue";
 import axios from "axios";
 import { defineProps, onMounted, reactive, toRefs, ref, defineAsyncComponent } from "vue";
 import { NotificationService } from "../services/NotificationService";
+import CChat from "./CChat.vue";
 
 const props = defineProps({
 	settingsUrl: String,
@@ -33,6 +39,7 @@ const { settingsUrl } = toRefs(props);
 
 let title = reactive("");
 let menus = reactive([]);
+let urlChat = reactive("");
 let currentComponent = ref(null);
 let currentComponentBindData = ref({});
 
@@ -46,6 +53,9 @@ onMounted(() => {
 
 			// top title for application
 			title = response.data.title;
+
+			// url to dialogue with chat boot
+			urlChat = response.data.chat;
 
 			// list of menus
 			menus.splice(0);

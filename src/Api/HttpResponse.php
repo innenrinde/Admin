@@ -8,6 +8,8 @@ class HttpResponse
 
     private ?array $rows = null;
 
+    private ?array $values = null;
+
     private ?array $pager = null;
 
     /**
@@ -74,5 +76,29 @@ class HttpResponse
     public function hasPager(): bool
     {
         return $this->pager !== null;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setValues(array $data): void
+    {
+        $this->values = $data;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getValues(): ?array
+    {
+        return $this->values;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasValues(): bool
+    {
+        return $this->values && count($this->values) > 0;
     }
 }

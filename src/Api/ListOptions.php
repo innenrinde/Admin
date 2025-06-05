@@ -20,6 +20,11 @@ readonly class ListOptions
     public bool $withRows;
 
     /**
+     * @var bool
+     */
+    public bool $withValues;
+
+    /**
      * @param array $data
      */
     public function __construct(array $data)
@@ -32,5 +37,8 @@ readonly class ListOptions
 
         // check presence of 'rows' key
         $this->withRows = in_array('rows', $list);
+
+        // check presence of 'values' key
+        $this->withValues = in_array('values', $list);
     }
 }

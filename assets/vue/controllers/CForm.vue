@@ -72,7 +72,7 @@ import XPassword from "../components/XPassword.vue";
 import XSelect from "../components/XSelect.vue";
 import XCheckbox from "../components/XCheckbox.vue";
 import XDate from "../components/XDate.vue";
-import { defineProps, toRefs, ref, onBeforeMount, defineEmits } from "vue";
+import { defineProps, toRefs, ref, reactive, onBeforeMount, defineEmits } from "vue";
 
 const props = defineProps({
 	sectionTitle: String,
@@ -82,7 +82,7 @@ const props = defineProps({
 	},
 	values: {
 		type: Object,
-		default: {}
+		default: null
 	},
 	url: Object,
 	hasCloseButton: {
@@ -97,7 +97,7 @@ const props = defineProps({
 
 const { sectionTitle, columns, values, url, hasCloseButton, hasSaveButton } = toRefs(props);
 
-const emit = defineEmits(["sve", "close"]);
+const emit = defineEmits(["close"]);
 
 /**
  *
@@ -109,13 +109,14 @@ let localColumns = ref([]);
  * All form values
  * @type {Object}
  */
-let form = ref({});
+let form = reactive({});
 
 /**
- *
+ * Get form structure and its values from props or through get api if it's possible
  */
-const getColumnsStructure = () => {
-	if (columns.value.length) {
+const getFormStructureAndValues = () => {
+	if (values.value || columns.value.length) {
+		form = values.value;
 		localColumns = columns;
 		return;
 	}
@@ -124,12 +125,12 @@ const getColumnsStructure = () => {
 		axios
 			.get(url.value.get, {
 				params: {
-					list: ['columns']
+					list: ['columns', 'values']
 				}
 			})
 			.then(response => {
-				console.log(response);
 				localColumns.value = response.data.columns;
+				form = response.data.values ?? {};
 			});
 	}
 };
@@ -138,8 +139,7 @@ const getColumnsStructure = () => {
  * Init form values
  */
 onBeforeMount(() => {
-	getColumnsStructure();
-	form = values;
+	getFormStructureAndValues();
 });
 
 /**
@@ -147,7 +147,8 @@ onBeforeMount(() => {
  * @return {Object}
  */
 const getValues = () => {
-	let values = { ... form.value };
+	let values = { ... form };
+
 	columns.value.forEach(column => {
 		if (column.type === "datetime") {
 			values[column.field] = DateTimeTransformer.reverseTransform(values[column.field]);

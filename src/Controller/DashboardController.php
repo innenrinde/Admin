@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\ObjectData;
 use App\Entity\User;
+use App\Services\Menu;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +17,7 @@ class DashboardController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly UrlGeneratorInterface $router
+        private readonly Menu $menu
     ) {
     }
 
@@ -33,19 +34,19 @@ class DashboardController extends AbstractController
             [
                 'label' => "Available categories",
                 'count' => $categories,
-//                'link' => $this->router->generate("app_categories"),
+                'menu' => $this->menu->menuCategoryList,
                 'color' => 'c1'
             ],
             [
                 'label' => "Parsed museum objects",
-//                'link' => $this->router->generate("app_objectdata"),
                 'count' => $museums,
+                'menu' => $this->menu->menuObjectList,
                 'color' => 'c2'
             ],
             [
                 'label' => "Active users",
-//                'link' => $this->router->generate("app_users"),
                 'count' => $users,
+                'menu' => $this->menu->menuUserList,
                 'color' => 'c3'
             ]
         ];

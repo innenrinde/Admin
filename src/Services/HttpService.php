@@ -69,6 +69,10 @@ class HttpService
             $data['pager'] = $httpResponse->getPager();
         }
 
+        if ($httpResponse->hasValues()) {
+            $data['values'] = $httpResponse->getValues();
+        }
+
         return new JsonResponse($data, Response::HTTP_OK);
     }
 }
