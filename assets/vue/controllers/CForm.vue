@@ -11,7 +11,10 @@
 			  :key="column"
 				class="form-line"
 	    >
-				<div>{{ column.title }}</div>
+				<div>
+          {{ column.title }}
+          <span v-if="column.mandatory">*</span>
+        </div>
 				<div>
 					<x-select
 						v-if="column.type === 'choice'"
@@ -49,7 +52,7 @@
 						@click="confirmClose"
 					/>
 					<x-button
-						v-if="hasSaveButton"
+						v-if="hasSaveButton && formLoaded"
 						type="primary"
 						title="Save"
 						@click="confirmSave"
@@ -100,6 +103,12 @@ const { sectionTitle, columns, values, url, hasCloseButton, hasSaveButton } = to
 const emit = defineEmits(["close"]);
 
 /**
+ * Flag to chek if form struct was loaded or not
+ * @type {Boolean}
+ */
+let formLoaded = ref(false);
+
+/**
  *
  * @type {Ref<UnwrapRef<*[]>, UnwrapRef<*[]> | *[]>}
  */
@@ -118,6 +127,7 @@ const getFormStructureAndValues = () => {
 	if (values.value || columns.value.length) {
 		form = values.value;
 		localColumns = columns;
+    formLoaded = true;
 		return;
 	}
 
@@ -131,6 +141,7 @@ const getFormStructureAndValues = () => {
 			.then(response => {
 				localColumns.value = response.data.columns;
 				form = response.data.values ?? {};
+        formLoaded = true;
 			});
 	}
 };
@@ -177,7 +188,7 @@ const confirmSave = () => {
 			.put(url.value.put, values)
 			.then(response => {
 				HttpRequestService.parseResponse(response, () => {
-					console.log(response.data.content);
+          console.log(response);
 				});
 			});
 	} else {
