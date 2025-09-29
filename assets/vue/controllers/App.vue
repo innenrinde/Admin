@@ -1,8 +1,8 @@
 <template>
-	<c-chat
-		:url="urlChat"
-		@action="selectMenu"
-	/>
+<!--	<c-chat-->
+<!--		:url="urlChat"-->
+<!--		@action="selectMenu"-->
+<!--	/>-->
 	<div class="content">
 		<div
 			v-if="menus.length"

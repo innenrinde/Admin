@@ -22,6 +22,7 @@
 			@edit="editRow"
 			@delete="deleteRow"
 			@change-page="changePage"
+			@sort-by="sortBy"
 		/>
 
   </div>
@@ -85,11 +86,18 @@ const query = defineModel("");
 
 const { sectionTitle, url } = toRefs(props);
 
+// to manage pages
 let pager = reactive({
 	total: 0,
 	page: 0,
 	limit: 0,
 });
+
+// to manage sorting options
+let sorting = {
+  sortBy: null,
+  sortDir: null,
+};
 
 /**
  * List of columns fetched by api; no columns is like no table to display
@@ -259,6 +267,7 @@ const getTableDataList = () => {
     .get(url.value.get, {
 			params: {
 				...pager,
+        ...sorting,
 				list: ['columns', 'rows']
 			}
 		})
@@ -287,6 +296,13 @@ const getTableDataList = () => {
 const changePage = (data) => {
 	pager = data;
 	getTableDataList();
+}
+
+const sortBy = (data) => {
+  // console.log(data);
+  sorting = data;
+
+  getTableDataList();
 }
 
 /**

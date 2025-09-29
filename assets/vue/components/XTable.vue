@@ -2,7 +2,7 @@
 	<div
 		class="table-section"
 	>
-		<div class="table">
+    <div class="table">
 			<div
 				class="header"
 			>
@@ -11,7 +11,15 @@
 					:key="column"
 					:class="{ [column.width]: column.width, 'align-center': column.type === 'checkbox'}"
 				>
-					{{ column.title }}
+					<span @click="sortBy(column)">{{ column.title }}</span>
+          <font-awesome-icon
+            v-if="column.field === localSorting.sortBy && localSorting.sortDir === 'asc'"
+            :icon="['fas', 'sort-alpha-down']"
+          />
+          <font-awesome-icon
+            v-if="column.field === localSorting.sortBy && localSorting.sortDir === 'desc'"
+            :icon="['fas', 'sort-alpha-up-alt']"
+          />
 				</div>
 				<div class="w1">
 					<!-- Operations-->
@@ -97,7 +105,7 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs, defineEmits, defineAsyncComponent } from "vue";
+import { ref, defineProps, toRefs, defineEmits, defineAsyncComponent } from "vue";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import XPager from "./XPager.vue";
 
@@ -111,6 +119,7 @@ const props = defineProps({
 	columns: Array,
 	rows: Array,
 	pager: Object,
+  sorting: Object,
 });
 
 const { columns, rows, pager } = toRefs(props);
@@ -120,6 +129,9 @@ const visibleColumns = columns.value.filter(column => !column.hidden);
 
 // local data pages to calculate row's index
 let localPager = pager;
+
+// local sorting object to display proper icons
+let localSorting = ref({});
 
 /**
  * Emit deleting row
@@ -144,6 +156,22 @@ const editRow = (row) => {
 const changePage = (pager) => {
 	localPager = pager;
 	emit("changePage", pager);
+}
+
+/**
+ * Emit sorting option: by column with secified direction
+ * @param column
+ */
+const sortBy = (column) => {
+
+  let direction = localSorting.value.sortDir === 'asc' ? 'desc' : 'asc';
+
+  localSorting.value = {
+    sortBy: column.field,
+    sortDir: direction,
+  }
+
+  emit("sortBy", localSorting.value);
 }
 
 /**
@@ -182,6 +210,14 @@ const dateFormat = (value) => {
 				color: var(--secondary-color);
 				padding: 7px;
 				white-space: nowrap;
+
+        span {
+          cursor: pointer;
+        }
+
+        span:hover {
+          text-decoration: underline;
+        }
 			}
 
 			.w1 {

@@ -43,6 +43,9 @@ import {
     faBackwardStep,
     faChartSimple,
     faArrowUpRightFromSquare,
+    faFileContract,
+    faSortAlphaAsc,
+    faSortAlphaUpAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan, faPenToSquare, faImage } from '@fortawesome/free-regular-svg-icons';
 import { NotificationService } from "./vue/services/NotificationService";
@@ -94,6 +97,9 @@ document.addEventListener('vue:before-mount', (event) => {
     library.add(faImage);
     library.add(faChartSimple);
     library.add(faArrowUpRightFromSquare);
+    library.add(faFileContract);
+    library.add(faSortAlphaAsc);
+    library.add(faSortAlphaUpAlt);
 
     app.component('font-awesome-icon', FontAwesomeIcon);
 
