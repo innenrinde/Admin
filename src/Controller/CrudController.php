@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Api\Pager;
+use App\Api\Sorting;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,9 +54,9 @@ abstract class CrudController extends AbstractController
      * @param Pager $pager
      * @return array
      */
-    protected function filteredRows(string $entity, Pager $pager): array
+    protected function filteredRows(string $entity, Pager $pager, Sorting $sorting): array
     {
-        $rows = $this->em->getRepository($entity)->findBy([], null, $pager->limit, $pager->offset);
+        $rows = $this->em->getRepository($entity)->findBy([], [$sorting->sortBy => $sorting->sortDir], $pager->limit, $pager->offset);
         $total = $this->em->getRepository($entity)->count();
 
         return [

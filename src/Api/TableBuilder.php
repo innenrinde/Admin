@@ -2,6 +2,7 @@
 
 namespace App\Api;
 
+use App\Api\Constraints\NotBlank;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -27,6 +28,12 @@ readonly class TableBuilder
     {
         return array_map(function ($column) {
             $column['type'] = (new $column['type']())->getBlockPrefix();
+
+            if (isset($column['constraints'][NotBlank::class])) {
+                $column['mandatory'] = true;
+            }
+            unset($column['constraints']);
+
             return $column;
         }, $columns);
     }
