@@ -26,7 +26,7 @@
 						v-model="form[column.field]"
 					/>
 					<x-date
-						v-else-if="column.type === 'datetime'"
+						v-else-if="column.type === 'datetime' || column.type === 'date'"
 						v-model="form[column.field]"
 					/>
 					<x-password

@@ -6,6 +6,7 @@ use App\Api\Constraints\NotBlank;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -126,7 +127,7 @@ readonly class TableBuilder
             $value = match ($column['type']) {
                 ChoiceType::class => $this->choiceType($column, $data),
                 CollectionType::class => $this->collectionType($column, $data),
-                DateTimeType::class => $this->dateTimeType($column, $data),
+                DateType::class, DateTimeType::class => $this->dateTimeType($column, $data),
                 PasswordType::class => $this->passwordType($column, $data, $entity),
                 default => $data[$column['field']] ?? "",
             };

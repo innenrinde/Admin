@@ -50,8 +50,11 @@
 						/>
 						<span v-else>-</span>
 					</span>
-					<span v-else-if="column.type === 'datetime'">
+          <span v-else-if="column.type === 'date'">
 						{{ dateFormat(row[column.field]) }}
+					</span>
+					<span v-else-if="column.type === 'datetime'">
+						{{ dateTimeFormat(row[column.field]) }}
 					</span>
 					<span v-else-if="column.type === 'choice'">
 						{{ row[column.field].label }}
@@ -107,6 +110,7 @@
 <script setup>
 import { ref, defineProps, toRefs, defineEmits, defineAsyncComponent } from "vue";
 import DateTimeTransformer from "../transformers/DateTimeTransformer";
+import DateTransformer from "../transformers/DateTransformer";
 import XPager from "./XPager.vue";
 
 const XImage = defineAsyncComponent(
@@ -180,6 +184,15 @@ const sortBy = (column) => {
  * @returns {String}
  */
 const dateFormat = (value) => {
+  return value ? DateTransformer.transform(value) : "-";
+};
+
+/**
+ * Custom date time format
+ * @param {String} value
+ * @returns {String}
+ */
+const dateTimeFormat = (value) => {
 	return value ? DateTimeTransformer.transform(value) : "-";
 };
 
