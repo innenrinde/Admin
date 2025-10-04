@@ -8,7 +8,6 @@ export default class DateTransformer {
      * @returns {string}
      */
     static transform(value) {
-        console.log(value);
         return value ? moment(value).format("DD/MM/YYYY") : "-";
     }
 

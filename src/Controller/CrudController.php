@@ -50,8 +50,10 @@ abstract class CrudController extends AbstractController
     }
 
     /**
+     * Get rows based on entity name, sorting options and pagination
      * @param string $entity
      * @param Pager $pager
+     * @param Sorting $sorting
      * @return array
      */
     protected function filteredRows(string $entity, Pager $pager, Sorting $sorting): array
@@ -67,5 +69,23 @@ abstract class CrudController extends AbstractController
                 'limit' => $pager->limit,
             ],
         ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getData(Request $request): array
+    {
+        return $request->request->all();
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getFiles(Request $request): array
+    {
+        return $request->files->all();
     }
 }

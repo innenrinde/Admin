@@ -1,7 +1,7 @@
 <template>
 	<div class="menu-panel">
 		<div class="icon-panel">
-			<font-awesome-icon :icon="['fas', 'repeat']" />
+			<font-awesome-icon :icon="['fas', 'file-contract']" />
 			{{ title }}
 		</div>
 		<div class="menu-content">

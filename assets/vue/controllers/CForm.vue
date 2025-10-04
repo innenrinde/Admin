@@ -34,6 +34,11 @@
 						v-model="form[column.field]"
 						:placeholder="column.placeholder ?? ''"
 					/>
+          <x-file
+            v-else-if="column.type === 'file'"
+            v-model="form[column.field]"
+            :placeholder="column.placeholder ?? ''"
+          />
 					<x-input
 						v-else
 						v-model="form[column.field]"
@@ -72,10 +77,12 @@ import DateTimeTransformer from "../transformers/DateTimeTransformer";
 import XButton from "../components/XButton.vue";
 import XInput from "../components/XInput.vue";
 import XPassword from "../components/XPassword.vue";
+import XFile from "../components/XFile.vue";
 import XSelect from "../components/XSelect.vue";
 import XCheckbox from "../components/XCheckbox.vue";
 import XDate from "../components/XDate.vue";
 import { defineProps, toRefs, ref, reactive, onBeforeMount, defineEmits } from "vue";
+import ChoiceTransformer from "../transformers/ChoiceTransformer";
 
 const props = defineProps({
 	sectionTitle: String,
@@ -155,18 +162,25 @@ onBeforeMount(() => {
 
 /**
  * Get form values
- * @return {Object}
+ * @return {FormData}
  */
 const getValues = () => {
 	let values = { ... form };
 
-	columns.value.forEach(column => {
+  localColumns.value.forEach(column => {
 		if (column.type === "datetime") {
 			values[column.field] = DateTimeTransformer.reverseTransform(values[column.field]);
+		} else if (column.type === "choice") {
+			values[column.field] = ChoiceTransformer.reverseTransform(values[column.field]);
 		}
 	});
 
-	return values;
+  let formData = new FormData();
+  for (const key in values) {
+    formData.append(key, values[key]);
+  }
+
+	return formData;
 };
 
 /**
@@ -181,11 +195,15 @@ defineExpose({
  */
 const confirmSave = () => {
 
-	let values = getValues();
+	let formData = getValues();
 
 	if (url.value.put) {
 		axios
-			.put(url.value.put, values)
+			.post(url.value.put, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
 			.then(response => {
 				HttpRequestService.parseResponse(response, () => {
           console.log(response);
