@@ -5,18 +5,23 @@
 		>
 			<input
         type="file"
-        accept="image/png, image/jpeg"
+        :accept="accept"
         ref="inputFile"
         :placeholder="placeholder"
 				:readonly="readonly"
 				@blur="emitBlur"
         @change="emitChange"
 			/>
+      <div v-if="model">
+        <a :href="model" target="_blank">Open existing file</a>
+      </div>
 		</div>
 </template>
 
 <script setup>
-import { useTemplateRef, defineEmits, defineProps } from "vue";
+import { useTemplateRef, defineEmits, defineProps, defineModel } from "vue";
+
+const model = defineModel();
 
 const input = useTemplateRef("inputFile");
 
@@ -26,6 +31,7 @@ const props = defineProps({
 	placeholder: String,
 	readonly: Boolean,
 	focus: { type: Boolean, default: false },
+  accept: String,
 });
 
 /**

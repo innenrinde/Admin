@@ -221,6 +221,7 @@ const confirmEditRow = () => {
 		.then(response => {
 			HttpRequestService.parseResponse(response, () => {
 				processEditedRow(response.data.content);
+        console.log(response.data.content, editDialogVisible);
 				editDialogVisible.value = false;
 			});
 		});
@@ -299,9 +300,7 @@ const changePage = (data) => {
 }
 
 const sortBy = (data) => {
-  // console.log(data);
   sorting = data;
-
   getTableDataList();
 }
 

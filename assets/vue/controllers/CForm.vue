@@ -38,6 +38,7 @@
             v-else-if="column.type === 'file'"
             v-model="form[column.field]"
             :placeholder="column.placeholder ?? ''"
+            :accept="column.accept"
           />
 					<x-input
 						v-else
