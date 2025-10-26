@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Api\Pager;
 use App\Api\Sorting;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,11 +83,37 @@ abstract class CrudController extends AbstractController
     }
 
     /**
+     * Return uploaded files
      * @param Request $request
      * @return array
      */
     protected function getFiles(Request $request): array
     {
         return $request->files->all();
+    }
+
+    /**
+     * Convert received data to a standard format to be saved into database
+     * @param array $data associative data received
+     * @param array $columns columns definition to be used
+     * @return array
+     */
+    protected function prepareData(array $data, array $columns): array
+    {
+        foreach ($columns as $column) {
+            if (isset($data[$column['field']])) {
+                if ($column['type'] === NumberType::class) {
+                    $data[$column['field']] = intval($data[$column['field']]);
+                } else if ($column['type'] === ChoiceType::class) {
+                    $entity = $this->em->getRepository($column['entity'])->find($data[$column['field']]);
+                    $data[$column['field']] = [
+                        'value' => $entity ? $entity->getId() : null,
+                        'label' => $entity ? $entity->getTitle() : null,
+                    ];
+                }
+            }
+        }
+
+        return $data;
     }
 }

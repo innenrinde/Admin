@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -120,7 +121,7 @@ readonly class TableBuilder
     private function fillData(object $entity, array $columns, array $data): void
     {
         foreach ($columns as $column) {
-            if (isset($column['isPk'])) {
+            if (isset($column['isPk']) || $column['type'] === FileType::class) {
                 continue;
             }
 

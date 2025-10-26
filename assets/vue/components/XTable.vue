@@ -64,6 +64,9 @@
 							:src="row[column.field]"
 						/>
 					</span>
+          <span v-else-if="column.type === 'url'">
+						<a :href="row[column.url]" target="_blank">{{ row[column.field] }}</a>
+					</span>
 					<span v-else>{{ row[column.field] }}</span>
 				</div>
 
@@ -266,6 +269,15 @@ const dateTimeFormat = (value) => {
 		.content {
 			display: table-row;
 
+      a {
+        text-decoration: none;
+        color: var(--secondary-color);
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
 			&:nth-child(odd) > div {
 				background-color: var(--table-alt-line-color);
 			}
@@ -273,6 +285,10 @@ const dateTimeFormat = (value) => {
 			&:hover > div {
 				background-color: var(--table-hover-line-color);
 				color: var(--primary-text-color);
+
+        a {
+          color: var(--primary-text-color);
+        }
 			}
 
 			> div {
@@ -286,6 +302,8 @@ const dateTimeFormat = (value) => {
 				font-size: 16px;
 				color: var(--green-button-color);
 			}
+
+
 
 			.actions {
 				text-wrap : nowrap;
